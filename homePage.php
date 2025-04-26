@@ -1,7 +1,18 @@
+<?php
+session_start();
+if (!isset($_SESSION['account_loggedin'])) {
+    header('Location: loginFunction/mainPage.php');
+    exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1">
+    <title>TRANG CHỦ</title>
     <title>Trang quản lý nhà sách - Backend</title>
     <style>
         body {
@@ -29,7 +40,26 @@
     </style>
 </head>
 <body>
-    <h1>Danh sách các chức năng API (backend)</h1>
+    <header class="header">
+        <div class="wrapper">
+            <h1>Hệ thống quản lý nhà sách</h1>
+            <nav class="menu">
+                <a href="homePage.php">Trang chủ</a>
+                <a href="loginFunction/profile.php">Thông tin tài khoản</a>
+                <a href="loginFunction/logout.php">Đăng xuất</a>
+            </nav>
+        </div>
+    </header>
+    <div class="content">
+        <div class="wrap">
+            <h2>Trang chủ</h2>
+            <p>Chào mừng quay trở lại, <?htmlspecialchars($_SESSION['account_name'], ENT_QUOTES)?>!</p>
+        </div>
+    </div>
+    <div class="block">
+        <p>Đây là trang chủ của hệ thống. Bạn đã đăng nhập thành công!</p>
+    </div>
+    <h3>Danh sách các chức năng API (backend)</h1>
     <ul>
         <li><a href="baocao_congno.php">Báo cáo công nợ</a></li>
         <li><a href="baocao_doanhthu.php">Báo cáo doanh thu</a></li>
