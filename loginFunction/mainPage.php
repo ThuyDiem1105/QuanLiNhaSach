@@ -27,7 +27,7 @@ $usernameError = $passwordError = $message = '';
             if (mysqli_connect_errno()) {
                 $message = '<br />Lỗi kết nối thất bại đến MySql: ' . mysqli_connect_error();
             } else {
-                $stmt = $connection->prepare('SELECT id, password FROM accounts WHERE username = ?');
+                $stmt = $connection->prepare('SELECT MaNV, MatKhau FROM taikhoan WHERE TenDN = ?');
                 $stmt->bind_param('s', $username);
                 $stmt->execute();
                 //lưu để kiểm tra nếu tk có tồn tại
@@ -44,6 +44,7 @@ $usernameError = $passwordError = $message = '';
                         $_SESSION['account_loggedin'] = TRUE;
                         $_SESSION['account_name'] = $_POST['username'];
                         $_SESSION['account_id'] = $id;
+                        //$_SESSION['account_role'] = $role;
                         header('Location: ../homePage.php');
                         exit;
                     } else {
