@@ -66,6 +66,7 @@ if (!isset($_SESSION['account_loggedin'])) {
         <li><a href="baocao_kho.php">Báo cáo kho</a></li>
         <li><a href="phanquyen.php">Phân quyền</a></li>
         <li><a href="them_hoadon.php">Thêm hóa đơn</a></li>
+        <li><a href="QuanLySach/quanly_sach.php">Quản lý sách</a></li>
         <li><a href="them_khachhang.php">Thêm khách hàng</a></li>
         <li><a href="them_khuyenmai.php">Thêm khuyến mãi</a></li>
         <li><a href="them_nhanvien.php">Thêm nhân viên</a></li>

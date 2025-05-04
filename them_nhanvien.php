@@ -12,20 +12,27 @@ if (!isset($_SESSION['account_loggedin'])) {
 //     exit;
 // }
 
-$fullnameError = $usernameError = $phonenumError = $dobError = $passwordError =  $message = $salaryError = '';
-$employee_id = $emailError = $addressError = $positionError  = $confirmpassError = $shiftError = '';
+$fullnameError = $usernameError = $phonenumError = $dobError = $passwordError = $salaryError = '';
+$employee_id = $emailError = $addressError = $positionError  = $confirmpassError = $message = '';
+$shiftError = '';
 $employeeFormVisible = true;
 $userFormVisible = false;
 
+$fullname = $_POST['fullname'] ?? '';
+$phonenum = $_POST['phonenum'] ?? '';
+$dob = $_POST['dob'] ?? '';
+$address = $_POST['address'] ?? '';
+$position = $_POST['position'] ?? '';
+$shift = $_POST['shifts'] ?? [];
+echo "<pre>";
+print_r($shift);
+echo "</pre>";
+
+$shift_string = implode(',', $shift);
+$salary = $_POST['salary'] ?? [];
+
 //khi user nhấn button thêm nhân viên
 if (isset($_POST['submit_employee'])){
-    $fullname = $_POST['fullname'] ?? '';
-    $phonenum = $_POST['phonenum'] ?? '';
-    $dob = $_POST['dob'] ?? '';
-    $address = $_POST['address'] ?? '';
-    $position = $_POST['position'] ?? '';
-    $shift = $_POST['shifts'] ?? [];
-    $salary = $_POST['salary'] ?? '';
 
     //region ERROR: không điền đẩy đủ dữ liệu, sai định dạng
     if(empty($fullname)){
@@ -50,39 +57,45 @@ if (isset($_POST['submit_employee'])){
     if(empty($salary)){
         $salaryError = "<br />Vui lòng chọn mức lương phù hợp!";
     }
-    if (empty($shift) || count($shift) < 3){
-        $shiftError = '<br />Vui lòng chọn ít nhất 3 ca làm trong một tuần!';
+    if (empty($shift)){
+        $shiftError = '<br />Vui lòng chọn ít nhất 4 ca làm trong một tuần!';
+    } elseif (count($shift) < 4){
+        $shiftError = '<br />Phải đăng ký tối thiểu 4 ca trong một tuần!';
     }
+
+
     //endregion 
 
     //region THÊM thông tin nhân viên mới vào csdl
-    if (!$fullnameError && !$phonenumError && !$dobError && !$addressError && !$positionError){
+    if (!$fullnameError && !$phonenumError && !$dobError && !$addressError && !$positionError && !$salaryError && !$shiftError){
         $con = mysqli_connect('localhost', 'root', '', 'phplogin');
         if (mysqli_connect_errno()) {
             $message = 'Lỗi kết nối thất bại đến MySql: ' . mysqli_connect_error();
         }
         //kiểm tra xem nhân viên đã tồn tại chưa
         if ($stmt = $con->prepare('SELECT MaNV FROM nhanvien WHERE SDT = ?')) {
-            // Bind parameters (s = string, i = int, b = blob, etc)
             $stmt->bind_param('s', $phonenum);
             $stmt->execute();
-            // Store the result so we can check if the account exists in the database
             $stmt->store_result();
-            // Check if the account exists
             if ($stmt->num_rows > 0) {
-                // Username already exists
                 $phonenumError = 'Số điện thoại đã tồn tại. Vui lòng chọn số khác!';
             } else {
                 if ($stmt_nv = $con->prepare('INSERT INTO nhanvien (HoTen, NgaySinh, SDT, NoiO, ChucVu, CaLam, Luong) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
-                    $stmt_nv->bind_param('ssssssd', $fullname, $dob, $phonenum, $address, $position, $shift, $salary);
+                    $stmt_nv->bind_param('ssssssd', $fullname, $dob, $phonenum, $address, $position, $shift_string, $salary);
                     $stmt_nv->execute();  
                     $employee_id = $con->insert_id;
+
+                    $stmt_nv->close();
+                    foreach ($shift as $theShift){
+                        $stmt_nv = $con->prepare('INSERT INTO lichlamviec(MaNV, MaCa) VALUES(?, ?)');
+                        $stmt_nv->bind_param('is', $employee_id, $theShift);
+                        $stmt_nv->execute(); 
+                        $stmt_nv->close();
+                    } 
                     $message = 'Thêm thông tin nhân viên mới thành công! Tiếp theo, bạn cần đăng ký tài khoản cho nhân viên mới!';  
                     $employeeFormVisible = false;
-                    $userFormVisible = true;
-                } else {
-                    $message = 'Lỗi câu lệnh truy vấn cơ sở dữ liệu!';
-                }
+                    $userFormVisible = true;                
+                } else { $message = 'Lỗi câu lệnh truy vấn cơ sở dữ liệu!'; }
             }
             $stmt->close();
         } else {
@@ -145,14 +158,10 @@ if (isset($_POST['submit_employee'])){
         }
         //kiểm tra xem username đã tồn tại chưa
         if ($stmt = $con->prepare('SELECT MaNV FROM taikhoan WHERE TenDN = ? OR Email = ?')) {
-            // Bind parameters (s = string, i = int, b = blob, etc)
             $stmt->bind_param('ss', $username, $email);
             $stmt->execute();
-            // Store the result so we can check if the account exists in the database
             $stmt->store_result();
-            // Check if the account exists
             if ($stmt->num_rows > 0) {
-                // Username already exists
                 $message = 'Tên tài khoản hoặc địa chỉ email đã tồn tại. Vui lòng nhập lại!';
             } else {
                 $role = 'staff';
@@ -212,7 +221,7 @@ if (isset($_POST['submit_employee'])){
                         <span style="color: red;"><?php echo $dobError ?></span>
                     </div>
 
-                    <label class="label-form" for="phoneNumber">Số điện thoại</label>
+                    <label class="label-form" for="phonenum">Số điện thoại</label>
                     <div class="group-form">
                         <input class="input-form" type="tel" name="phonenum" placeholder="Phonenum" id="phonenum" value="<?= htmlspecialchars($phonenum ?? '') ?>" required>
                         <span style="color: red;"><?php echo $phonenumError ?></span>
@@ -272,12 +281,12 @@ if (isset($_POST['submit_employee'])){
 
                     <label class="label-form" for="salary">Lương cơ bản</label>
                     <div class="group-form">
-                        <select name="salary" id="salary">
+                        <select name="salary" id="salary" required>
                             <option value="">-Chọn mức lương tương ứng</option>
-                            <option value="Type D">Lương hạng D: 25k/giờ</option>
-                            <option value="Type C">Lương hạng C: 35k/giờ</option>
-                            <option value="Type B">Lương hạng B: 50k/giờ</option>
-                            <option value="Type A">Lương hạng A: 65k/giờ</option>
+                            <option value="25000">Lương hạng D: 25k/giờ</option>
+                            <option value="35000">Lương hạng C: 35k/giờ</option>
+                            <option value="50000">Lương hạng B: 50k/giờ</option>
+                            <option value="65000">Lương hạng A: 65k/giờ</option>
                         </select>
                         <span style="color: red;"><?php echo $salaryError ?></span>
                     </div>

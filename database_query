@@ -1,0 +1,89 @@
+CREATE TABLE IF NOT EXISTS `TheLoai` (
+    `MaTL` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `TenTheLoai` VARCHAR(255) NOT NULL,
+    `MaDS` INT(11) NOT NULL,
+    CONSTRAINT theloai_dausach
+    	FOREIGN KEY (MaDS)
+        REFERENCES dausach(MaDS) 
+    	ON DELETE CASCADE ON UPDATE CASCADE
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `DauSach` ( 
+    `MaDS` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+    `TenDauSach` VARCHAR(255) NOT NULL 
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `Sach` (
+    `MaSach` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `MaDS` INT(11) NOT NULL,
+    `MaTL` INT(11) NOT NULL,
+    `NhaXuatBan` VARCHAR(255) NOT NULL,
+    `NgayXuatBan` DATETIME NOT NULL,
+    `TacGia` VARCHAR(255) NOT NULL,
+    `NgonNgu` VARCHAR(100) NOT NULL,
+    `GiaBan` DECIMAL(12,2) NOT NULL,
+    CONSTRAINT sach_dausach
+    	FOREIGN KEY (MaDS)
+        REFERENCES dausach(MaDS) 
+    	ON DELETE CASCADE ON UPDATE CASCADE,
+   	CONSTRAINT sach_theloai
+    	FOREIGN KEY (MaTL)
+        REFERENCES theloai(MaTL) 
+    	ON DELETE CASCADE ON UPDATE CASCADE
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+// $categories = [
+//     'reference' => 'Tham khảo - Giáo trình',
+//     'comic_novel'     => 'Truyện - Tiểu thuyết',
+//     'science_economy'   => 'Khoa học công nghệ - Kinh tế',
+//     'literature'   => 'Văn học nghệ thuật',
+//     'culture_social'   => 'Văn hóa xã hội - lịch sử',
+//     'spirituality'   => 'Tâm lý, tâm linh, tôn giáo',
+//     'children'   => 'Thiếu nhi',
+//   ];
+  
+// $subGenres = [
+//     'reference' => ['Giáo khoa','Từ điển','Giáo trình', 'Luyện kiến thức'],
+//     'comic_novel' => ['Kinh dị', 'Trinh thám', 'Lãng mạng', 'Viễn tưởng', 'Hành động'],
+//     'science_economy' => ['Kinh doanh', 'Quản lý tài chính', 'Khởi nghiệp', 'Khoa học tự nhiên', 'Kỹ thuật'],
+//     'literature'   => ['Thơ ca', 'Truyện ngắn', 'Văn học đương đại', 'Văn học hiện đại'],
+//     'culture_social'   => ['Bản sắc văn hóa', 'Chính trị', 'Xã hội'],
+//     'spirituality'   => ['Kinh sách', 'Tôn giáo', 'Self-help', 'Giáo dục giới tính', 'Rối loạn tâm lý'],
+//     'children'   => ['Truyện tranh', 'Truyện cổ tích', 'Kỹ năng sống'],
+//   ];
+
+CREATE TABLE IF NOT EXISTS `CaLamViec` (
+    `MaCa` VARCHAR(10) NOT NULL PRIMARY KEY,
+    `Thu` VARCHAR(10) NOT NULL,
+    `LoaiCa` VARCHAR(10) NOT NULL,
+    `BatDau` TIME,
+    `KetThuc` TIME
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `LichLamViec` (
+    `MaNV` INT(11) NOT NULL,
+    `MaCa` VARCHAR(10) NOT NULL,
+    PRIMARY KEY (MaNV, MaCa),
+    FOREIGN KEY (MaNV) REFERENCES nhanvien(MaNV),
+    FOREIGN KEY (MaCa) REFERENCES calamviec(MaCa)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+<button type="open-button" onclick="openForm()" name="submit_genre">Thêm thể loại</button>
+                <div class="form-popup" id="addGenre">
+                    <form action="addGenre.php" class="">
+                        <h2>Thêm thể loại</h1>
+                        <label for="addgenre"><b>Thể loại</b></label>
+                        <input type="text" placeholder="New genre" name="addgenre" required>
+
+                        <button type="submit" class="btn">Oke</button>
+                        <button type="button" class="btn cancel" onclick="closeForm()">Đóng</button>
+                    </form>
+                </div>
+                <script>
+                    function openForm() {
+                    document.getElementById("myForm").style.display = "block";
+                    }
+                    function closeForm() {
+                    document.getElementById("myForm").style.display = "none";
+                    }
+                </script>
