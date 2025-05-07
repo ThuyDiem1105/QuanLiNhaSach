@@ -26,6 +26,7 @@ if (isset($_POST['account_loggedin'])){
     <h2>QUẢN LÝ SÁCH</h1>
     <ul>
         <li><a href="them_sach.php">Thêm sách</a></li>
+        <li><a href="them_phieunhap.php">Thêm phiếu nhập sách</a></li>
     </ul>
 </body>
 </html>

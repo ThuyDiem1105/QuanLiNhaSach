@@ -24,9 +24,6 @@ $dob = $_POST['dob'] ?? '';
 $address = $_POST['address'] ?? '';
 $position = $_POST['position'] ?? '';
 $shift = $_POST['shifts'] ?? [];
-echo "<pre>";
-print_r($shift);
-echo "</pre>";
 
 $shift_string = implode(',', $shift);
 $salary = $_POST['salary'] ?? [];

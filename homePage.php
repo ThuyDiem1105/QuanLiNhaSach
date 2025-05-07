@@ -70,7 +70,6 @@ if (!isset($_SESSION['account_loggedin'])) {
         <li><a href="them_khachhang.php">Thêm khách hàng</a></li>
         <li><a href="them_khuyenmai.php">Thêm khuyến mãi</a></li>
         <li><a href="them_nhanvien.php">Thêm nhân viên</a></li>
-        <li><a href="them_phieunhap.php">Thêm phiếu nhập</a></li>
         <li><a href="tracuu_hoadon.php">Tra cứu hóa đơn</a></li>
         <li><a href="tracuu_khachhang.php">Tra cứu khách hàng</a></li>
         <li><a href="tracuu_khuyenmai.php">Tra cứu khuyến mãi</a></li>

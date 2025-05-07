@@ -68,22 +68,13 @@ CREATE TABLE IF NOT EXISTS `LichLamViec` (
     FOREIGN KEY (MaCa) REFERENCES calamviec(MaCa)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-<button type="open-button" onclick="openForm()" name="submit_genre">Thêm thể loại</button>
-                <div class="form-popup" id="addGenre">
-                    <form action="addGenre.php" class="">
-                        <h2>Thêm thể loại</h1>
-                        <label for="addgenre"><b>Thể loại</b></label>
-                        <input type="text" placeholder="New genre" name="addgenre" required>
-
-                        <button type="submit" class="btn">Oke</button>
-                        <button type="button" class="btn cancel" onclick="closeForm()">Đóng</button>
-                    </form>
-                </div>
-                <script>
-                    function openForm() {
-                    document.getElementById("myForm").style.display = "block";
-                    }
-                    function closeForm() {
-                    document.getElementById("myForm").style.display = "none";
-                    }
-                </script>
+CREATE TABLE IF NOT EXISTS `PhieuNhapSach` (
+    `MaPhieu` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `MaSach` VARCHAR(10) NOT NULL,
+    `NgayLapPhieu` DATETIME CURRENT_TIMESTAMP NOT NULL,
+    `NgayNhap` DATETIME NOT NULL,
+    `SoLuong` INT NOT NULL,
+    `DonGiaNhap` DECIMAL(12,2) NOT NULL,
+    `NguonNhap` VARCHAR(255) NOT NULL,
+    `ThanhTien` DECIMAL(12,2) NOT NULL
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

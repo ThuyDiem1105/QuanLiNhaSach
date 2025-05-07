@@ -136,7 +136,10 @@ if (isset($_POST['submit_book']) || isset($_POST['submit_category']) || isset($_
         <title>THÊM SÁCH</title>    
     </head>
     <body>
-        <a href="../homePage.php">Về Trang chủ</a>
+        <nav>
+            <a href="../homePage.php">Về Trang chủ</a>
+            <a href="quanly_sach.php">Về Quản lý sách</a>
+        </nav>        
         <div class="container">
             <h1>Thêm sách mới</h1>
             <form action="" method="post" class="addBook-form" novalidate>
