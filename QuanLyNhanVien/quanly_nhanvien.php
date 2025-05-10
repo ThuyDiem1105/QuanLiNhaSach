@@ -1,0 +1,32 @@
+<?php
+session_start();
+if (isset($_POST['account_loggedin'])){
+    header('Location: ../loginFunction/mainPage.php');
+}
+?>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1">
+    <title>Quản lý nhân viên</title>
+</head>
+<body>
+    <header class="header">
+        <div class="wrapper">
+            <h1>Hệ thống quản lý nhà sách</h1>
+            <nav class="menu">
+                <a href="../homePage.php">Trang chủ</a>
+                <a href="../loginFunction/profile.php">Thông tin tài khoản</a>
+                <a href="../loginFunction/logout.php">Đăng xuất</a>
+            </nav>
+        </div>
+    </header>
+    <h2>QUẢN LÝ SÁCH</h1>
+    <ul>
+        <li><a href="them_nhanvien.php">Thêm nhân viên</a></li>
+        <li><a href="tracuu_nhanvien.php">Tra cứu nhân viên</a></li>
+    </ul>
+</body>
+</html>
