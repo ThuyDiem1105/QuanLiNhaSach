@@ -2,36 +2,54 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Đăng nhập</title>
+  <title>Đăng nhập Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-  <div class="bg-white p-6 rounded shadow-md w-96">
-    <h1 class="text-xl font-bold mb-4 text-center">Đăng nhập</h1>
-    <form onsubmit="login(event)">
-      <label class="block mb-2">Tên đăng nhập:</label>
-      <input id="username" class="w-full border px-3 py-2 mb-4" required>
-      <label class="block mb-2">Mật khẩu:</label>
-      <input id="password" type="password" class="w-full border px-3 py-2 mb-4" required>
-      <button type="submit" class="bg-pink-500 text-white px-4 py-2 rounded w-full">Đăng nhập</button>
+
+  <div class="bg-white p-8 rounded shadow-md w-full max-w-sm">
+    <h2 class="text-2xl font-bold text-center text-pink-600 mb-6">Đăng nhập Quản trị</h2>
+
+    <form id="loginForm">
+      <div class="mb-4">
+        <label class="block text-gray-700 mb-2" for="username">Tên đăng nhập</label>
+        <input type="text" id="username" name="username" required class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-pink-300">
+      </div>
+      <div class="mb-6">
+        <label class="block text-gray-700 mb-2" for="password">Mật khẩu</label>
+        <input type="password" id="password" name="password" required class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-pink-300">
+      </div>
+
+      <button type="submit" class="w-full bg-pink-600 text-white p-2 rounded hover:bg-pink-700 transition duration-200">
+        Đăng nhập
+      </button>
+
+      <p id="errorMessage" class="text-red-500 mt-4 hidden">Sai tên đăng nhập hoặc mật khẩu!</p>
     </form>
   </div>
 
   <script>
-    function login(event) {
-      event.preventDefault();
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
 
-      // Giả lập tài khoản
-      if (username === "admin" && password === "123") {
-        const user = { name: username, role: "admin" };
-        localStorage.setItem("user", JSON.stringify(user));
-        window.location.href = "admin/dashboard.html";
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Tài khoản giả lập
+      const validUsername = 'admin';
+      const validPassword = '123456';
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (username === validUsername && password === validPassword) {
+        window.location.href = './admin/home.html'; // Điều hướng đến dashboard nếu đúng
       } else {
-        alert("Sai tài khoản hoặc mật khẩu");
+        errorMessage.classList.remove('hidden');
       }
-    }
+    });
   </script>
+
 </body>
 </html>
