@@ -22,37 +22,44 @@ body {
     display: flex;
     height: 100vh;
     width: 100vw;
-    color: #7a4276;
 }
 
 /* Sidebar */
 aside {
     width: 290px;
-    background: #fffdeb;
+    background: #ddffef;
     padding: 20px;
     flex-shrink: 0;
 }
 
 .logo {
-    color: #65355d;
+    color: #104e8c;
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 30px;
 }
 
 .icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
     vertical-align: middle;
 }
 
 .icon-logo{
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
     vertical-align: middle;
 }
+
+.icon-dashboard{
+    width: 48px;
+    height: 48px;
+    margin-right: 24px;
+    vertical-align: middle;
+}
+
 
 .menu a{
     color: #393939;
@@ -67,13 +74,13 @@ aside {
 }
 
 .menu a:hover {
-    background-color: #fef9ce;
-    color: #65355d;
+    background-color: #b3ffdc;
+    color: #1c5083;
 }
 
 .menu a.active{
-    background-color: #fdf4a4;
-    color: #5e2154;
+    background-color: #84ffc6;
+    color: #0d3c6b;
 }
 
 .menu a:hover #dashboard-icon{
@@ -99,21 +106,23 @@ aside {
 
 /* Cards */
 .cards {
-    display: flex;
+    display: flex;    
     gap: 20px;
     margin-bottom: 30px;
 }
 
 .card {
-    background: #fff9cf;
+    display: flex;    
+    align-items: center;
+    background: #c8ffe5;
     padding: 25px;
     border-radius: 5px;
     /* box-shadow: 2px 2px 5px #c92c2c; */
     flex: 1;
+    color: #0d3c6b;
 }
 
 .card p:first-of-type{
-    color: #393939;
     margin-bottom: 10px;
 }
 
@@ -123,11 +132,11 @@ aside {
 
 /* Biểu đồ */
 canvas {
-    background: #fff;
+    background: #ecfff6;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
+    border-color: #000000;
 }
 
 #don-hang-ganday{
@@ -152,14 +161,7 @@ th, td {
 }
 
 th {
-    background-color: #fdf4a4;
-    color: #784775;
+    background-color: #c8ffe5;
+    color: #000000;
 }
 
-/* Icon menu */
-.icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    vertical-align: middle;
-}

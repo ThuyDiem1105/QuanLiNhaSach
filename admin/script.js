@@ -38,17 +38,17 @@ document.addEventListener('DOMContentLoaded', function () {
         {
           label: 'IELTS 15',
           data: [12, 19, 7, 5, 8, 6, 9],
-          backgroundColor: '#7a4276'
+          backgroundColor: '#0d3c6b'
         },
         {
           label: 'Tư duy nhanh và chậm',
           data: [5, 12, 8, 6, 10, 7, 11],
-          backgroundColor: '#aa77a7'
+          backgroundColor: '#48749f'
         },
         {
           label: 'Sách giáo khoa toán 9',
           data: [4, 7, 5, 3, 6, 4, 8],
-          backgroundColor: '#e0c2df'
+          backgroundColor: '#b0c2d4'
         }
       ]
     },
@@ -56,11 +56,50 @@ document.addEventListener('DOMContentLoaded', function () {
       responsive: true,
       plugins: {
         legend: {
-          position: 'top'
+          position: 'top',
+          labels: {
+            color: "#000000",
+            font: {
+              size: 12,
+              family: "fontweb"
+            },
+          }
         },
         title: {
           display: true,
-          text: 'Top 3 sản phẩm bán chạy'
+          text: 'Top 3 sản phẩm bán chạy',
+          color: "#000000",
+          font: {
+            size: 18,
+            family: "fontweb",
+            weight: 'bold'
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: '#0f172a', 
+            font: {
+              size: 12,
+              family: "fontweb"
+            },     
+          },
+          grid: {
+            color: '#000000'             // màu lưới trục X
+          }
+        },
+        y: {
+          ticks: {
+            color: '#0f172a',
+            font: {
+              size: 12,
+              family: "fontweb"
+            },
+          },
+          grid: {
+            color: '#000000'             // màu lưới trục Y
+          }
         }
       }
     }
