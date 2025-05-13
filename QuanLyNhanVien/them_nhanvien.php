@@ -2,7 +2,7 @@
 session_start();
 //kiểm tra nếu chưa login thì cho về login
 if (!isset($_SESSION['account_loggedin'])) {
-    header('Location: loginFunction/mainPage.php');
+    header('Location: ../loginFunction/mainPage.php');
     exit;
 }
 //kiểm tra nếu đã login rồi nhưng ko phải là quản lý thì cho 
@@ -161,7 +161,7 @@ if (isset($_POST['submit_employee'])){
             if ($stmt->num_rows > 0) {
                 $message = 'Tên tài khoản hoặc địa chỉ email đã tồn tại. Vui lòng nhập lại!';
             } else {
-                $role = 'staff';
+                $role = 'Nhân viên';
                 $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
                 if ($stmt_tk = $con->prepare('INSERT INTO taikhoan (MaNV, TenDN, MatKhau, Quyen, Email) VALUES (?, ?, ?, ?, ?)')){
                     $stmt_tk->bind_param('issss', $employee_id, $username, $password, $role, $email);
@@ -197,7 +197,8 @@ if (isset($_POST['submit_employee'])){
         <title>THÊM NHÂN VIÊN</title>    
     </head>
     <body>
-        <a href="homePage.php">Trang chủ</a>
+        <a href="../homePage.php">Trang chủ</a>
+        <a href="quanly_nhanvien.php">Về Quản lý nhân viên</a>
         <div class="container">
             <?php if ($message): ?>
                 <div class="alert" style="color:green;">
@@ -262,10 +263,10 @@ if (isset($_POST['submit_employee'])){
                                 <?php for ($i = 1; $i <= 4; $i++): ?>
                                 <td style="text-align:center">
                                 <input
-                                    type="checkbox"
-                                    name="shifts[]"
-                                    value="<?= "{$key}-ca{$i}" ?>"
-                                    <?= in_array("{$key}-ca{$i}", $_POST['shifts'] ?? [], true) ? 'checked' : '' ?>
+                                type="checkbox"
+                                name="shifts[]"
+                                value="<?= "{$key}-ca{$i}" ?>"
+                                <?= in_array("{$key}-ca{$i}", $_POST['shifts'] ?? [], true) ? 'checked' : '' ?>
                                 >
                                 </td>
                                 <?php endfor; ?>

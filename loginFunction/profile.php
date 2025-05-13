@@ -11,10 +11,11 @@ if (mysqli_connect_errno()) {
     $message = '<br />Lỗi kết nối thất bại đến MySql: ' . mysqli_connect_error();
 }
 
-$stmt = $connection->prepare('SELECT Email, TenDN FROM taikhoan WHERE MaNV = ?');
-$stmt->bind_param('i', $_SESSION['account_id']);
+$id = $_SESSION['account_id'];
+$stmt = $connection->prepare('SELECT Email, TenDN, Quyen FROM taikhoan WHERE MaNV = ?');
+$stmt->bind_param('i', $id);
 $stmt->execute();
-$stmt->bind_result($email, $username);
+$stmt->bind_result($email, $username, $role);
 $stmt->fetch();
 $stmt->close();
 ?>
@@ -49,11 +50,15 @@ $stmt->close();
         </div>
 
         <div class="block">
-
+            <div class="profile-detail">
+                <strong>Mã nhân viên: </strong><?=htmlspecialchars($id)?>
+            </div>
             <div class="profile-detail">
                 <strong>Tên tài khoản: </strong><?=htmlspecialchars($username)?>
             </div>
-
+            <div class="profile-detail">
+                <strong>Quyền: </strong><?=htmlspecialchars($role)?>
+            </div>
             <div class="profile-detail">
                 <strong>Địa chỉ email:</strong><?=htmlspecialchars($email)?>
             </div>

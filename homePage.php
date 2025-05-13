@@ -67,13 +67,12 @@ if (!isset($_SESSION['account_loggedin'])) {
         <li><a href="phanquyen.php">Phân quyền</a></li>
         <li><a href="them_hoadon.php">Thêm hóa đơn</a></li>
         <li><a href="QuanLySach/quanly_sach.php">Quản lý sách</a></li>
+        <li><a href="QuanLyNhanVien/quanly_nhanvien.php">Quản lý nhân viên</a></li>
         <li><a href="them_khachhang.php">Thêm khách hàng</a></li>
         <li><a href="them_khuyenmai.php">Thêm khuyến mãi</a></li>
-        <li><a href="them_nhanvien.php">Thêm nhân viên</a></li>
         <li><a href="tracuu_hoadon.php">Tra cứu hóa đơn</a></li>
         <li><a href="tracuu_khachhang.php">Tra cứu khách hàng</a></li>
         <li><a href="tracuu_khuyenmai.php">Tra cứu khuyến mãi</a></li>
-        <li><a href="tracuu_nhanvien.php">Tra cứu nhân viên</a></li>
         <li><a href="tracuu_phieunhap.php">Tra cứu phiếu nhập</a></li>
         <li><a href="tracuu_sanpham.php">Tra cứu sản phẩm</a></li>
     </ul>

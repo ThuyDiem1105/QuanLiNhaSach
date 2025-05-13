@@ -1,3 +1,10 @@
+<?php
+/*
+session_start();
+if (isset($_POST['account_loggedin'])){
+    header('Location: ../loginFunction/mainPage.php');
+} */
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
