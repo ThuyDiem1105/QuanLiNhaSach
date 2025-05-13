@@ -1,9 +1,5 @@
 <?php
-/*
-session_start();
-if (isset($_POST['account_loggedin'])){
-    header('Location: ../loginFunction/mainPage.php');
-} */
+/* session_start(); if (isset($_POST['account_loggedin'])){     header('Location: ../loginFunction/mainPage.php'); } */
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -241,7 +237,7 @@ if (isset($_POST['account_loggedin'])){
     gap: 12px;
   }
 
-  .btn-save, .btn-cancel {
+  .btn-save, .btn-cancel, .btn-edit {
     padding: 10px 20px;
     font-size: 14px;
     border-radius: 8px;
@@ -260,6 +256,11 @@ if (isset($_POST['account_loggedin'])){
     color: white;
   }
 
+  .btn-edit {
+    background-color: #ffb74d;
+    color: white;
+  }
+
   .btn-save:hover {
     background-color: #66bb6a;
   }
@@ -267,8 +268,11 @@ if (isset($_POST['account_loggedin'])){
   .btn-cancel:hover {
     background-color: #ef5350;
   }
-</style>
 
+  .btn-edit:hover {
+    background-color: #ffa726;
+  }
+  </style>
 </head>
 <body>
   <div class="sidebar">
@@ -320,15 +324,16 @@ if (isset($_POST['account_loggedin'])){
       <h3>Thông tin nhân viên</h3>
       <form id="employeeForm" onsubmit="return false;">
         <label>Mã NV:</label><input type="text" name="ma_nv" required readonly>
-        <label>Họ tên:</label><input type="text" name="ho_ten" required>
-        <label>Ngày sinh:</label><input type="date" name="ngay_sinh" required>
-        <label>SĐT:</label><input type="text" name="sdt" required>
-        <label>Nơi ở:</label><input type="text" name="noi_o">
-        <label>Chức vụ:</label><input type="text" name="chuc_vu">
-        <label>Ca làm:</label><input type="text" name="ca_lam">
-        <label>Lương:</label><input type="number" name="luong">
+        <label>Họ tên:</label><input type="text" name="ho_ten" required readonly>
+        <label>Ngày sinh:</label><input type="date" name="ngay_sinh" required readonly>
+        <label>SĐT:</label><input type="text" name="sdt" required readonly>
+        <label>Nơi ở:</label><input type="text" name="noi_o" readonly>
+        <label>Chức vụ:</label><input type="text" name="chuc_vu" readonly>
+        <label>Ca làm:</label><input type="text" name="ca_lam" readonly>
+        <label>Lương:</label><input type="number" name="luong" readonly>
         <div class="form-buttons">
-          <button type="button" class="btn-save" onclick="saveEmployee()">Lưu</button>
+          <button type="button" class="btn-save" onclick="saveEmployee()" style="display: none;">Lưu</button>
+          <button type="button" class="btn-edit" onclick="enableEditing()">Sửa</button>
           <button type="button" class="btn-cancel" onclick="closeForm()">Đóng</button>
         </div>
       </form>
@@ -350,7 +355,25 @@ if (isset($_POST['account_loggedin'])){
       form.ca_lam.value = caLam;
       form.luong.value = luong;
 
+      for (let input of form.elements) {
+        input.readOnly = true;
+      }
+
+      document.querySelector(".btn-save").style.display = "none";
+      document.querySelector(".btn-edit").style.display = "inline-block";
+
       document.getElementById("employeeFormOverlay").classList.add("show");
+    }
+
+    function enableEditing() {
+      const form = document.forms.employeeForm;
+      for (let input of form.elements) {
+        if (input.name !== "ma_nv") {
+          input.readOnly = false;
+        }
+      }
+      document.querySelector(".btn-save").style.display = "inline-block";
+      document.querySelector(".btn-edit").style.display = "none";
     }
 
     function createNewEmployee() {
@@ -360,6 +383,13 @@ if (isset($_POST['account_loggedin'])){
 
       form.reset();
       form.ma_nv.value = nextId;
+      for (let input of form.elements) {
+        input.readOnly = false;
+      }
+
+      document.querySelector(".btn-save").style.display = "inline-block";
+      document.querySelector(".btn-edit").style.display = "none";
+
       document.getElementById("employeeFormOverlay").classList.add("show");
       editingIndex = table.rows.length - 1;
     }
