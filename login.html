@@ -8,30 +8,14 @@
 <body class="bg-gray-100 flex items-center justify-center h-screen">
   <div class="bg-white p-6 rounded shadow-md w-96">
     <h1 class="text-xl font-bold mb-4 text-center">Đăng nhập</h1>
-    <form onsubmit="login(event)">
+    <!-- Dùng method POST + trỏ đúng file xử lý -->
+    <form action="login_process.php" method="POST">
       <label class="block mb-2">Tên đăng nhập:</label>
-      <input id="username" class="w-full border px-3 py-2 mb-4" required>
+      <input name="username" class="w-full border px-3 py-2 mb-4" required>
       <label class="block mb-2">Mật khẩu:</label>
-      <input id="password" type="password" class="w-full border px-3 py-2 mb-4" required>
+      <input name="password" type="password" class="w-full border px-3 py-2 mb-4" required>
       <button type="submit" class="bg-pink-500 text-white px-4 py-2 rounded w-full">Đăng nhập</button>
     </form>
   </div>
-
-  <script>
-    function login(event) {
-      event.preventDefault();
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-
-      // Giả lập tài khoản
-      if (username === "admin" && password === "123") {
-        const user = { name: username, role: "admin" };
-        localStorage.setItem("user", JSON.stringify(user));
-        window.location.href = "admin/dashboard.html";
-      } else {
-        alert("Sai tài khoản hoặc mật khẩu");
-      }
-    }
-  </script>
 </body>
 </html>
