@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../assets/style.css" />
+    <script src="script.js" defer></script>
+</head>
+<body>
+<div class="main">
+    <div class="cards">
+        <div class="card">
+            <div><img src="../assets/chart-line.png" class="icon-dashboard"/></div>
+            <div class="text">
+                <p>Đơn hàng hôm nay</p>
+                <strong>1234</strong>
+              </div>  
+        </div>
+        <div class="card">
+            <div><img src="../assets/chart-column.png" class="icon-dashboard"/></div>
+            <div class="text">
+                <p>Tổng số đơn hàng</p>
+                <strong>1234</strong>
+              </div>
+        </div>
+        <div class="card">
+            <div><img src="../assets/circle-dollar-sign.png" class="icon-dashboard"/></div>
+            <div class="text">
+                <p>Doanh thu hôm nay</p>
+                <strong>10.920.222 vnd</strong>
+              </div>
+        </div>
+        <div class="card">
+            <div><img src="../assets/users-round.png" class="icon-dashboard"/></div>
+            <div class="text">
+                <p>Tổng số khách hàng</p>
+                <strong>1234</strong>
+              </div>
+        </div>
+    </div>
+
+    <canvas id="salesChart" height="120"></canvas>
+
+    <p id="don-hang-ganday">
+        Đơn hàng gần đây
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Invoice</th>
+                <th>Customer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>01 Jan 2045</td>
+                <td>INV-0123</td>
+                <td>Jhon Doe</td>
+            </tr>
+            <tr>
+                <td>01 Jan 2045</td>
+                <td>INV-0124</td>
+                <td>Jane Smith</td>
+            </tr>
+            <tr>
+                <td>01 Jan 2045</td>
+                <td>INV-0125</td>
+                <td>Michael Brown</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>  
