@@ -4,18 +4,19 @@ if (!isset($_SESSION['account_loggedin'])){
     header("Location: ../loginFunction/mainPage.php");
 }
 
+$con = new mysqli('localhost','root','','phplogin');
+if ($con->connect_errno) {
+  die("DB failed: ".$con->connect_error);
+}
+
 if ($_SERVER['REQUEST_METHOD']==='POST') {
     $employee_id = $_POST['id'];
 } else {
     $employee_id = $_GET['id'] ?? '';
 }
-$fullname = $dob = $phonenum = $address = $position = $shift_string = $salary = '';
-$shiftArr = [];
 
-$con = new mysqli('localhost','root','','phplogin');
-if ($con->connect_errno) {
-  die("DB failed: ".$con->connect_error);
-}
+$fullname = $dob = $phonenum = $address = $position = $shift_string = $salary = '';
+$shiftArr = $availableShifts = [];
 
 if (isset($_GET['load'])) {
     header('Content-Type: application/json; charset=utf-8');
@@ -54,6 +55,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $employee_id) {
   $stmt->fetch();
   $stmt->close();
   $shiftArr = explode(',', $shift_string);
+
+    $stmt = $con->prepare('SELECT MaCa FROM lichlamviec WHERE MaNV != ?');
+    $stmt->bind_param('i', $employee_id);
+    $stmt->execute();
+    $stmt->bind_result($maCa);
+    while ($stmt->fetch()) {
+        $availableShifts[] = $maCa;
+    }
+    $stmt->close();
 }
 
 $fullnameError = $usernameError = $phonenumError = $dobError = $passwordError = $salaryError = '';
@@ -115,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['submit'])){
             $stmt->close();
         } 
 
-         echo <<<HTML
+        echo <<<HTML
               <script>
                 alert("Cập nhật thông tin nhân viên thành công!");
                 window.location.href = "tracuu_nhanvien.php"; 
@@ -170,6 +180,8 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['submit'])){
                 <div class="group-form">
                     <select name="position" id="position">
                     <option value="">-Chọn chức vụ-</option>
+                    <option value="Quản lý" <?= $position === 'Quản lý' ? 'selected' : ''?>>Quản lý</option>
+                    <option value="Bảo vệ" <?= $position === 'Bảo vệ' ? 'selected' : ''?>>Bảo vệ</option>
                     <option value="Bán hàng" <?= $position === 'Bán hàng' ? 'selected' : '' ?>>Nhân viên bán hàng</option>
                     <option value="Thu ngân" <?= $position === 'Thu ngân' ? 'selected' : '' ?>>Nhân viên thu ngân</option>
                     <option value="Marketing và chăm sóc khách hàng"
@@ -203,6 +215,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['submit'])){
                                 name="shifts[]"
                                 value="<?= "{$key}-ca{$i}" ?>"
                                 <?= in_array("{$key}-ca{$i}", $shiftArr, true) ? 'checked' : '' ?> 
+                                <?= in_array("{$key}-ca{$i}", $availableShifts, true) ? 'disabled' : '' ?> 
                             >
                             </td>
                             <?php endfor; ?>

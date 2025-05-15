@@ -44,7 +44,7 @@ if (!isset($_SESSION['account_loggedin'])) {
         <div class="wrapper">
             <h1>Hệ thống quản lý nhà sách</h1>
             <nav class="menu">
-                <a href="homePage.php">Trang chủ</a>
+                <a href="adminHomePage.php">Trang chủ</a>
                 <a href="loginFunction/profile.php">Thông tin tài khoản</a>
                 <a href="loginFunction/logout.php">Đăng xuất</a>
             </nav>
@@ -61,19 +61,17 @@ if (!isset($_SESSION['account_loggedin'])) {
     </div>
     <h3>Danh sách các chức năng API (backend)</h1>
     <ul>
+        <li><a href="QuanLySach/quanly_sach.php">Quản lý sách</a></li>
+        <li><a href="QuanLyNhanVien/quanly_nhanvien.php">Quản lý nhân viên</a></li>
+        <li><a href="QuanLyKhachHang/quanly_khachhang.php">Quản lý khách hàng</a></li>
         <li><a href="baocao_congno.php">Báo cáo công nợ</a></li>
         <li><a href="baocao_doanhthu.php">Báo cáo doanh thu</a></li>
         <li><a href="baocao_kho.php">Báo cáo kho</a></li>
         <li><a href="phanquyen.php">Phân quyền</a></li>
         <li><a href="them_hoadon.php">Thêm hóa đơn</a></li>
-        <li><a href="QuanLySach/quanly_sach.php">Quản lý sách</a></li>
-        <li><a href="QuanLyNhanVien/quanly_nhanvien.php">Quản lý nhân viên</a></li>
-        <li><a href="them_khachhang.php">Thêm khách hàng</a></li>
         <li><a href="them_khuyenmai.php">Thêm khuyến mãi</a></li>
         <li><a href="tracuu_hoadon.php">Tra cứu hóa đơn</a></li>
-        <li><a href="tracuu_khachhang.php">Tra cứu khách hàng</a></li>
         <li><a href="tracuu_khuyenmai.php">Tra cứu khuyến mãi</a></li>
-        <li><a href="tracuu_phieunhap.php">Tra cứu phiếu nhập</a></li>
         <li><a href="tracuu_sanpham.php">Tra cứu sản phẩm</a></li>
     </ul>
 </body>

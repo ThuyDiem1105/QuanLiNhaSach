@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_POST['account_loggedin'])){
+if (!isset($_SESSION['account_loggedin'])){
     header('Location: ../loginFunction/mainPage.php');
 }
 ?>
@@ -10,7 +10,7 @@ if (isset($_POST['account_loggedin'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1">
-    <title>Quản lý sách</title>
+    <title>QUẢN LÝ KHÁCH HÀNG</title>
 </head>
 <body>
     <header class="header">
@@ -23,12 +23,10 @@ if (isset($_POST['account_loggedin'])){
             </nav>
         </div>
     </header>
-    <h2>QUẢN LÝ SÁCH</h1>
+    <h2>Quản lý khách hàng</h1>
     <ul>
-        <li><a href="them_sach.php">Thêm sách</a></li>
-        <li><a href="them_phieunhap.php">Thêm phiếu nhập sách</a></li>
-        <li><a href="tracuu_phieunhap.php">Tra cứu phiếu nhập sách</a></li>
-        <li><a href="tracuu_sach.php">Tra cứu sách</a></li>
+        <li><a href="them_khachhang.php">Thêm khách hàng</a></li>
+        <li><a href="tracuu_khachhang.php">Tra cứu khách hàng</a></li>
     </ul>
 </body>
 </html>

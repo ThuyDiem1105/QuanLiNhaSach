@@ -34,7 +34,7 @@ $stmt->close();
             <div class="wrapper">
                 <h1>Hệ thống quản lý nhà sách</h1>
                 <nav class="menu">
-                    <a href="../homePage.php">Trang chủ</a>
+                    <a href="../adminHomePage.php">Trang chủ</a>
                     <a href="profile.php">Thông tin tài khoản</a>
                     <a href="logout.php">Đăng xuất</a>
                 </nav>

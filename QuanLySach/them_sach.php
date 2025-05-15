@@ -8,7 +8,7 @@ if (!isset($_SESSION['account_loggedin'])) {
 //kiểm tra nếu đã login rồi nhưng ko phải là quản lý thì cho 
 //quay về trang chủ với chức năng tương ứng được cấp quyền
 // if (!isset($_SESSION['account_isManager'])) {
-//     header('Location: homePage.php');
+//     header('Location: adminHomePage.php');
 //     exit;
 // }
 
@@ -137,7 +137,7 @@ if (isset($_POST['submit_book']) || isset($_POST['submit_category']) || isset($_
     </head>
     <body>
         <nav>
-            <a href="../homePage.php">Về Trang chủ</a>
+            <a href="../adminHomePage.php">Về Trang chủ</a>
             <a href="quanly_sach.php">Về Quản lý sách</a>
         </nav>        
         <div class="container">
@@ -160,6 +160,7 @@ if (isset($_POST['submit_book']) || isset($_POST['submit_category']) || isset($_
                     </select>
                     <span style="color: red;"><?php echo $categoryError ?></span>
                     <button type="submit" name="submit_category">Lọc</button>
+                    <button type="submit" name="add_category">Thêm đầu sách</button>
                 </div>
 
                 <label class="label-form" for="genre">Thể loại tương ứng</label>
@@ -171,8 +172,7 @@ if (isset($_POST['submit_book']) || isset($_POST['submit_category']) || isset($_
                     <?php endforeach; ?>
                     </select>
                     <span style="color: red;"><?php echo $genreError ?></span>
-                    <button type="submit" name="submit_genre">Thêm thể loại</button>
-
+                    <button type="submit" name="add_genre">Thêm thể loại</button>
                 </div>
                 
                 <label class="label-form" for="author">Tác giả</label>

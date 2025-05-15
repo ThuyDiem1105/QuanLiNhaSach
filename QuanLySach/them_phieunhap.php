@@ -8,7 +8,7 @@ if (!isset($_SESSION['account_loggedin'])) {
 //kiểm tra nếu đã login rồi nhưng ko phải là quản lý thì cho 
 //quay về trang chủ với chức năng tương ứng được cấp quyền
 // if (!isset($_SESSION['account_isManager'])) {
-//     header('Location: homePage.php');
+//     header('Location: adminHomePage.php');
 //     exit;
 // }
 
@@ -60,12 +60,32 @@ if (isset($_POST['submit_bookTicket'])){
             $stmt->bind_param('isidsd', $bookid, $importday, $quantity, $price, $provider, $bill);
             $stmt->execute();
             $message = 'Thêm phiếu nhập sách thành công!';
-            $bookid = $importday = $provider = $price = $quantity = $bill = '';
+            $stmt->close();
+
+            $stmt = $con->prepare('SELECT SoLuongTon FROM sach WHERE MaSach = ?');
+            $stmt->bind_param('i', $bookid);
+            $stmt->execute();
+            $stmt->bind_result($totalQuantity);
+            $stmt->close();
+
+            $totalQuantity += $quantity;
+            $stmt = $con->prepare('UPDATE sach SET SoLuongTon = ? WHERE MaSach = ?');
+            $stmt->bind_param('ii', $totalQuantity, $bookid);
+            $stmt->execute();
+            $stmt->close();
+            echo <<<HTML
+                    <script>
+                        alert("Thêm phiếu nhập sách mới thành công. Bạn sẽ được đưa đến trang tra cứu phiếu nhập sách!");
+                        window.location.href = "tracuu_phieunhap.php"; 
+                    </script>
+                HTML;
+            exit;      
         }
         else {
             $message = 'Lỗi truy vấn cơ sở dữ liệu.';
         }
     }
+    $con->close();
 }
  
 ?>
@@ -79,7 +99,7 @@ if (isset($_POST['submit_bookTicket'])){
     </head>
     <body>
         <nav>
-            <a href="../homePage.php">Về Trang chủ</a>
+            <a href="../adminHomePage.php">Về Trang chủ</a>
             <a href="quanly_sach.php">Về Quản lý sách</a>
         </nav>
         <div class="container">

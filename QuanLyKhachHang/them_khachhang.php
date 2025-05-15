@@ -2,7 +2,7 @@
 session_start();
 //kiểm tra nếu chưa login thì cho về login
 if (!isset($_SESSION['account_loggedin'])) {
-    header('Location: loginFunction/mainPage.php');
+    header('Location: ../loginFunction/mainPage.php');
     exit;
 }
 
@@ -74,7 +74,8 @@ if (isset($_POST['submit_customer'])){
         <title>THÊM KHÁCH HÀNG</title>    
     </head>
     <body>
-        <a href="homePage.php">Về Trang chủ</a>
+        <a href="../adminHomePage.php">Về Trang chủ</a>
+        <a href="quanly_khachhang.php">Về Quản lý khách hàng</a>
         <div class="container">
             <h1>Thêm khách hàng mới</h1>
             <form action="" method="post" class="addCustomer-form" novalidate>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION['account_loggedin'])) {
-    header('Location: ../homePage.php');
+    header('Location: ../adminHomePage.php');
     exit;
 }
 
@@ -27,7 +27,7 @@ $usernameError = $passwordError = $message = '';
             if (mysqli_connect_errno()) {
                 $message = '<br />Lỗi kết nối thất bại đến MySql: ' . mysqli_connect_error();
             } else {
-                $stmt = $connection->prepare('SELECT MaNV, MatKhau FROM taikhoan WHERE TenDN = ?');
+                $stmt = $connection->prepare('SELECT MaNV, MatKhau, Quyen FROM taikhoan WHERE TenDN = ?');
                 $stmt->bind_param('s', $username);
                 $stmt->execute();
                 //lưu để kiểm tra nếu tk có tồn tại
@@ -35,7 +35,7 @@ $usernameError = $passwordError = $message = '';
                 //kiểm tra nếu tài khoản tồn tại với username đã nhập
                 if ($stmt->num_rows > 0) {
                     //tài khoản tồn tại
-                    $stmt->bind_result($id, $password);
+                    $stmt->bind_result($id, $password, $role);
                     $stmt->fetch();
                     if (password_verify($_POST['password'], $password)) {
                         //đúng mật khẩu
@@ -44,9 +44,15 @@ $usernameError = $passwordError = $message = '';
                         $_SESSION['account_loggedin'] = TRUE;
                         $_SESSION['account_name'] = $_POST['username'];
                         $_SESSION['account_id'] = $id;
-                        //$_SESSION['account_role'] = $role;
-                        header('Location: ../homePage.php');
-                        exit;
+                        $_SESSION['account_role'] = $role;
+
+                        if ($_SESSION['account_role'] === 'Admin') {
+                            header('Location: ../adminHomePage.php');
+                            exit;
+                        } else {
+                            header('Location: ../staffHomePage.php');
+                            exit;
+                        }
                     } else {
                         $passwordError = '<br />Sai mật khẩu. Vui lòng nhập lại!';
                     }
