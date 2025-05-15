@@ -102,11 +102,6 @@ if (isset($_GET['load'])) {
                 $('#nhanvienTable').on('click', '.delete-btn', function() {
                     const id = $(this).data('id');
                     if (confirm('Bạn có chắc muốn xóa nhân viên này không? Xóa nhân viên sẽ xóa luôn tài khoản và lịch làm việc của nhân viên bị xóa.')) {
-                        // $.post('xoa_nhanvien.php', {id: id}, function (response) {
-                        //     if (response.success) {
-                        //         $('#nhanvienTable').DataTable().ajax.reload(null, false);
-                        //     }
-                        // }, 'json');
                         $.ajax({
                             url: 'xoa_nhanvien.php',
                             type: 'POST',
