@@ -1,26 +1,267 @@
-<section>
-    <h2>Quản lý Sách</h2>
-    <table class="product-table">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý sách</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    i[data-lucide] {
+      width: 18px;
+      height: 18px;
+      color: inherit;
+    }
+
+    .main-content {
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-filter {
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-filter input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #81c784;
+      color: white;
+    }
+
+    .view-btn {
+      background-color: #64b5f6;
+      color: white;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .form-popup {
+      background: #fff;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      position: relative;
+      border: 1px solid #81c784;
+    }
+
+    .form-popup::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 6px;
+      width: 100%;
+      background-color: #81c784;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
+
+    .form-popup h3 {
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: #2c3e50;
+      text-align: center;
+      font-size: 22px;
+    }
+
+    .form-popup label {
+      display: block;
+      margin-top: 16px;
+      font-weight: 600;
+      color: #444;
+      font-size: 14px;
+    }
+
+    .form-popup input {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .form-popup input[readonly] {
+      background-color: #f4f4f4;
+      border-color: #ddd;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 28px;
+    }
+
+    .btn-close {
+      background-color: #e57373;
+      color: white;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-close:hover {
+      background-color: #ef5350;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <div class="header">
+      <div class="search-filter">
+        <input type="text" placeholder="Tìm mã sách...">
+      </div>
+    </div>
+
+    <table>
       <thead>
         <tr>
-          <th>Mã SP</th>
-          <th>Tên SP</th>
-          <th>Danh mục</th>
-          <th>Giá</th>
-          <th>Kho</th>
-          <th>Thao tác</th>
+          <th>Mã sách</th>
+          <th>Mã đầu sách</th>
+          <th>NXB</th>
+          <th>Năm XB</th>
+          <th>Tồn</th>
+          <th>Giá nhập</th>
+          <th>Giá bán</th>
+          <th>Chi tiết</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>SP001</td>
-          <td>Sách Kỹ Năng</td>
-          <td>Phát triển bản thân</td>
-          <td>120.000đ</td>
-          <td>45</td>
-          <td><span class="edit">Sửa</span> <span class="delete">Xóa</span></td>
+          <td>S001</td>
+          <td>DS001</td>
+          <td>NXB Kim Đồng</td>
+          <td>2023</td>
+          <td>50</td>
+          <td>15000</td>
+          <td>20000</td>
+          <td>
+            <button class="view-btn" onclick="openBookForm('S001','DS001','NXB Kim Đồng',2023,50,15000,20000)">
+              Xem
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
-  </section>
-  
+  </div>
+
+  <div id="bookFormOverlay" class="overlay">
+    <div class="form-popup">
+      <h3>Chi tiết sách</h3>
+      <form onsubmit="return false;">
+        <label>Mã sách:</label>
+        <input type="text" readonly>
+        
+        <label>Mã đầu sách:</label>
+        <input type="text" readonly>
+        
+        <label>Nhà xuất bản:</label>
+        <input type="text" readonly>
+        
+        <label>Năm xuất bản:</label>
+        <input type="number" readonly>
+        
+        <label>Số lượng tồn:</label>
+        <input type="number" readonly>
+        
+        <label>Đơn giá nhập:</label>
+        <input type="number" readonly>
+        
+        <label>Đơn giá bán:</label>
+        <input type="number" readonly>
+        
+        <div class="form-buttons">
+          <button type="button" class="btn-close" onclick="closeBookForm()">Đóng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openBookForm(ma, dau, nxb, nam, ton, giaNhap, giaBan) {
+      const form = document.forms[0];
+      form[0].value = ma;
+      form[1].value = dau;
+      form[2].value = nxb;
+      form[3].value = nam;
+      form[4].value = ton;
+      form[5].value = giaNhap;
+      form[6].value = giaBan;
+      document.getElementById("bookFormOverlay").classList.add("show");
+    }
+
+    function closeBookForm() {
+      document.getElementById("bookFormOverlay").classList.remove("show");
+    }
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
