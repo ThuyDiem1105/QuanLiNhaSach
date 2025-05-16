@@ -26,7 +26,6 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
-    .add-button:hover { background-color: #66bb6a; }
 
     table {
       width: 100%;
@@ -67,11 +66,36 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
     .overlay.show {
       opacity: 1;
       pointer-events: all;
     }
+    .form-popup {
+      transform: translateY(-20px) scale(0.98);
+      opacity: 0;
+      transition: all 0.4s ease;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      border: none;
+    }
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .overlay.show .form-popup {
+      animation: fadeSlideIn 0.5s ease forwards;
+    }
+
+    
 
     .form-popup {
       background: #fff;
@@ -159,6 +183,58 @@
     .btn-save:hover { background-color: #66bb6a; }
     .btn-cancel:hover { background-color: #ef5350; }
     .btn-edit:hover { background-color: #ffa726; }
+    tbody tr:hover {
+    background-color: #e0f8c5;
+    transition: background-color 0.25s ease;
+    cursor: pointer;
+  }
+  @keyframes highlightNewRow {
+    from { background-color: #d6f0f1; }
+    to { background-color: transparent; }
+  }
+  tbody tr {
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    } 
+
+    tbody tr:hover {
+      transform: scale(1.01);
+      background-color: #e8f5e9;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+  tr.new-row {
+        animation: highlightNewRow 1.5s ease;
+      }
+    .action-buttons button,
+    .add-button,
+    .btn-save,
+    .btn-cancel,
+    .btn-edit {
+      transition: all 0.2s ease;
+      transform: scale(1);
+    }
+
+    .action-buttons button:hover,
+    .add-button:hover,
+    .btn-save:hover,
+    .btn-cancel:hover,
+    .btn-edit:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+    @keyframes popupIn {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .overlay.show .form-popup {
+      animation: popupIn 0.4s ease forwards;
+    }
+ 
+    body {
+      background: linear-gradient(to right, #e8f5e9, #e1e1e1);
+    }
+
+
   </style>
 </head>
 <body>
@@ -219,6 +295,7 @@
 
   <script>
     let editingIndex = -1;
+    
 
     function openForm(maHD, maKH, ngayLap, tongTien, daThanhToan, conLai) {
       const form = document.forms['orderForm'];
@@ -293,6 +370,8 @@
         row.cells[5].textContent = conLai;
       } else {
         const row = table.insertRow();
+        row.classList.add("new-row");  
+
         row.innerHTML = `
           <td>${maHD}</td>
           <td>${maKH}</td>
@@ -313,7 +392,9 @@
     function deleteRow(button) {
       if (confirm("Bạn có chắc muốn xóa hóa đơn này không?")) {
         const row = button.closest("tr");
-        row.remove();
+        row.style.transition = "opacity 0.4s ease";
+        row.style.opacity = 0;
+        setTimeout(() => row.remove(), 400);
       }
     }
 
