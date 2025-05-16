@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Quản lý hóa đơn</title>
-  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background-color: #f8f9fa; }
-    i[data-lucide] { width: 18px; height: 18px; color: inherit; }
 
     .main-content { padding: 20px; }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -17,6 +15,13 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
+    .search-filter input:hover {
+      border-color: #81c784;
+      background-color: #f0fff4;
+      box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
+      transition: all 0.25s ease;
+    }
+
     .add-button {
       background-color: #81c784;
       color: white;
@@ -251,10 +256,13 @@
     .overlay.show .form-popup {
       animation: popupIn 0.4s ease forwards;
     }
- 
+
     body {
-      background: linear-gradient(to right, #e8f5e9, #e1e1e1);
+      background: linear-gradient(135deg, #f4ffef, #e8fffd, #d2daca);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
     }
+
     #toast {
       position: fixed;
       bottom: 20px;
@@ -313,6 +321,8 @@
           </td>
         </tr>
         <div id="toast">Lưu thành công!</div>
+      <script>
+</script>
 
       </tbody>
     </table>
