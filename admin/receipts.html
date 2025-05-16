@@ -38,12 +38,17 @@
       gap: 10px;
     }
 
-    .search-filter input {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    .search-filter input:hover {
+  border-color: #81c784;
+  background-color: #f0fff4;
+  box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
+  transition: all 0.25s ease;
+}
+    body {
+      background: linear-gradient(135deg, #f4ffef, #e8fffd, #d2daca);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
     }
-
     .add-button {
       background-color: #81c784;
       color: white;
@@ -99,24 +104,35 @@
       background-color: #e57373;
       color: white;
     }
-
     .overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 9999;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(6px);
     }
 
     .overlay.show {
       opacity: 1;
       pointer-events: all;
+    }
+    .form-popup {
+      transform: translateY(-20px) scale(0.98);
+      opacity: 0;
+      transition: all 0.4s ease;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      border: none;
+    }
+    .overlay.show .form-popup {
+      transform: translateY(0) scale(1);
+      opacity: 1;
     }
 
     .form-popup {
@@ -224,6 +240,112 @@
     .btn-edit:hover {
       background-color: #ffa726;
     }
+    tbody tr:hover {
+      background-color: #f1f8e9;
+      transition: background-color 0.25s ease;
+      cursor: pointer;
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .overlay.show .form-popup {
+      animation: fadeSlideIn 0.5s ease forwards;
+    }
+    @keyframes highlightNewRow {
+      from { background-color: #dcedc8; }
+      to { background-color: transparent; }
+    }
+
+    tr.new-row {
+      animation: highlightNewRow 1.5s ease;
+    }
+
+    .action-buttons button,
+    .add-button,
+    .btn-save,
+    .btn-cancel,
+    .btn-edit {
+      transition: all 0.2s ease;
+      transform: scale(1);
+    }
+
+    .action-buttons button:hover,
+    .add-button:hover,
+    .btn-save:hover,
+    .btn-cancel:hover,
+    .btn-edit:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+    tbody tr {
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    tbody tr:hover {
+      transform: scale(1.01);
+      background-color: #e8f5e9;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    @keyframes popupIn {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .overlay.show .form-popup {
+      animation: popupIn 0.4s ease forwards;
+    }
+    button {
+      position: relative;
+      overflow: hidden;
+    }
+    .ripple {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: rippleAnim 0.6s linear;
+      width: 100px;
+      height: 100px;
+      pointer-events: none;
+    }
+    @keyframes rippleAnim {
+      to {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+
+
+    #toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: translateY(20px);
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-size: 14px;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+    
   </style>
 </head>
 <body>
@@ -254,6 +376,7 @@
             <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
           </td>
         </tr>
+        <div id="toast">Lưu thành công!</div>
       </tbody>
     </table>
   </div>
@@ -277,8 +400,18 @@
   </div>
 
   <script>
-    let editingIndex = -1;
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        const circle = document.createElement('span');
+        circle.classList.add('ripple');
+        this.appendChild(circle);
+        circle.style.left = `${e.offsetX}px`;
+        circle.style.top = `${e.offsetY}px`;
+        setTimeout(() => circle.remove(), 600);
+      });
+    });
 
+    let editingIndex = -1;
     function openForm(maPhieu, maSach, soLuong, donGia, index = -1) {
   const form = document.forms.receiptForm;
   form.ma_phieu.value = maPhieu;
@@ -350,7 +483,8 @@
     `;
   } else {
     const row = table.insertRow();
-    const index = row.rowIndex - 1; // bỏ phần thead
+    row.classList.add("new-row");
+    const index = row.rowIndex - 1; 
     row.innerHTML = `
       <td>${maPhieu}</td>
       <td>${ngayNhap}</td>
@@ -363,26 +497,46 @@
   }
 
   closeForm();
+  showToast("Phiếu nhập đã được lưu!");
+
 }
 
 
     function deleteRow(button) {
-  const row = button.closest("tr");
-  const index = row.rowIndex - 1;
-  if (confirm("Bạn có chắc muốn xóa phiếu nhập này không?")) {
-    row.remove();
-    if (editingIndex === index) {
-      editingIndex = -1;
+      if (confirm("Bạn có chắc muốn xóa phiếu nhập này không?")) {
+        const row = button.closest("tr");
+        row.style.transition = "opacity 0.4s ease";
+        row.style.opacity = 0;
+        setTimeout(() => row.remove(), 400);
+      }
     }
-  }
-}
 
 
     function closeForm() {
       document.getElementById("receiptFormOverlay").classList.remove("show");
     }
 
-    lucide.createIcons();
-  </script>
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        closeForm();
+      }
+    });
+
+    document.getElementById("receiptFormOverlay").addEventListener("click", function (e) {
+      if (e.target === this) {
+        closeForm();
+      }
+    });
+    function showToast(message = "Lưu thành công!") {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+}
+
+      </script>
 </body>
 </html>
