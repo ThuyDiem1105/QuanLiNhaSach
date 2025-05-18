@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>Quản lý nhân viên</title>
   <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
   <style>
   * {
       box-sizing: border-box;
@@ -270,6 +273,24 @@
     .btn-cancel:hover { background-color: #ef5350; transform: scale(1.05); }
     .btn-edit:hover { background-color: #ffa726; transform: scale(1.05); }
 
+  .choices__item--choice.is-highlighted {
+    background-color: #84ffc6 !important; 
+    color: #0d3c6b !important;
+  }
+
+  .choices__inner {
+    min-height: 36px !important;
+    font-size: 14px;
+    padding: 4px 8px !important;
+  }
+
+  .choices__list--dropdown .choices__item {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+
+
     /* Toast */
     #toast {
       position: fixed;
@@ -316,9 +337,9 @@
         <tr>
           <td>NV001</td>
           <td>Nguyễn Văn A</td>
-          <td>Quản lý</td>
+          <td>Thu ngân</td>
           <td class="action-buttons">
-            <button class="view-btn" onclick="openForm('NV001', 'Nguyễn Văn A', '1995-01-01', '0901234567', 'Hà Nội', 'Quản lý', 'Sáng', '15000000')">Xem</button>
+            <button class="view-btn" onclick="openForm('NV001', 'Nguyễn Văn A', '1995-01-01', '0901234567', 'Hà Nội', 'Thu ngân', 'Sáng', '15000000')">Xem</button>
             <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
           </td>
         </tr>
@@ -336,7 +357,14 @@
         <label>Ngày sinh:</label><input type="date" name="ngay_sinh" required readonly>
         <label>SĐT:</label><input type="text" name="sdt" required readonly>
         <label>Nơi ở:</label><input type="text" name="noi_o" readonly>
-        <label>Chức vụ:</label><input type="text" name="chuc_vu" readonly>
+        <label for="chuc_vu">Chức vụ:</label>
+<select name="chuc_vu" id="chuc_vu">
+  <option value="">-- Chọn chức vụ --</option>
+  <option value="BanHang">Bán hàng</option>
+  <option value="ThuNgan">Thu ngân</option>
+  <option value="CSKH">Marketing và chăm sóc khách hàng</option>
+</select>
+
         <label>Ca làm:</label><input type="text" name="ca_lam" readonly>
         <label>Lương:</label><input type="number" name="luong" readonly>
         <div class="form-buttons">
@@ -347,7 +375,6 @@
       </form>
     </div>
   </div>
-
   <script>
   let editingIndex = -1;
 
@@ -407,7 +434,7 @@
   const ngaySinh = form.ngay_sinh.value;
   const sdt = form.sdt.value;
   const noiO = form.noi_o.value;
-  const chucVu = form.chuc_vu.value;
+  const chucVu = form.chuc_vu.options[form.chuc_vu.selectedIndex].text; // LẤY TEXT
   const caLam = form.ca_lam.value;
   const luong = form.luong.value;
 
@@ -429,7 +456,8 @@
       </td>
     `;
   }
-  showToast("Hóa đơn đã được lưu!");
+
+  showToast("Lưu thành công!");
   closeForm();
 }
 
@@ -470,6 +498,16 @@
       circle.style.top = `${e.offsetY}px`;
       btn.appendChild(circle);
       setTimeout(() => circle.remove(), 600);
+    });
+  });
+
+   document.addEventListener('DOMContentLoaded', function () {
+    const selectElement = document.getElementById('chuc_vu');
+    const choices = new Choices(selectElement, {
+      searchEnabled: false,      // Ẩn ô tìm kiếm
+      itemSelectText: '',        // Không hiện chữ "Press to select"
+      shouldSort: false,         // Giữ nguyên thứ tự options
+      placeholderValue: 'Chọn chức vụ'
     });
   });
 </script>
