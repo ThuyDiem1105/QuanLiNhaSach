@@ -379,51 +379,71 @@
   let editingIndex = -1;
 
   function openForm(maNV, hoTen, ngaySinh, sdt, noiO, chucVu, caLam, luong) {
-    const form = document.forms['employeeForm'];
-    form.ma_nv.value = maNV;
-    form.ho_ten.value = hoTen;
-    form.ngay_sinh.value = ngaySinh;
-    form.sdt.value = sdt;
-    form.noi_o.value = noiO;
-    form.chuc_vu.value = chucVu;
-    form.ca_lam.value = caLam;
-    form.luong.value = luong;
+  const form = document.forms['employeeForm'];
+  form.ma_nv.value = maNV;
+  form.ho_ten.value = hoTen;
+  form.ngay_sinh.value = ngaySinh;
+  form.sdt.value = sdt;
+  form.noi_o.value = noiO;
 
-    editingIndex = Array.from(document.querySelector('#employeeTable tbody').rows)
-      .findIndex(row => row.cells[0].textContent === maNV);
-
-    for (let input of form.elements) input.readOnly = true;
-
-    document.querySelector(".btn-save").style.display = "none";
-    document.querySelector(".btn-edit").style.display = "inline-block";
-    document.getElementById("employeeFormOverlay").classList.add("show");
+  let chucVuValue = "";
+  switch(chucVu) {
+    case "Bán hàng": chucVuValue = "BanHang"; break;
+    case "Thu ngân": chucVuValue = "ThuNgan"; break;
+    case "Marketing và chăm sóc khách hàng": chucVuValue = "CSKH"; break;
+    default: chucVuValue = "";
   }
+  form.chuc_vu.value = chucVuValue;
+  choices.setChoiceByValue(chucVuValue);  
 
-  function enableEditing() {
-    const form = document.forms['employeeForm'];
-    for (let input of form.elements) {
-      if (input.name !== "ma_nv") input.readOnly = false;
-    }
-    document.querySelector(".btn-save").style.display = "inline-block";
-    document.querySelector(".btn-edit").style.display = "none";
+  form.ca_lam.value = caLam;
+  form.luong.value = luong;
+
+  editingIndex = Array.from(document.querySelector('#employeeTable tbody').rows)
+    .findIndex(row => row.cells[0].textContent === maNV);
+
+
+  for (let input of form.elements) input.readOnly = true;
+
+
+  choices.disable();
+
+  document.querySelector(".btn-save").style.display = "none";
+  document.querySelector(".btn-edit").style.display = "inline-block";
+  document.getElementById("employeeFormOverlay").classList.add("show");
+}
+
+function enableEditing() {
+  const form = document.forms['employeeForm'];
+  for (let input of form.elements) {
+    if (input.name !== "ma_nv") input.readOnly = false;
   }
+  choices.enable();  
 
-  function createNewEmployee() {
-    const form = document.forms['employeeForm'];
-    const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
-    const nextId = "NV" + String(table.rows.length + 1).padStart(3, '0');
+  document.querySelector(".btn-save").style.display = "inline-block";
+  document.querySelector(".btn-edit").style.display = "none";
+}
 
-    form.reset();
-    form.ma_nv.value = nextId;
 
-    for (let input of form.elements) input.readOnly = false;
+function createNewEmployee() {
+  const form = document.forms['employeeForm'];
+  const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
+  const nextId = "NV" + String(table.rows.length + 1).padStart(3, '0');
 
-    document.querySelector(".btn-save").style.display = "inline-block";
-    document.querySelector(".btn-edit").style.display = "none";
+  form.reset();
+  form.ma_nv.value = nextId;
 
-    editingIndex = -1;
-    document.getElementById("employeeFormOverlay").classList.add("show");
-  }
+  for (let input of form.elements) input.readOnly = false;
+
+  document.querySelector(".btn-save").style.display = "inline-block";
+  document.querySelector(".btn-edit").style.display = "none";
+
+  editingIndex = -1;
+  choices.enable();
+  document.getElementById("employeeFormOverlay").classList.add("show");
+}
+
+
 
   function saveEmployee() {
   const form = document.forms['employeeForm'];
@@ -434,7 +454,7 @@
   const ngaySinh = form.ngay_sinh.value;
   const sdt = form.sdt.value;
   const noiO = form.noi_o.value;
-  const chucVu = form.chuc_vu.options[form.chuc_vu.selectedIndex].text; // LẤY TEXT
+  const chucVu = form.chuc_vu.options[form.chuc_vu.selectedIndex].text; 
   const caLam = form.ca_lam.value;
   const luong = form.luong.value;
 
@@ -501,15 +521,18 @@
     });
   });
 
-   document.addEventListener('DOMContentLoaded', function () {
-    const selectElement = document.getElementById('chuc_vu');
-    const choices = new Choices(selectElement, {
-      searchEnabled: false,      // Ẩn ô tìm kiếm
-      itemSelectText: '',        // Không hiện chữ "Press to select"
-      shouldSort: false,         // Giữ nguyên thứ tự options
-      placeholderValue: 'Chọn chức vụ'
-    });
+   let choices;  
+
+document.addEventListener('DOMContentLoaded', function () {
+  const selectElement = document.getElementById('chuc_vu');
+  choices = new Choices(selectElement, {
+    searchEnabled: false,
+    itemSelectText: '',
+    shouldSort: false,
+    placeholderValue: 'Chọn chức vụ'
   });
+});
+
 </script>
 
 </body>
