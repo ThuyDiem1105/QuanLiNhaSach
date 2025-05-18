@@ -3,228 +3,294 @@
 <head>
   <meta charset="UTF-8">
   <title>Quản lý nhân viên</title>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../assets/style.css" />
   <style>
   * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f8f9fa;
-  }
+    body {
+      background: linear-gradient(135deg, #f9fff6, #edfaf9, #d8ddd3);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
 
+    /* Layout */
+    .main-content {
+      padding: 20px;
+    }
 
-  i[data-lucide] {
-    width: 18px;
-    height: 18px;
-    color: inherit;
-  }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
 
-  .main-content {
-    padding: 20px;
-  }
+    .search-filter {
+      display: flex;
+      gap: 10px;
+    }
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
+    .search-filter input {
+      font-family: fontweb;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: all 0.25s ease;
+    }
 
-  .search-filter {
-    display: flex;
-    gap: 10px;
-  }
+    .search-filter input:hover {
+      border-color: #81c784;
+      background-color: #f0fff4;
+      box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
+    }
 
-  .search-filter input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
+    .add-button {
+      background-color: #c8ffe5;
+      font-family: fontweb;
+      color: #0d3c6b;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
 
-  .add-button {
-    background-color: #81c784;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
+    .add-button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
 
-  .add-button:hover {
-    background-color: #66bb6a;
-  }
+    button {
+      position: relative;
+      overflow: hidden;
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    border-radius: 6px;
-    overflow: hidden;
-  }
+    .ripple {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: rippleAnim 0.6s linear;
+      width: 100px;
+      height: 100px;
+      pointer-events: none;
+    }
 
-  th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-  }
+    @keyframes rippleAnim {
+      to {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
 
-  th {
-    background-color: #81c784;
-    color: white;
-  }
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 6px;
+      overflow: hidden;
+    }
 
-  .action-buttons button {
-    margin-right: 5px;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
 
-  .view-btn {
-    background-color: #64b5f6;
-    color: white;
-  }
+    th {
+      background-color: #c8ffe5;
+      color: #0d3c6b;
+    }
 
-  .edit-btn {
-    background-color: #ffb74d;
-    color: white;
-  }
+    tbody tr {
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
 
-  .delete-btn {
-    background-color: #e57373;
-    color: white;
-  }
+    tbody tr:hover {
+      transform: scale(1.01);
+      background-color: #e8f5e9;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
 
-  .overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
+    tr.new-row {
+      animation: highlightNewRow 1.5s ease;
+    }
 
-  .overlay.show {
-    opacity: 1;
-    pointer-events: all;
-  }
+    @keyframes highlightNewRow {
+      from { background-color: #d6f0f1; }
+      to { background-color: transparent; }
+    }
 
-  .form-popup {
-    background: #fff;
-    padding: 32px 24px;
-    width: 100%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    position: relative;
-    border: 1px solid #81c784;
-  }
+    .action-buttons button {
+      margin-right: 5px;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: fontweb;
+      transition: all 0.2s ease;
+    }
 
-  .form-popup::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 6px;
-    width: 100%;
-    background-color: #81c784;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-  }
+    .action-buttons button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
 
-  .form-popup h3 {
-    margin-top: 0;
-    margin-bottom: 24px;
-    color: #2c3e50;
-    text-align: center;
-    font-size: 22px;
-  }
+    .view-btn { background-color: #64b5f6; color: white; }
+    .edit-btn { background-color: #ffb74d; color: white; }
+    .delete-btn { background-color: #e57373; color: white; }
 
-  .form-popup label {
-    display: block;
-    margin-top: 16px;
-    font-weight: 600;
-    color: #444;
-    font-size: 14px;
-  }
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(6px);
+    }
 
-  .form-popup input {
-    width: 100%;
-    padding: 10px 12px;
-    margin-top: 6px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-  }
+    .overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
 
-  .form-popup input:focus {
-    border-color: #81c784;
-    outline: none;
-    box-shadow: 0 0 6px rgba(129, 199, 132, 0.3);
-  }
+    .form-popup {
+      background: #fff;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 16px;
+      border: 1px solid #81c784;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      position: relative;
+      transform: translateY(-20px) scale(0.98);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
 
-  .form-popup input[readonly] {
-    background-color: #f4f4f4;
-    border-color: #ddd;
-    color: #666;
-    cursor: not-allowed;
-  }
+    .overlay.show .form-popup {
+      animation: popupIn 0.4s ease forwards;
+    }
 
-  .form-buttons {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 28px;
-    gap: 12px;
-  }
+    @keyframes popupIn {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
 
-  .btn-save, .btn-cancel, .btn-edit {
-    padding: 10px 20px;
-    font-size: 14px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-  }
+    .form-popup::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 6px;
+      width: 100%;
+      background-color: #81c784;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
 
-  .btn-save {
-    background-color: #81c784;
-    color: white;
-  }
+    .form-popup h3 {
+      margin-bottom: 24px;
+      color: #2c3e50;
+      text-align: center;
+      font-size: 22px;
+    }
 
-  .btn-cancel {
-    background-color: #e57373;
-    color: white;
-  }
+    .form-popup label {
+      display: block;
+      margin-top: 16px;
+      font-weight: 600;
+      color: #444;
+      font-size: 14px;
+    }
 
-  .btn-edit {
-    background-color: #ffb74d;
-    color: white;
-  }
+    .form-popup input {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
 
-  .btn-save:hover {
-    background-color: #66bb6a;
-  }
+    .form-popup input:focus {
+      border-color: #81c784;
+      outline: none;
+      box-shadow: 0 0 6px rgba(129, 199, 132, 0.3);
+    }
 
-  .btn-cancel:hover {
-    background-color: #ef5350;
-  }
+    .form-popup input[readonly] {
+      background-color: #f4f4f4;
+      border-color: #ddd;
+      color: #666;
+      cursor: not-allowed;
+    }
 
-  .btn-edit:hover {
-    background-color: #ffa726;
-  }
+    .form-buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 28px;
+      gap: 12px;
+    }
+
+    .btn-save,
+    .btn-cancel,
+    .btn-edit {
+      padding: 10px 20px;
+      font-family: fontweb;
+      font-size: 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .btn-save { background-color: #81c784; color: white; }
+    .btn-cancel { background-color: #e57373; color: white; }
+    .btn-edit { background-color: #ffb74d; color: white; }
+
+    .btn-save:hover { background-color: #66bb6a; transform: scale(1.05); }
+    .btn-cancel:hover { background-color: #ef5350; transform: scale(1.05); }
+    .btn-edit:hover { background-color: #ffa726; transform: scale(1.05); }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #b3ffdc;
+      color: #1c5083;
+      padding: 12px 20px;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      z-index: 10000;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -258,6 +324,7 @@
         </tr>
       </tbody>
     </table>
+    <div id="toast">Lưu thành công!</div>
   </div>
 
   <div id="employeeFormOverlay" class="overlay">
@@ -282,99 +349,130 @@
   </div>
 
   <script>
-    let editingIndex = -1;
+  let editingIndex = -1;
 
-    function openForm(maNV, hoTen, ngaySinh, sdt, noiO, chucVu, caLam, luong) {
-      editingIndex = -1;
-      const form = document.forms.employeeForm;
-      form.ma_nv.value = maNV;
-      form.ho_ten.value = hoTen;
-      form.ngay_sinh.value = ngaySinh;
-      form.sdt.value = sdt;
-      form.noi_o.value = noiO;
-      form.chuc_vu.value = chucVu;
-      form.ca_lam.value = caLam;
-      form.luong.value = luong;
+  function openForm(maNV, hoTen, ngaySinh, sdt, noiO, chucVu, caLam, luong) {
+    const form = document.forms['employeeForm'];
+    form.ma_nv.value = maNV;
+    form.ho_ten.value = hoTen;
+    form.ngay_sinh.value = ngaySinh;
+    form.sdt.value = sdt;
+    form.noi_o.value = noiO;
+    form.chuc_vu.value = chucVu;
+    form.ca_lam.value = caLam;
+    form.luong.value = luong;
 
-      for (let input of form.elements) {
-        input.readOnly = true;
-      }
+    editingIndex = Array.from(document.querySelector('#employeeTable tbody').rows)
+      .findIndex(row => row.cells[0].textContent === maNV);
 
-      document.querySelector(".btn-save").style.display = "none";
-      document.querySelector(".btn-edit").style.display = "inline-block";
+    for (let input of form.elements) input.readOnly = true;
 
-      document.getElementById("employeeFormOverlay").classList.add("show");
+    document.querySelector(".btn-save").style.display = "none";
+    document.querySelector(".btn-edit").style.display = "inline-block";
+    document.getElementById("employeeFormOverlay").classList.add("show");
+  }
+
+  function enableEditing() {
+    const form = document.forms['employeeForm'];
+    for (let input of form.elements) {
+      if (input.name !== "ma_nv") input.readOnly = false;
     }
+    document.querySelector(".btn-save").style.display = "inline-block";
+    document.querySelector(".btn-edit").style.display = "none";
+  }
 
-    function enableEditing() {
-      const form = document.forms.employeeForm;
-      for (let input of form.elements) {
-        if (input.name !== "ma_nv") {
-          input.readOnly = false;
-        }
-      }
-      document.querySelector(".btn-save").style.display = "inline-block";
-      document.querySelector(".btn-edit").style.display = "none";
+  function createNewEmployee() {
+    const form = document.forms['employeeForm'];
+    const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
+    const nextId = "NV" + String(table.rows.length + 1).padStart(3, '0');
+
+    form.reset();
+    form.ma_nv.value = nextId;
+
+    for (let input of form.elements) input.readOnly = false;
+
+    document.querySelector(".btn-save").style.display = "inline-block";
+    document.querySelector(".btn-edit").style.display = "none";
+
+    editingIndex = -1;
+    document.getElementById("employeeFormOverlay").classList.add("show");
+  }
+
+  function saveEmployee() {
+  const form = document.forms['employeeForm'];
+  const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
+
+  const maNV = form.ma_nv.value;
+  const hoTen = form.ho_ten.value;
+  const ngaySinh = form.ngay_sinh.value;
+  const sdt = form.sdt.value;
+  const noiO = form.noi_o.value;
+  const chucVu = form.chuc_vu.value;
+  const caLam = form.ca_lam.value;
+  const luong = form.luong.value;
+
+  if (editingIndex >= 0) {
+    const row = table.rows[editingIndex];
+    row.cells[0].textContent = maNV;
+    row.cells[1].textContent = hoTen;
+    row.cells[2].textContent = chucVu;
+  } else {
+    const row = table.insertRow();
+    row.classList.add("new-row");
+    row.innerHTML = `
+      <td>${maNV}</td>
+      <td>${hoTen}</td>
+      <td>${chucVu}</td>
+      <td class="action-buttons">
+        <button class="view-btn" onclick="openForm('${maNV}', '${hoTen}', '${ngaySinh}', '${sdt}', '${noiO}', '${chucVu}', '${caLam}', '${luong}')">Xem</button>
+        <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
+      </td>
+    `;
+  }
+  showToast("Hóa đơn đã được lưu!");
+  closeForm();
+}
+
+
+  function deleteRow(button) {
+    if (confirm("Bạn có chắc muốn xóa nhân viên này không?")) {
+      const row = button.closest("tr");
+      row.style.transition = "opacity 0.4s ease";
+      row.style.opacity = 0;
+      setTimeout(() => row.remove(), 400);
     }
+  }
 
-    function createNewEmployee() {
-      const form = document.forms.employeeForm;
-      const table = document.getElementById("employeeTable");
-      const nextId = "NV" + String(table.rows.length).padStart(3, '0');
+  function closeForm() {
+    document.getElementById("employeeFormOverlay").classList.remove("show");
+  }
 
-      form.reset();
-      form.ma_nv.value = nextId;
-      for (let input of form.elements) {
-        input.readOnly = false;
-      }
+  function showToast(message = "Lưu thành công!") {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+  }
 
-      document.querySelector(".btn-save").style.display = "inline-block";
-      document.querySelector(".btn-edit").style.display = "none";
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeForm();
+  });
 
-      document.getElementById("employeeFormOverlay").classList.add("show");
-      editingIndex = table.rows.length - 1;
-    }
+  document.getElementById("employeeFormOverlay").addEventListener("click", e => {
+    if (e.target === e.currentTarget) closeForm();
+  });
 
-    function saveEmployee() {
-      const form = document.forms.employeeForm;
-      const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
-      const maNV = form.ma_nv.value;
-      const hoTen = form.ho_ten.value;
-      const chucVu = form.chuc_vu.value;
+  document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const circle = document.createElement('span');
+      circle.classList.add('ripple');
+      circle.style.left = `${e.offsetX}px`;
+      circle.style.top = `${e.offsetY}px`;
+      btn.appendChild(circle);
+      setTimeout(() => circle.remove(), 600);
+    });
+  });
+</script>
 
-      if (editingIndex >= 0) {
-        const row = table.rows[editingIndex];
-        row.cells[0].textContent = maNV;
-        row.cells[1].textContent = hoTen;
-        row.cells[2].textContent = chucVu;
-      } else {
-        const row = table.insertRow();
-        row.innerHTML = `
-          <td>${maNV}</td>
-          <td>${hoTen}</td>
-          <td>${chucVu}</td>
-          <td class="action-buttons">
-            <button class="view-btn" onclick="openForm('${maNV}', '${hoTen}', '${form.ngay_sinh.value}', '${form.sdt.value}', '${form.noi_o.value}', '${chucVu}', '${form.ca_lam.value}', '${form.luong.value}')">Xem</button>
-            <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
-          </td>
-        `;
-      }
-
-      closeForm();
-    }
-
-    function deleteRow(button) {
-      if (confirm("Bạn có chắc muốn xóa nhân viên này không?")) {
-        const row = button.closest("tr");
-        row.remove();
-      }
-    }
-
-    function closeForm() {
-      document.getElementById("employeeFormOverlay").classList.remove("show");
-    }
-
-    lucide.createIcons();
-  </script>
 </body>
 </html>
