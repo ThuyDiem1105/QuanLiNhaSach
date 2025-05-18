@@ -1,4 +1,5 @@
 <?php
+
 ini_set('display_errors', 0);
 error_reporting(0);
 
@@ -13,9 +14,9 @@ if (!isset($_SESSION['account_loggedin'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $masach = $_POST['id'] ?? '';
-    if (empty($masach)) {
-        echo json_encode(['error' => 'Mã sách không hợp lệ!']);
+    $category = $_POST['category'] ?? '';
+    if (empty($category)) {
+        echo json_encode(['error' => 'Tên đầu sách không hợp lệ!']);
         exit;
     }
 
@@ -25,19 +26,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if ($stmt = $con->prepare('DELETE FROM sach WHERE MaSach = ?')) {
-        $stmt->bind_param('i', $masach);
+    if ($stmt = $con->prepare('INSERT INTO dausach(TenDauSach) VALUES (?)')) {
+        $stmt->bind_param('s', $category);
         if (!$stmt->execute()) {
             echo json_encode(['success' => false, 'error' => 'Lỗi khi xóa dữ liệu']);
         }
     } else {
         echo json_encode(['success' => false, 'error' => 'Lỗi prepare SQL']);
     }
+    
     $stmt->close();
     $con->close();
-    
     echo json_encode(['success' => true]);
 } else {
     echo json_encode(['error' => "Phương thức yêu cầu không hợp lệ!"]);
 }
+
 ?>
+

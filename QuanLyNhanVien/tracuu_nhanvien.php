@@ -77,7 +77,7 @@ if (isset($_GET['load'])) {
                                 return `
                                 <button class="edit-btn" data-id="${row.MaNV}" title="Sửa">✏️</button>
                                 <button class="delete-btn" data-id="${row.MaNV}" title="Xóa">🗑️</button>
-                                <button class="adduser-btn" data-id="${row.MaNV}" title="Thêm tài khoản">✏️</button>
+                                <button class="adduser-btn" data-id="${row.MaNV}" title="Thêm tài khoản">➕</button>
                                 `;
                                 //TODO: đổi dùm cái icon chỗ thêm tài khoản nhân viên nha
                             }

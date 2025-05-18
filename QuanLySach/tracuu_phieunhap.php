@@ -53,7 +53,6 @@ if (isset($_GET['load'])) {
                     <th>Số lượng nhập</th>
                     <th>Đơn giá nhập</th>
                     <th>Thành tiền</th>
-                    <th></th>
                 </tr>
             </thead>
         </table>
@@ -70,44 +69,12 @@ if (isset($_GET['load'])) {
                         { "data": "NguonNhap" },
                         { "data": "SoLuong" },
                         { "data": "DonGiaNhap" },
-                        { "data": "ThanhTien" },
-                        {
-                            "data": null,
-                            "orderable": false,
-                            "render": function (data, type, row) {
-                                return `
-                                <button class="delete-btn" data-id="${row.MaPhieu}" title="Xóa">🗑️</button>
-                                `;
-                            }
-                        }
+                        { "data": "ThanhTien" }
                     ],
                     "scrollY": "400px",
                     "scrollCollapse": true,
                     "paging": false,         
                     "info": false,    
-                });
-
-                $('#phieunhapsachTable').on('click', '.delete-btn', function() {
-                    const id = $(this).data('id');
-                    if (confirm('Bạn có chắc muốn xóa phiếu nhập này không?')) {
-                        $.ajax({
-                            url: 'xoa_phieunhap.php',
-                            type: 'POST',
-                            data: {id: id},
-                            dataType: 'json',
-                            success: function (res) {
-                                if (res.success) {
-                                    alert('Xóa nhân viên thành công!');
-                                    $('#nhanvienTable').DataTable().ajax.reload(null, false); 
-                                } else {
-                                    alert("Xóa không thành công: " + res.error);
-                                }
-                            },
-                            error: function () {
-                                alert('Lỗi AJAX. Không thể gửi yêu cầu xóa.');
-                            }
-                        });
-                    }
                 });
             });
         </script>

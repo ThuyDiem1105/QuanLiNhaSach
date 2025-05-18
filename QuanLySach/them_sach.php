@@ -34,7 +34,6 @@ while ($row = $result->fetch_assoc()) {
     $subGenres[$id][] = $row['TenTheLoai']; 
 }
 $result->free();
-$mysqli->close();
 //endregion
   
 $selectedCat = $_POST['category'] ?? '';
@@ -84,13 +83,8 @@ if (isset($_POST['submit_book']) || isset($_POST['submit_category']) || isset($_
     
 
     if (!$nameError && !$genreError && !$categoryError && !$authorError && !$publisherError && !$publishDayError && !$languageError  && !$sellPriceError){
-        $con = mysqli_connect('localhost', 'root', '', 'phplogin');
-        if (mysqli_connect_errno()) {
-            $message = 'Lỗi kết nối thất bại đến MySql: ' . mysqli_connect_error();
-        }
 
         //lấy mã đầu sách và mã thể loại tương ứng 
-
         $stmt = $con->prepare('SELECT MaTL FROM theloai WHERE TenTheLoai = ? AND MaDS = ?');
         $stmt->bind_param('si', $selectedSub, $MaDS);
         $stmt->execute();
@@ -143,7 +137,6 @@ if (isset($_POST['submit_book']) || isset($_POST['submit_category']) || isset($_
         <div class="container">
             <h1>Thêm sách mới</h1>
             <form action="" method="post" class="addBook-form" novalidate>
-                <input type="hidden" name="form_action" id="form_action" value="">
                 <label class="label-form" for="name">Tên sách</label>
                 <div class="group-form">
                     <input class="input-form" type="text" name="name" placeholder="Name" id="name" value="<?= htmlspecialchars($name?? '') ?>" required>
