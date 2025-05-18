@@ -315,7 +315,6 @@
   </style>
 </head>
 <body>
-  
   <div class="main-content">
     <div class="header">
       <div class="search-filter">
@@ -339,7 +338,7 @@
           <td>Nguyễn Văn A</td>
           <td>Thu ngân</td>
           <td class="action-buttons">
-            <button class="view-btn" onclick="openForm('NV001', 'Nguyễn Văn A', '1995-01-01', '0901234567', 'Hà Nội', 'Thu ngân', 'Sáng', '15000000')">Xem</button>
+            <button class="view-btn" onclick="openForm('NV001', 'Nguyễn Văn A', '1995-01-01', '0901234567', 'Hà Nội', 'Thu ngân', 'Sáng', 'Lương hạng C: 35k/giờ')">Xem</button>
             <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
           </td>
         </tr>
@@ -358,15 +357,21 @@
         <label>SĐT:</label><input type="text" name="sdt" required readonly>
         <label>Nơi ở:</label><input type="text" name="noi_o" readonly>
         <label for="chuc_vu">Chức vụ:</label>
-<select name="chuc_vu" id="chuc_vu">
-  <option value="">-- Chọn chức vụ --</option>
-  <option value="BanHang">Bán hàng</option>
-  <option value="ThuNgan">Thu ngân</option>
-  <option value="CSKH">Marketing và chăm sóc khách hàng</option>
-</select>
+        <select name="chuc_vu" id="chuc_vu">
+          <option value="BanHang">Bán hàng</option>
+          <option value="ThuNgan">Thu ngân</option>
+          <option value="CSKH">Marketing và chăm sóc khách hàng</option>
+        </select>
+
+        <label for="luong">Lương:</label>
+        <select name="luong" id="luong">
+          <option value="D">Lương hạng D: 25k/giờ</option>
+          <option value="C">Lương hạng C: 35k/giờ</option>
+          <option value="B">Lương hạng B: 50k/giờ</option>
+          <option value="A">Lương hạng A: 65k/giờ</option>
+        </select>
 
         <label>Ca làm:</label><input type="text" name="ca_lam" readonly>
-        <label>Lương:</label><input type="number" name="luong" readonly>
         <div class="form-buttons">
           <button type="button" class="btn-save" onclick="saveEmployee()" style="display: none;">Lưu</button>
           <button type="button" class="btn-edit" onclick="enableEditing()">Sửa</button>
@@ -375,165 +380,161 @@
       </form>
     </div>
   </div>
+
   <script>
-  let editingIndex = -1;
+    let editingIndex = -1;
+    let chucVuChoices, luongChoices;
 
-  function openForm(maNV, hoTen, ngaySinh, sdt, noiO, chucVu, caLam, luong) {
-  const form = document.forms['employeeForm'];
-  form.ma_nv.value = maNV;
-  form.ho_ten.value = hoTen;
-  form.ngay_sinh.value = ngaySinh;
-  form.sdt.value = sdt;
-  form.noi_o.value = noiO;
-
-  let chucVuValue = "";
-  switch(chucVu) {
-    case "Bán hàng": chucVuValue = "BanHang"; break;
-    case "Thu ngân": chucVuValue = "ThuNgan"; break;
-    case "Marketing và chăm sóc khách hàng": chucVuValue = "CSKH"; break;
-    default: chucVuValue = "";
-  }
-  form.chuc_vu.value = chucVuValue;
-  choices.setChoiceByValue(chucVuValue);  
-
-  form.ca_lam.value = caLam;
-  form.luong.value = luong;
-
-  editingIndex = Array.from(document.querySelector('#employeeTable tbody').rows)
-    .findIndex(row => row.cells[0].textContent === maNV);
-
-
-  for (let input of form.elements) input.readOnly = true;
-
-
-  choices.disable();
-
-  document.querySelector(".btn-save").style.display = "none";
-  document.querySelector(".btn-edit").style.display = "inline-block";
-  document.getElementById("employeeFormOverlay").classList.add("show");
-}
-
-function enableEditing() {
-  const form = document.forms['employeeForm'];
-  for (let input of form.elements) {
-    if (input.name !== "ma_nv") input.readOnly = false;
-  }
-  choices.enable();  
-
-  document.querySelector(".btn-save").style.display = "inline-block";
-  document.querySelector(".btn-edit").style.display = "none";
-}
-
-
-function createNewEmployee() {
-  const form = document.forms['employeeForm'];
-  const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
-  const nextId = "NV" + String(table.rows.length + 1).padStart(3, '0');
-
-  form.reset();
-  form.ma_nv.value = nextId;
-
-  for (let input of form.elements) input.readOnly = false;
-
-  document.querySelector(".btn-save").style.display = "inline-block";
-  document.querySelector(".btn-edit").style.display = "none";
-
-  editingIndex = -1;
-  choices.enable();
-  document.getElementById("employeeFormOverlay").classList.add("show");
-}
-
-
-
-  function saveEmployee() {
-  const form = document.forms['employeeForm'];
-  const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
-
-  const maNV = form.ma_nv.value;
-  const hoTen = form.ho_ten.value;
-  const ngaySinh = form.ngay_sinh.value;
-  const sdt = form.sdt.value;
-  const noiO = form.noi_o.value;
-  const chucVu = form.chuc_vu.options[form.chuc_vu.selectedIndex].text; 
-  const caLam = form.ca_lam.value;
-  const luong = form.luong.value;
-
-  if (editingIndex >= 0) {
-    const row = table.rows[editingIndex];
-    row.cells[0].textContent = maNV;
-    row.cells[1].textContent = hoTen;
-    row.cells[2].textContent = chucVu;
-  } else {
-    const row = table.insertRow();
-    row.classList.add("new-row");
-    row.innerHTML = `
-      <td>${maNV}</td>
-      <td>${hoTen}</td>
-      <td>${chucVu}</td>
-      <td class="action-buttons">
-        <button class="view-btn" onclick="openForm('${maNV}', '${hoTen}', '${ngaySinh}', '${sdt}', '${noiO}', '${chucVu}', '${caLam}', '${luong}')">Xem</button>
-        <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
-      </td>
-    `;
-  }
-
-  showToast("Lưu thành công!");
-  closeForm();
-}
-
-
-  function deleteRow(button) {
-    if (confirm("Bạn có chắc muốn xóa nhân viên này không?")) {
-      const row = button.closest("tr");
-      row.style.transition = "opacity 0.4s ease";
-      row.style.opacity = 0;
-      setTimeout(() => row.remove(), 400);
-    }
-  }
-
-  function closeForm() {
-    document.getElementById("employeeFormOverlay").classList.remove("show");
-  }
-
-  function showToast(message = "Lưu thành công!") {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 3000);
-  }
-
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeForm();
-  });
-
-  document.getElementById("employeeFormOverlay").addEventListener("click", e => {
-    if (e.target === e.currentTarget) closeForm();
-  });
-
-  document.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const circle = document.createElement('span');
-      circle.classList.add('ripple');
-      circle.style.left = `${e.offsetX}px`;
-      circle.style.top = `${e.offsetY}px`;
-      btn.appendChild(circle);
-      setTimeout(() => circle.remove(), 600);
+    window.addEventListener("DOMContentLoaded", () => {
+      chucVuChoices = new Choices("#chuc_vu", { shouldSort: false, searchEnabled: false });
+      luongChoices = new Choices("#luong", { shouldSort: false, searchEnabled: false });
+      chucVuChoices.disable();
+      luongChoices.disable();
     });
-  });
 
-   let choices;  
+    function openForm(maNV, hoTen, ngaySinh, sdt, noiO, chucVu, caLam, luong) {
+      const form = document.forms['employeeForm'];
+      form.ma_nv.value = maNV;
+      form.ho_ten.value = hoTen;
+      form.ngay_sinh.value = ngaySinh;
+      form.sdt.value = sdt;
+      form.noi_o.value = noiO;
 
-document.addEventListener('DOMContentLoaded', function () {
-  const selectElement = document.getElementById('chuc_vu');
-  choices = new Choices(selectElement, {
-    searchEnabled: false,
-    itemSelectText: '',
-    shouldSort: false,
-    placeholderValue: 'Chọn chức vụ'
-  });
-});
+      const chucVuMap = {
+        "Bán hàng": "BanHang",
+        "Thu ngân": "ThuNgan",
+        "Marketing và chăm sóc khách hàng": "CSKH"
+      };
+      const luongMap = {
+        "Lương hạng D: 25k/giờ": "D",
+        "Lương hạng C: 35k/giờ": "C",
+        "Lương hạng B: 50k/giờ": "B",
+        "Lương hạng A: 65k/giờ": "A"
+      };
 
-</script>
+      form.chuc_vu.value = chucVuMap[chucVu] || "";
+      chucVuChoices.setChoiceByValue(chucVuMap[chucVu] || "");
 
+      form.luong.value = luongMap[luong] || "";
+      luongChoices.setChoiceByValue(luongMap[luong] || "");
+
+      form.ca_lam.value = caLam;
+      editingIndex = Array.from(document.querySelector('#employeeTable tbody').rows)
+        .findIndex(row => row.cells[0].textContent === maNV);
+
+      for (let input of form.querySelectorAll("input")) input.readOnly = true;
+
+      chucVuChoices.disable();
+      luongChoices.disable();
+
+      document.querySelector(".btn-save").style.display = "none";
+      document.querySelector(".btn-edit").style.display = "inline-block";
+      document.getElementById("employeeFormOverlay").classList.add("show");
+    }
+
+    function enableEditing() {
+      const form = document.forms['employeeForm'];
+      for (let input of form.querySelectorAll("input")) {
+        if (input.name !== "ma_nv") input.readOnly = false;
+      }
+      chucVuChoices.enable();
+      luongChoices.enable();
+      document.querySelector(".btn-save").style.display = "inline-block";
+      document.querySelector(".btn-edit").style.display = "none";
+    }
+
+    function createNewEmployee() {
+      const form = document.forms['employeeForm'];
+      const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
+      const nextId = "NV" + String(table.rows.length + 1).padStart(3, '0');
+
+      form.reset();
+      form.ma_nv.value = nextId;
+      for (let input of form.querySelectorAll("input")) input.readOnly = false;
+
+      document.querySelector(".btn-save").style.display = "inline-block";
+      document.querySelector(".btn-edit").style.display = "none";
+
+      editingIndex = -1;
+      chucVuChoices.enable();
+      luongChoices.enable();
+      document.getElementById("employeeFormOverlay").classList.add("show");
+    }
+
+    function saveEmployee() {
+      const form = document.forms['employeeForm'];
+      const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
+
+      const maNV = form.ma_nv.value;
+      const hoTen = form.ho_ten.value;
+      const ngaySinh = form.ngay_sinh.value;
+      const sdt = form.sdt.value;
+      const noiO = form.noi_o.value;
+      const chucVu = form.chuc_vu.options[form.chuc_vu.selectedIndex].text;
+      const caLam = form.ca_lam.value;
+      const luong = form.luong.options[form.luong.selectedIndex].text;
+
+      if (editingIndex >= 0) {
+        const row = table.rows[editingIndex];
+        row.cells[0].textContent = maNV;
+        row.cells[1].textContent = hoTen;
+        row.cells[2].textContent = chucVu;
+      } else {
+        const row = table.insertRow();
+        row.classList.add("new-row");
+        row.innerHTML = `
+          <td>${maNV}</td>
+          <td>${hoTen}</td>
+          <td>${chucVu}</td>
+          <td class="action-buttons">
+            <button class="view-btn" onclick="openForm('${maNV}', '${hoTen}', '${ngaySinh}', '${sdt}', '${noiO}', '${chucVu}', '${caLam}', '${luong}')">Xem</button>
+            <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
+          </td>
+        `;
+      }
+
+      showToast("Lưu thành công!");
+      closeForm();
+    }
+
+    function deleteRow(button) {
+      if (confirm("Bạn có chắc muốn xóa nhân viên này không?")) {
+        const row = button.closest("tr");
+        row.style.transition = "opacity 0.4s ease";
+        row.style.opacity = 0;
+        setTimeout(() => row.remove(), 400);
+      }
+    }
+
+    function closeForm() {
+      document.getElementById("employeeFormOverlay").classList.remove("show");
+    }
+
+    function showToast(message = "Lưu thành công!") {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeForm();
+    });
+
+    document.getElementById("employeeFormOverlay").addEventListener("click", e => {
+      if (e.target === e.currentTarget) closeForm();
+    });
+
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const circle = document.createElement('span');
+        circle.classList.add('ripple');
+        circle.style.left = `${e.offsetX}px`;
+        circle.style.top = `${e.offsetY}px`;
+        btn.appendChild(circle);
+        setTimeout(() => circle.remove(), 600);
+      });
+    });
+  </script>
 </body>
 </html>
