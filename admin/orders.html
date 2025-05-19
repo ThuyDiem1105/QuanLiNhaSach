@@ -5,23 +5,48 @@
   <title>Quản lý hóa đơn</title>
   <link rel="stylesheet" href="../assets/style.css" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    .main-content { padding: 20px; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .search-filter { display: flex; gap: 10px; }
+    body {
+      background: linear-gradient(135deg, #f9fff6, #edfaf9, #d8ddd3);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+
+    /* Layout */
+    .main-content {
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-filter {
+      display: flex;
+      gap: 10px;
+    }
+
     .search-filter input {
       font-family: fontweb;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 6px;
+      transition: all 0.25s ease;
     }
+
     .search-filter input:hover {
       border-color: #81c784;
       background-color: #f0fff4;
       box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
-      transition: all 0.25s ease;
     }
 
     .add-button {
@@ -32,14 +57,20 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      transition: background 0.2s ease;
       font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .add-button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
     }
 
     button {
       position: relative;
       overflow: hidden;
     }
+
     .ripple {
       position: absolute;
       background: rgba(255, 255, 255, 0.6);
@@ -50,6 +81,7 @@
       height: 100px;
       pointer-events: none;
     }
+
     @keyframes rippleAnim {
       to {
         transform: scale(2.5);
@@ -57,7 +89,7 @@
       }
     }
 
-
+    /* Table */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -65,68 +97,77 @@
       border-radius: 6px;
       overflow: hidden;
     }
+
     th, td {
       border: 1px solid #ddd;
       padding: 12px;
       text-align: left;
     }
+
     th {
       background-color: #c8ffe5;
       color: #0d3c6b;
     }
+
+    tbody tr {
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    tbody tr:hover {
+      transform: scale(1.01);
+      background-color: #e8f5e9;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+
+    tr.new-row {
+      animation: highlightNewRow 1.5s ease;
+    }
+
+    @keyframes highlightNewRow {
+      from { background-color: #d6f0f1; }
+      to { background-color: transparent; }
+    }
+
     .action-buttons button {
       margin-right: 5px;
       padding: 6px 10px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-family: fontweb;
+      transition: all 0.2s ease;
     }
-    .view-btn { background-color: #64b5f6; color: white; font-family: fontweb;}
-    .edit-btn { background-color: #ffb74d; color: white; font-family: fontweb;}
-    .delete-btn { background-color: #e57373; color: white; font-family: fontweb;}
 
+    .action-buttons button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    .view-btn { background-color: #64b5f6; color: white; }
+    .edit-btn { background-color: #ffb74d; color: white; }
+    .delete-btn { background-color: #e57373; color: white; }
+
+    /* Overlay */
     .overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-  backdrop-filter: blur(6px);
-}
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(6px);
+    }
 
     .overlay.show {
       opacity: 1;
       pointer-events: all;
     }
-    .form-popup {
-      transform: translateY(-20px) scale(0.98);
-      opacity: 0;
-      transition: all 0.4s ease;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-      border: none;
-    }
-    @keyframes fadeSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-30px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    .overlay.show .form-popup {
-      animation: fadeSlideIn 0.5s ease forwards;
-    }
-
-    
 
     .form-popup {
       background: #fff;
@@ -136,9 +177,21 @@
       max-height: 90vh;
       overflow-y: auto;
       border-radius: 16px;
+      border: 1px solid #81c784;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
       position: relative;
-      border: 1px solid #81c784;
+      transform: translateY(-20px) scale(0.98);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .overlay.show .form-popup {
+      animation: popupIn 0.4s ease forwards;
+    }
+
+    @keyframes popupIn {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     .form-popup::before {
@@ -154,7 +207,6 @@
     }
 
     .form-popup h3 {
-      margin-top: 0;
       margin-bottom: 24px;
       color: #2c3e50;
       text-align: center;
@@ -198,7 +250,9 @@
       gap: 12px;
     }
 
-    .btn-save, .btn-cancel, .btn-edit {
+    .btn-save,
+    .btn-cancel,
+    .btn-edit {
       padding: 10px 20px;
       font-family: fontweb;
       font-size: 14px;
@@ -206,68 +260,18 @@
       border: none;
       cursor: pointer;
       font-weight: bold;
+      transition: all 0.2s ease;
     }
 
     .btn-save { background-color: #81c784; color: white; }
     .btn-cancel { background-color: #e57373; color: white; }
     .btn-edit { background-color: #ffb74d; color: white; }
 
-    .btn-save:hover { background-color: #66bb6a; }
-    .btn-cancel:hover { background-color: #ef5350; }
-    .btn-edit:hover { background-color: #ffa726; }
-    tbody tr:hover {
-    background-color: #e0f8c5;
-    transition: background-color 0.25s ease;
-    cursor: pointer;
-  }
-  @keyframes highlightNewRow {
-    from { background-color: #d6f0f1; }
-    to { background-color: transparent; }
-  }
-  tbody tr {
-      transition: transform 0.2s ease, background-color 0.2s ease;
-    } 
+    .btn-save:hover { background-color: #66bb6a; transform: scale(1.05); }
+    .btn-cancel:hover { background-color: #ef5350; transform: scale(1.05); }
+    .btn-edit:hover { background-color: #ffa726; transform: scale(1.05); }
 
-    tbody tr:hover {
-      transform: scale(1.01);
-      background-color: #e8f5e9;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-  tr.new-row {
-        animation: highlightNewRow 1.5s ease;
-      }
-    .action-buttons button,
-    .add-button,
-    .btn-save,
-    .btn-cancel,
-    .btn-edit {
-      transition: all 0.2s ease;
-      transform: scale(1);
-    }
-
-    .action-buttons button:hover,
-    .add-button:hover,
-    .btn-save:hover,
-    .btn-cancel:hover,
-    .btn-edit:hover {
-      transform: scale(1.05);
-      filter: brightness(1.1);
-    }
-    @keyframes popupIn {
-      0% { transform: scale(0.95); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .overlay.show .form-popup {
-      animation: popupIn 0.4s ease forwards;
-    }
-
-    body {
-      background: linear-gradient(135deg, #f9fff6, #edfaf9, #d8ddd3);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-    }
-
+    /* Toast */
     #toast {
       position: fixed;
       bottom: 20px;
@@ -277,21 +281,20 @@
       padding: 12px 20px;
       border-radius: 8px;
       opacity: 0;
-      transition: opacity 0.4s ease, transform 0.4s ease;
       transform: translateY(20px);
       z-index: 10000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
     #toast.show {
       opacity: 1;
       transform: translateY(0);
     }
-
-
   </style>
 </head>
+
 <body>
   <div class="main-content">
     <div class="header">
@@ -300,6 +303,7 @@
       </div>
       <button class="add-button" onclick="createNewOrder()">+ Thêm hóa đơn</button>
     </div>
+
     <table id="orderTable">
       <thead>
         <tr>
@@ -325,12 +329,9 @@
             <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
           </td>
         </tr>
-        <div id="toast">Lưu thành công!</div>
-      <script>
-</script>
-
       </tbody>
     </table>
+    <div id="toast">Lưu thành công!</div>
   </div>
 
   <div id="orderFormOverlay" class="overlay">
@@ -354,7 +355,6 @@
 
   <script>
     let editingIndex = -1;
-    
 
     function openForm(maHD, maKH, ngayLap, tongTien, daThanhToan, conLai) {
       const form = document.forms['orderForm'];
@@ -368,22 +368,17 @@
       editingIndex = Array.from(document.querySelector('#orderTable tbody').rows)
         .findIndex(row => row.cells[0].textContent === maHD);
 
-      for (let input of form.elements) {
-        input.readOnly = true;
-      }
+      for (let input of form.elements) input.readOnly = true;
 
       document.querySelector(".btn-save").style.display = "none";
       document.querySelector(".btn-edit").style.display = "inline-block";
-
       document.getElementById("orderFormOverlay").classList.add("show");
     }
 
     function enableEditing() {
       const form = document.forms['orderForm'];
       for (let input of form.elements) {
-        if (input.name !== "ma_hd") {
-          input.readOnly = false;
-        }
+        if (input.name !== "ma_hd") input.readOnly = false;
       }
       document.querySelector(".btn-save").style.display = "inline-block";
       document.querySelector(".btn-edit").style.display = "none";
@@ -397,9 +392,7 @@
       form.reset();
       form.ma_hd.value = nextId;
 
-      for (let input of form.elements) {
-        input.readOnly = false;
-      }
+      for (let input of form.elements) input.readOnly = false;
 
       document.querySelector(".btn-save").style.display = "inline-block";
       document.querySelector(".btn-edit").style.display = "none";
@@ -429,8 +422,7 @@
         row.cells[5].textContent = conLai;
       } else {
         const row = table.insertRow();
-        row.classList.add("new-row");  
-
+        row.classList.add("new-row");
         row.innerHTML = `
           <td>${maHD}</td>
           <td>${maKH}</td>
@@ -461,41 +453,31 @@
       document.getElementById("orderFormOverlay").classList.remove("show");
     }
 
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") {
-        closeForm();
-      }
-    });
-
-
-    document.getElementById("orderFormOverlay").addEventListener("click", function (e) {
-      if (e.target === this) {
-        closeForm();
-      }
-    });
-
-
-    document.querySelectorAll('button').forEach(btn => {
-      btn.addEventListener('click', function (e) {
-        const circle = document.createElement('span');
-        circle.classList.add('ripple');
-        this.appendChild(circle);
-        circle.style.left = `${e.offsetX}px`;
-        circle.style.top = `${e.offsetY}px`;
-        setTimeout(() => circle.remove(), 600);
-      });
-    });
     function showToast(message = "Lưu thành công!") {
       const toast = document.getElementById("toast");
       toast.textContent = message;
       toast.classList.add("show");
-
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 3000);
+      setTimeout(() => toast.classList.remove("show"), 3000);
     }
 
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeForm();
+    });
 
+    document.getElementById("orderFormOverlay").addEventListener("click", e => {
+      if (e.target === e.currentTarget) closeForm();
+    });
+
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const circle = document.createElement('span');
+        circle.classList.add('ripple');
+        circle.style.left = `${e.offsetX}px`;
+        circle.style.top = `${e.offsetY}px`;
+        btn.appendChild(circle);
+        setTimeout(() => circle.remove(), 600);
+      });
+    });
   </script>
 </body>
 </html>

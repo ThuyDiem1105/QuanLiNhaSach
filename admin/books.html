@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Quản lý sách</title>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../assets/style.css" />
   <style>
     * {
       box-sizing: border-box;
@@ -12,15 +12,11 @@
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f8f9fa;
+      background: linear-gradient(135deg, #f9fff6, #edfaf9, #d8ddd3);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
     }
 
-    i[data-lucide] {
-      width: 18px;
-      height: 18px;
-      color: inherit;
-    }
 
     .main-content {
       padding: 20px;
@@ -39,9 +35,17 @@
     }
 
     .search-filter input {
+      font-family: fontweb;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 6px;
+      transition: all 0.25s ease;
+    }
+
+    .search-filter input:hover {
+      border-color: #81c784;
+      background-color: #f0fff4;
+      box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
     }
 
     table {
@@ -59,8 +63,19 @@
     }
 
     th {
-      background-color: #81c784;
-      color: white;
+      background-color: #c8ffe5;
+      color: #0d3c6b;
+    }
+
+    tbody tr {
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    tbody tr:hover {
+      transform: scale(1.01);
+      background-color: #e8f5e9;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
     }
 
     .view-btn {
@@ -70,22 +85,28 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-family: fontweb;
+      transition: all 0.2s ease;
+    }
+
+    .view-btn:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
     }
 
     .overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.4);
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 9999;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(6px);
     }
 
     .overlay.show {
@@ -96,14 +117,19 @@
     .form-popup {
       background: #fff;
       padding: 32px 24px;
-      width: 100%;
       max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
+      width: 100%;
       border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-      position: relative;
       border: 1px solid #81c784;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transform: translateY(-20px) scale(0.98);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .overlay.show .form-popup {
+      transform: scale(1);
+      opacity: 1;
     }
 
     .form-popup::before {
@@ -119,7 +145,6 @@
     }
 
     .form-popup h3 {
-      margin-top: 0;
       margin-bottom: 24px;
       color: #2c3e50;
       text-align: center;
@@ -157,18 +182,21 @@
     }
 
     .btn-close {
-      background-color: #e57373;
-      color: white;
       padding: 10px 20px;
+      font-family: fontweb;
       font-size: 14px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
       font-weight: bold;
+      background-color: #e57373;
+      color: white;
+      transition: all 0.2s ease;
     }
 
     .btn-close:hover {
       background-color: #ef5350;
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -260,8 +288,6 @@
     function closeBookForm() {
       document.getElementById("bookFormOverlay").classList.remove("show");
     }
-
-    lucide.createIcons();
   </script>
 </body>
 </html>
