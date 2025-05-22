@@ -3,31 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script defer src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" data-source-map="false"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../assets/style.css" />
+    <script src="script.js" defer></script>
 </head>
 <body class="bg-gray-100">
 
     <div id="dashboard">
         <div class="flex">
-        <!-- Sidebar -->
-            <aside class="w-64 bg-white h-screen shadow-md">
-                <div class="p-4 font-bold text-xl text-pink-600">Booktopia</div>
-                <nav class="mt-4">
-                    <a href="dashboard.html" class="block p-4 hover:bg-pink-100">Tổng quan</a>
-                    <a href="products.html" class="block p-4 hover:bg-pink-100">Sản phẩm</a>
-                    <a href="them_hoadon.html" class="block p-4 hover:bg-pink-100">Hóa đơn</a>
-                    <a href="#" class="block p-4 hover:bg-pink-100">Khách hàng</a>
-                    <a href="#" class="block p-4 hover:bg-pink-100">Nhân viên</a>
-                    <a href="#" class="block p-4 hover:bg-pink-100">Phiếu nhập sản phẩm</a>
-                    <a href="#" class="block p-4 hover:bg-pink-100">Khuyến mãi</a>
-                    <a href="#" class="block p-4 hover:bg-pink-100">Báo cáo</a>
-                    <a href="#" class="block p-4 hover:bg-pink-100">Thay đổi quy định</a>
-                    <a href="#" class="block p-4 hover:bg-pink-100">Đăng xuất</a>
-                </nav>
-            </aside>
+
 
         <!-- Main Content -->
             <main class="flex-1 p-6">
@@ -66,5 +50,70 @@
         </div>
     </div>
 
+<body>
+<div class="main">
+    <div class="cards">
+        <div class="card">
+            <div><img src="../assets/chart-line.png" class="icon-dashboard"/></div>
+            <div class="text">
+                <p>Đơn hàng hôm nay</p>
+                <strong>1234</strong>
+              </div>  
+        </div>
+        <div class="card">
+            <div><img src="../assets/chart-column.png" class="icon-dashboard"/></div>
+            <div class="text">
+                <p>Tổng số đơn hàng</p>
+                <strong>1234</strong>
+              </div>
+        </div>
+        <div class="card">
+            <div><img src="../assets/circle-dollar-sign.png" class="icon-dashboard"/></div>
+            <div class="text">
+                <p>Doanh thu hôm nay</p>
+                <strong>10.920.222 vnd</strong>
+              </div>
+        </div>
+        <div class="card">
+            <div><img src="../assets/users-round.png" class="icon-dashboard"/></div>
+            <div class="text">
+                <p>Tổng số khách hàng</p>
+                <strong>1234</strong>
+              </div>
+        </div>
+    </div>
+
+    <canvas id="salesChart" height="120"></canvas>
+
+    <p id="don-hang-ganday">
+        Đơn hàng gần đây
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Invoice</th>
+                <th>Customer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>01 Jan 2045</td>
+                <td>INV-0123</td>
+                <td>Jhon Doe</td>
+            </tr>
+            <tr>
+                <td>01 Jan 2045</td>
+                <td>INV-0124</td>
+                <td>Jane Smith</td>
+            </tr>
+            <tr>
+                <td>01 Jan 2045</td>
+                <td>INV-0125</td>
+                <td>Michael Brown</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 </body>
-</html>
+</html>  
