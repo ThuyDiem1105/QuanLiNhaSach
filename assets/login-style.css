@@ -1,0 +1,83 @@
+@charset "utf-8";
+* {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: fontweb;
+    src: url("../assets/RobotoSlab-Medium.ttf");
+}
+
+body {
+    margin: 0;
+    background-color: #edfff7;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body, button {
+    font-family: fontweb;
+    font-size: 15px;
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-container h2 {
+    text-align: center;
+    color: #104e8c;
+    margin-bottom: 22px;
+    font-size: 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #393939;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #979797;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    outline: none;
+    background-color: none;
+}
+
+input:focus {
+    border-color: #104e8c;
+    box-shadow: 0 0 0 2px rgba(72, 228, 236, 0.2);
+}
+
+button {
+    width: 100%;
+    background-color: #104e8c;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #104e8c;
+}
+
+.error-message {
+    color: red;
+    margin-top: 15px;
+    display: none;
+    text-align: center;
+}

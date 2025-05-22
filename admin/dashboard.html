@@ -2,118 +2,95 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../assets/dashboard-style.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="../assets/style.css" />
-    <script src="script.js" defer></script>
+    <script src="dashboard-script.js" defer></script>
 </head>
-<body class="bg-gray-100">
-
-    <div id="dashboard">
-        <div class="flex">
-
-
-        <!-- Main Content -->
-            <main class="flex-1 p-6">
-                <h1 class="text-2xl font-bold mb-6">Trang quản trị</h1>
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="bg-white p-4 rounded shadow">
-                        <h2 class="font-semibold">Đơn hàng hôm nay</h2>
-                        <p class="text-3xl">1234</p>
-                    </div>
-                    <div class="bg-white p-4 rounded shadow">
-                        <h2 class="font-semibold">Tổng đơn hàng</h2>
-                        <p class="text-3xl">1234</p>
-                    </div>
-                </div>
-                <div class="mt-10 bg-white p-4 rounded shadow">
-                    <h2 class="font-semibold mb-4">Top 3 sản phẩm bán chạy</h2>
-                    <canvas id="salesChart" height="100"></canvas>
-                </div>
-                <div class="mt-10 bg-white p-4 rounded shadow">
-                    <h2 class="font-semibold mb-4">Đơn hàng gần đây</h2>
-                    <table class="w-full table-auto border border-gray-200">
-                      <thead class="bg-gray-100">
-                        <tr>
-                          <th class="px-4 py-2 border">Ngày</th>
-                          <th class="px-4 py-2 border">Mã đơn</th>
-                          <th class="px-4 py-2 border">Khách hàng</th>
-                          <th class="px-4 py-2 border">Trạng thái</th>
-                        </tr>
-                      </thead>
-                      <tbody id="orderTable">
-                        <!-- Dữ liệu sẽ được thêm bằng JS -->
-                      </tbody>
-                    </table>
-                  </div>                  
-            </main>
-        </div>
-    </div>
-
 <body>
-<div class="main">
-    <div class="cards">
-        <div class="card">
-            <div><img src="../assets/chart-line.png" class="icon-dashboard"/></div>
-            <div class="text">
-                <p>Đơn hàng hôm nay</p>
-                <strong>1234</strong>
-              </div>  
+    <div class="main">
+        <div class="cards">
+            <div class="card">
+                <div><img src="../assets/chart-line.png" class="icon-dashboard"/></div>
+                <div class="text">
+                    <p>Đơn hàng hôm nay</p>
+                    <strong>1234</strong>
+                </div>  
+            </div>
+            <div class="card">
+                <div><img src="../assets/chart-column.png" class="icon-dashboard"/></div>
+                <div class="text">
+                    <p>Số sách bán ra</p>
+                    <strong>1234</strong>
+                </div>
+            </div>
+            <div class="card">
+                <div><img src="../assets/circle-dollar-sign.png" class="icon-dashboard"/></div>
+                <div class="text">
+                    <p>Doanh thu hôm nay</p>
+                    <strong>10.920.222 đ</strong>
+                </div>
+            </div>
+            <div class="card">
+                <div><img src="../assets/users-round.png" class="icon-dashboard"/></div>
+                <div class="text">
+                    <p>Tổng số khách hàng</p>
+                    <strong>1234</strong>
+                </div>
+            </div>
         </div>
-        <div class="card">
-            <div><img src="../assets/chart-column.png" class="icon-dashboard"/></div>
-            <div class="text">
-                <p>Tổng số đơn hàng</p>
-                <strong>1234</strong>
-              </div>
+
+        <div class="charts-wrapper">
+            <!-- Biểu đồ 1 -->
+            <div class="chart-container">
+                <canvas id="salesChart"></canvas>
+            </div>
+
+            <!-- Biểu đồ 2 -->
+            <div class="chart-container">
+                <canvas id="financeChart"></canvas>
+            </div>
         </div>
-        <div class="card">
-            <div><img src="../assets/circle-dollar-sign.png" class="icon-dashboard"/></div>
-            <div class="text">
-                <p>Doanh thu hôm nay</p>
-                <strong>10.920.222 vnd</strong>
-              </div>
-        </div>
-        <div class="card">
-            <div><img src="../assets/users-round.png" class="icon-dashboard"/></div>
-            <div class="text">
-                <p>Tổng số khách hàng</p>
-                <strong>1234</strong>
-              </div>
+
+        <div class="recent">
+            <div class="table-title">
+                <img src="../assets/recent-orders.png" class="icon-table"/>
+                <p id="don-hang-ganday">
+                    Đơn hàng gần đây
+                </p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>Hóa đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>12:05:23 18/05/2025</td>
+                        <td>INV-0123</td>
+                        <td>Nguyễn Văn A</td>
+                        <td>130.000 đ </td>
+                    </tr>
+                    <tr>
+                        <td>11:55:49 18/05/2025</td>
+                        <td>INV-0124</td>
+                        <td>Nguyễn Thị Yến Nhi</td>
+                        <td>250.000 đ </td>
+                    </tr>
+                    <tr>
+                        <td>10:23:30 18/05/2025</td>
+                        <td>INV-0125</td>
+                        <td>Huỳnh Việt Dũng</td>
+                        <td>150.000 đ </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <canvas id="salesChart" height="120"></canvas>
-
-    <p id="don-hang-ganday">
-        Đơn hàng gần đây
-    </p>
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Invoice</th>
-                <th>Customer</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>01 Jan 2045</td>
-                <td>INV-0123</td>
-                <td>Jhon Doe</td>
-            </tr>
-            <tr>
-                <td>01 Jan 2045</td>
-                <td>INV-0124</td>
-                <td>Jane Smith</td>
-            </tr>
-            <tr>
-                <td>01 Jan 2045</td>
-                <td>INV-0125</td>
-                <td>Michael Brown</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 </body>
 </html>  

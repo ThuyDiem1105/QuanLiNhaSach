@@ -1,0 +1,123 @@
+@charset "utf-8";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: fontweb;
+    src: url("../assets/RobotoSlab-Medium.ttf");
+}
+
+body {
+    color: #393939;
+    font-family: fontweb;
+    font-size: 14px;
+    background-color: #ffffff;
+}
+
+.main {
+    padding: 30px;
+}
+
+/* Cards */
+.cards {
+    display: flex;    
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    display: flex;    
+    align-items: center;
+    background: #ddffef;
+    padding: 25px;
+    border-radius: 5px;
+    flex: 1;
+    color: #0d3c6b;
+    border: 1px solid #beffe1;
+}
+
+.card p:first-of-type{
+    margin-bottom: 10px;
+}
+
+.number{
+    font-weight: bold;
+}
+
+.icon-dashboard{
+    width: 48px;
+    height: 48px;
+    margin-right: 24px;
+    vertical-align: middle;
+}
+
+.charts-wrapper {
+    display: flex;    
+    gap: 25px;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.chart-container {
+    width: 48%;
+    height: 400px;
+    display: flex;    
+    background: #ddffef;
+    padding: 25px;
+    border-radius: 10px;
+    flex: 1;
+    border: 1px solid #beffe1;
+}
+
+.recent {   
+    border: 1px solid #beffe1;
+    background-color: #ddffef;
+    padding: 25px;
+    border-radius: 5px;
+}
+
+#don-hang-ganday{
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #0d3c6b;
+}
+
+.table-title {
+    display: flex;
+    vertical-align: middle;
+}
+
+.icon-table{    
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Bảng đơn hàng */
+table {
+    table-layout: fixed;
+    width: 100%;
+    background: #fff;
+    border-collapse: collapse;
+    overflow: hidden;
+    color: #393939;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #1e4977;
+}
+
+th {
+    text-align: center;
+    background-color: #e4f1ff;
+    color: #0d3c6b;
+}
