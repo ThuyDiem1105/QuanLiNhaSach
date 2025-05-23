@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const pageMap = {
     dashboardBtn: 'dashboard.html',
     ordersBtn: 'orders.html',
-    booksBtn: 'books.html',
+    booksBtn: 'Books/books.php',
     customersBtn: 'customers.html',
-    staffBtn: 'staff.html',
+    staffBtn: 'Employee/staff.php',
     receiptsBtn: 'receipts.html',
     dealsBtn: 'deals.html',
     reportsBtn: 'reports.html',

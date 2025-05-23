@@ -25,57 +25,56 @@ ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE TABLE IF NOT EXISTS `THELOAI` (
     `MaTL` VARCHAR(10) NOT NULL PRIMARY KEY,
     `MaDMS` VARCHAR(10) NOT NULL,
-    `TenTheLoai` VARCHAR(255) NOT NULL,
-    CONSTRAINT theloai_danhmucsach
-    	FOREIGN KEY (MaDMS)
-        REFERENCES danhmucsach(MaDMS) 
-    	ON DELETE CASCADE ON UPDATE CASCADE
+    `TenTheLoai` VARCHAR(255) NOT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO theloai (MaTL, TenTheLoai) VALUES 
+('TL001', 'Truyện ngắn'), ('TL002', 'Trinh thám'), ('TL003', 'Khoa học viễn tưởng'), ('TL004', 'Ngôn tình'), ('TL005', 'Lãng mạn'),
+('TL006', 'Kỹ năng sống'), ('TL007', 'Kinh doanh'), ('TL008', 'Truyện cổ tích'), ('TL009', 'Truyện dân gian'), ('TL010', 'Kinh dị'),
+('TL011', 'Thơ ca'), ('TL012', 'Du ký'), ('TL013', 'Học thuật'), ('TL014', 'Tâm linh'), ('TL015', 'Nấu ăn - Ẩm thực'),
+('TL016', 'Y học – Sức khỏe'), ('TL017', 'Ngoại ngữ'), ('TL018', 'Sách giáo khoa'), ('TL019', 'Hành động'), ('TL020', 'Pháp luật – Chính trị'),
+('TL021', 'Sách bài tập'), ('TL022', 'Quản lý tài chính'), ('TL023', 'Khởi nghiệp'), ('TL024', 'Self-help (Tự lực)'), ('TL025', 'Văn hóa');
 
 CREATE TABLE IF NOT EXISTS `DANHMUCSACH` ( 
     `MaDMS` VARCHAR(10) NOT NULL PRIMARY KEY, 
     `TenDanhMuc` VARCHAR(255) NOT NULL 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM001','Tham khảo');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM002','Giáo trình');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM003','Truyện tranh');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM004','Tiểu thuyết');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM005','Khoa học tự nhiên');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM006','Kinh doanh - tài chính');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM007','Tâm lý');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM008','Tôn giáo - Tâm linh');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM009','Văn học nghệ thuật');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM010','Thiếu nhi');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM011','Phát triển bản thân');
+INSERT INTO `danhmucsach`(`MaDMS`, `TenDanhMuc`) VALUES ('DM012','Công nghệ - Kỹ thuật')
+
 
 CREATE TABLE IF NOT EXISTS `Sach` (
-    `MaSach` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `MaDS` INT(11) NOT NULL,
-    `MaTL` INT(11) NOT NULL,
+    `MaSach` VARCHAR(50) NOT NULL PRIMARY KEY,
+    `TenSach` VARCHAR(255) NOT NULL,
+    `MaDMS` VARCHAR(10) NOT NULL,
+    `MaTL` VARCHAR(10) NOT NULL,
     `NhaXuatBan` VARCHAR(255) NOT NULL,
-    `NgayXuatBan` DATETIME NOT NULL,
+    `NgayXuatBan` DATE NOT NULL,
     `TacGia` VARCHAR(255) NOT NULL,
     `NgonNgu` VARCHAR(100) NOT NULL,
-    `GiaBan` DECIMAL(12,2) NOT NULL,
-    CONSTRAINT sach_dausach
-    	FOREIGN KEY (MaDS)
-        REFERENCES dausach(MaDS) 
-    	ON DELETE CASCADE ON UPDATE CASCADE,
-   	CONSTRAINT sach_theloai
-    	FOREIGN KEY (MaTL)
-        REFERENCES theloai(MaTL) 
-    	ON DELETE CASCADE ON UPDATE CASCADE
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `GiaBan` DECIMAL(12,2) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-// $categories = [
-//     'reference' => 'Tham khảo - Giáo trình',
-//     'comic_novel'     => 'Truyện - Tiểu thuyết',
-//     'science_economy'   => 'Khoa học công nghệ - Kinh tế',
-//     'literature'   => 'Văn học nghệ thuật',
-//     'culture_social'   => 'Văn hóa xã hội - lịch sử',
-//     'spirituality'   => 'Tâm lý, tâm linh, tôn giáo',
-//     'children'   => 'Thiếu nhi',
-//   ];
-  
-// $subGenres = [
-//     'reference' => ['Giáo khoa','Từ điển','Giáo trình', 'Luyện kiến thức'],
-//     'comic_novel' => ['Kinh dị', 'Trinh thám', 'Lãng mạng', 'Viễn tưởng', 'Hành động'],
-//     'science_economy' => ['Kinh doanh', 'Quản lý tài chính', 'Khởi nghiệp', 'Khoa học tự nhiên', 'Kỹ thuật'],
-//     'literature'   => ['Thơ ca', 'Truyện ngắn', 'Văn học đương đại', 'Văn học hiện đại'],
-//     'culture_social'   => ['Bản sắc văn hóa', 'Chính trị', 'Xã hội'],
-//     'spirituality'   => ['Kinh sách', 'Tôn giáo', 'Self-help', 'Giáo dục giới tính', 'Rối loạn tâm lý'],
-//     'children'   => ['Truyện tranh', 'Truyện cổ tích', 'Kỹ năng sống'],
-//   ];
+ALTER TABLE sach ADD CONSTRAINT sach_danhmucsach FOREIGN KEY (MaDMS) REFERENCES danhmucsach(MaDMS);
+
+CREATE TABLE IF NOT EXISTS `sach_theloai` (
+  `MaSach` VARCHAR(10) NOT NULL,
+  `MaTL` VARCHAR(10) NOT NULL,
+  PRIMARY KEY (MaSach, MaTL),
+  FOREIGN KEY (MaSach) REFERENCES sach(MaSach),
+  FOREIGN KEY (MaTL) REFERENCES theloai(MaTL)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `CALAM` (
     `MaCa` VARCHAR(10) NOT NULL PRIMARY KEY,
@@ -105,5 +104,22 @@ CREATE TABLE IF NOT EXISTS `PhieuNhapSach` (
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-INSERT INTO `nhanvien`(`MaNV`, `HoTen`, `NgaySinh`, `SDT`, `NoiO`, `ChucVu`, `CaLam`, `Luong`) 
-VALUES ('NV001','Nguyen Van A','2005-12-05','0912345678','Hà Nội','Thu Ngân','Mon-ca1, Tue-ca2, Wed-ca4, Thu-ca3','35000')
+// $categories = [
+//     'reference' => 'Tham khảo - Giáo trình',
+//     'comic_novel'     => 'Truyện - Tiểu thuyết',
+//     'science_economy'   => 'Khoa học công nghệ - Kinh tế',
+//     'literature'   => 'Văn học nghệ thuật',
+//     'culture_social'   => 'Văn hóa xã hội - lịch sử',
+//     'spirituality'   => 'Tâm lý, tâm linh, tôn giáo',
+//     'children'   => 'Thiếu nhi',
+//   ];
+  
+// $subGenres = [
+//     'reference' => ['Giáo khoa','Từ điển','Giáo trình', 'Luyện kiến thức'],
+//     'comic_novel' => ['Kinh dị', 'Trinh thám', 'Lãng mạng', 'Viễn tưởng', 'Hành động'],
+//     'science_economy' => ['Kinh doanh', 'Quản lý tài chính', 'Khởi nghiệp', 'Khoa học tự nhiên', 'Kỹ thuật'],
+//     'literature'   => ['Thơ ca', 'Truyện ngắn', 'Văn học đương đại', 'Văn học hiện đại'],
+//     'culture_social'   => ['Bản sắc văn hóa', 'Chính trị', 'Xã hội'],
+//     'spirituality'   => ['Kinh sách', 'Tôn giáo', 'Self-help', 'Giáo dục giới tính', 'Rối loạn tâm lý'],
+//     'children'   => ['Truyện tranh', 'Truyện cổ tích', 'Kỹ năng sống'],
+//   ];
