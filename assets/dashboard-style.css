@@ -1,23 +1,5 @@
 @charset "utf-8";
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-@font-face {
-    font-family: fontweb;
-    src: url("../assets/RobotoSlab-Medium.ttf");
-}
-
-body {
-    color: #393939;
-    font-family: fontweb;
-    font-size: 14px;
-    background-color: #ffffff;
-}
-
 .main {
     padding: 30px;
 }

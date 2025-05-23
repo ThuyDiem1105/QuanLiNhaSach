@@ -1,0 +1,71 @@
+//Xóa thể loại
+$('#theloaiTable').on('click', '.delete-btn', function () {
+    const genre_id = $(this).data('genre-id');
+    if (confirm('Bạn có chắc muốn xóa thể loại này không? Nếu xóa thì bạn cần thêm lại thể loại tương ứng cho những sách có thể loại này.')) {
+        $.ajax({
+            url: 'xoa_theloai.php',
+            type: 'POST',
+            data: {id: genre_id},
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    alert('Xóa thể loại thành công!');
+                    $('#theloaiTable').DataTable().ajax.reload(null, false); 
+                } else {
+                    alert("Xóa không thành công: " + res.error);
+                }
+            },
+            error: function () {
+                alert('Lỗi AJAX. Không thể gửi yêu cầu xóa.');
+            }
+        });
+    }
+});
+
+//Xóa đầu sách
+$('#dausachTable').on('click', '.delete-btn', function () {
+    const category_id = $(this).data('category-id');
+    if (confirm('Bạn có chắc muốn xóa đầu sách này không? Nếu xóa đầu sách thì các thể loại tương ứng của đầu sách cũng bị xóa theo, và bạn cần thêm lại đầu sách và thể loại cho những sách đó!')) {
+        $.ajax({
+            url: 'xoa_dausach.php',
+            type: 'POST',
+            data: {id: category_id},
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    alert('Xóa đầu sách thành công!');
+                    location.reload();
+                } else {
+                    alert("Xóa không thành công: " + res.error);
+                }
+            },
+            error: function (xhs, status, error) {
+                alert("Lỗi AJAX: " + xhr.status + " - " + xhr.responseText);
+            }
+        });
+    }
+});
+
+//Xóa phiếu nhập
+$('#phieunhapsachTable').on('click', '.delete-btn', function() {
+const id = $(this).data('id');
+if (confirm('Bạn có chắc muốn xóa phiếu nhập này không?')) {
+    $.ajax({
+        url: 'xoa_phieunhap.php',
+        type: 'POST',
+        data: {id: id},
+        dataType: 'json',
+        success: function (res) {
+            if (res.success) {
+                alert('Xóa nhân viên thành công!');
+                $('#nhanvienTable').DataTable().ajax.reload(null, false); 
+            } else {
+                alert("Xóa không thành công: " + res.error);
+            }
+        },
+        error: function () {
+            alert('Lỗi AJAX. Không thể gửi yêu cầu xóa.');
+        }
+    });
+}
+});
