@@ -2,7 +2,7 @@
 $servername = "localhost";    // hoặc 127.0.0.1
 $username = "root";           // tài khoản mặc định của XAMPP
 $password = "";               // thường để trống với XAMPP
-$dbname = "phplogin";          // tên CSDL bạn đã tạo
+$dbname = "nhasach";          // tên CSDL bạn đã tạo
 
 // Tạo kết nối
 $conn = new mysqli($servername, $username, $password, $dbname);
