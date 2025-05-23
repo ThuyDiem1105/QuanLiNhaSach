@@ -1,11 +1,17 @@
+<?php
+/* session_start(); if (isset($_POST['account_loggedin'])){     header('Location: ../loginFunction/mainPage.php'); } */
+include __DIR__ . '/../../database_connect.php';
+$result = $mysqli->query("SELECT * FROM khachhang");
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản lý khách hàng</title>
-    <link rel="stylesheet" href="../assets/customers-style.css" />
-    <script src="customers-script.js" defer></script>
+    <link rel="stylesheet" href="../../assets/customers-style.css" />
+    <script src="../customers-script.js" defer></script>
 </head>
 <body>
     <div class="main-content">
