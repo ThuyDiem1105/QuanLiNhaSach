@@ -1,6 +1,6 @@
 // Hàm xử lý border-bottom cho dòng cuối cùng đang hiển thị
 function fixTableBorders() {
-    const rows = Array.from(document.querySelectorAll('.customer-table tbody tr'))
+    const rows = Array.from(document.querySelectorAll('.table tbody tr'))
         .filter(row => row.style.display !== "none");
     // Đặt lại border-bottom cho tất cả các dòng hiển thị
     rows.forEach(row => row.querySelectorAll('td').forEach(td => td.style.borderBottom = "1px solid #0d3c6b"));
@@ -8,11 +8,11 @@ function fixTableBorders() {
     if (rows.length > 0) {
         rows[rows.length - 1].querySelectorAll('td').forEach(td => td.style.borderBottom = "none");
         // Hiện border-bottom cho th
-        document.querySelectorAll('.customer-table th').forEach(th => th.style.borderBottom = "1px solid #0d3c6b");
+        document.querySelectorAll('.table th').forEach(th => th.style.borderBottom = "1px solid #0d3c6b");
     }
     else {
         // Không có dòng nào hiển thị, ẩn border-bottom của th
-        document.querySelectorAll('.customer-table th').forEach(th => th.style.borderBottom = "none");
+        document.querySelectorAll('.table th').forEach(th => th.style.borderBottom = "none");
     }
 }
 
@@ -27,16 +27,16 @@ function isValidPhone(phone) {
 }
 
 function viewCustomer(customerId) {
-    const row = [...document.querySelectorAll(".customer-table tbody tr")]
+    const row = [...document.querySelectorAll(".table tbody tr")]
         .find(tr => tr.children[0].textContent === customerId);
 
     if (!row) return;
 
-    const id = row.children[0].textContent;
-    const name = row.children[1].textContent;
-    const phone = row.children[2].textContent;
-    const type = row.children[3].textContent;
-    const debtRaw = row.children[4].textContent;
+    const id = row.children[1].textContent;
+    const name = row.children[2].textContent;
+    const phone = row.children[3].textContent;
+    const type = row.children[4].textContent;
+    const debtRaw = row.children[5].textContent;
     
     // Lấy thông tin chi tiết từ nguồn dữ liệu khác nếu có, hoặc lưu trữ thêm thông tin khi tạo mới/sửa
     // Ở đây demo sẽ lấy tạm, bạn có thể mở rộng thêm nếu cần
@@ -52,10 +52,10 @@ function viewCustomer(customerId) {
     const debt = parseInt(debtRaw.replace(/\./g, "")) || 0;
 
     const overlay = document.createElement("div");
-    overlay.className = "customer-detail-overlay";
+    overlay.className = "detail-overlay";
 
     overlay.innerHTML = `
-        <div class="customer-detail-form">
+        <div class="detail-form">
             <h2>Thông tin khách hàng</h2>
             <div class="form-group">
                 <label for="id">Mã KH</label>
@@ -157,10 +157,10 @@ function viewCustomer(customerId) {
                 return;
             }
             
-            row.children[1].textContent = nameInput.value;
-            row.children[2].textContent = phoneInput.value;
-            row.children[3].textContent = typeSelect.value;
-            row.children[4].textContent = parsedDebt.toLocaleString("vi-VN");
+            row.children[2].textContent = nameInput.value;
+            row.children[3].textContent = phoneInput.value;
+            row.children[4].textContent = typeSelect.value;
+            row.children[5].textContent = parsedDebt.toLocaleString("vi-VN");
             row.setAttribute('data-address', addressInput.value);
             row.setAttribute('data-email', emailInput.value);
 
@@ -182,6 +182,7 @@ function viewCustomer(customerId) {
                 debt: debtInput.value
             };
 
+            renderTable(); // Gọi lại renderTable để cập nhật phân trang
             // Hiển thị thông báo đã lưu
             showToast("Đã lưu thành công!");
             overlay.remove(); // <-- Đóng popup sau khi lưu
@@ -214,13 +215,14 @@ function deleteRow(button) {
     if (confirm("Bạn có chắc muốn xóa khách hàng này?")) {
         row.remove();
     }
+    renderTable(); // Gọi lại renderTable để cập nhật phân trang
 }
 
 function createNewCustomer() {
     const form = document.createElement("div");
-    form.className = "customer-detail-overlay";
+    form.className = "detail-overlay";
     form.innerHTML = `
-        <div class="customer-add-form">
+        <div class="add-form">
             <h2>Thêm khách hàng</h2>
             <div class="form-group">
                 <label for="new-name">Họ tên</label>
@@ -259,8 +261,33 @@ function createNewCustomer() {
 
     document.body.appendChild(form);
 
+    // Lưu dữ liệu mặc định ban đầu
+    const defaultData = {
+        name: "",
+        address: "",
+        email: "",
+        phone: "",
+        type: "",
+        debt: "0"
+    };
+
     form.querySelector(".cancel-btn").addEventListener("click", () => {
-        form.remove(); // Đóng popup khi nhấn Hủy
+        // Lấy dữ liệu hiện tại
+        const currentData = {
+            name: form.querySelector("#new-name").value.trim(),
+            address: form.querySelector("#new-address").value.trim(),
+            email: form.querySelector("#new-email").value.trim(),
+            phone: form.querySelector("#new-phone").value.trim(),
+            type: form.querySelector("#new-type").value,
+            debt: form.querySelector("#new-debt").value.trim() || "0"
+        };
+        // Kiểm tra nếu có thay đổi so với mặc định
+        const dataChanged = JSON.stringify(currentData) !== JSON.stringify(defaultData);
+
+        if (dataChanged) {
+            if (!confirm("Bạn có muốn thoát khi chưa lưu không?")) return;
+        }
+        form.remove();
     });
 
     form.querySelector(".save-btn").addEventListener("click", () => {
@@ -295,7 +322,7 @@ function createNewCustomer() {
             return;
         }
 
-        const table = document.querySelector(".customer-table tbody");
+        const table = document.querySelector(".table tbody");
         const newId = generateCustomerId();
         const newRow = document.createElement("tr");
 
@@ -304,6 +331,7 @@ function createNewCustomer() {
         newRow.setAttribute("data-email", email);
 
         newRow.innerHTML = `
+            <td></td> <!-- STT sẽ được JS cập nhật -->
             <td>${newId}</td>
             <td>${name}</td>
             <td>${phone}</td>
@@ -316,7 +344,7 @@ function createNewCustomer() {
         `;
 
         table.appendChild(newRow);
-        fixTableBorders(); // <-- Thêm dòng này ngay sau khi thêm dòng mới
+        renderTable();
         form.remove();
 
         // Hiển thị thông báo đã lưu
@@ -325,51 +353,35 @@ function createNewCustomer() {
 }
 
 function generateCustomerId() {
-    const rows = document.querySelectorAll(".customer-table tbody tr");
-    let max = 0;
+    const rows = document.querySelectorAll(".table tbody tr");
+    const usedNumbers = [];
     rows.forEach(row => {
-        const id = row.children[0].textContent;
+        const id = row.children[1].textContent;
         const num = parseInt(id.replace("KH", ""));
-        if (!isNaN(num) && num > max) max = num;
+        if (!isNaN(num)) usedNumbers.push(num);;
     });
-    const next = max + 1;
+    // Tìm số nhỏ nhất chưa dùng
+    let next = 1;
+    while (usedNumbers.includes(next)) {
+        next++;
+    }
     return `KH${next.toString().padStart(3, "0")}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector(".search-input");
     const filterSelect = document.querySelector(".filter-select");
-    const tableBody = document.querySelector(".customer-table tbody");
+    const tableBody = document.querySelector(".table tbody");
 
     function filterCustomers() {
-        const keyword = searchInput.value.toLowerCase();
-        const typeFilter = filterSelect.value;
-
-        const rows = tableBody.querySelectorAll("tr");
-        rows.forEach(row => {
-            const cells = [
-                row.children[0]?.textContent.toLowerCase() || "",
-                row.children[1]?.textContent.toLowerCase() || "",
-                row.children[2]?.textContent.toLowerCase() || "",
-                row.children[3]?.textContent.toLowerCase() || "",
-            ];
-            const matchesKeyword = cells.some(text => text.includes(keyword));
-            const matchesType = (typeFilter === "all" || cells[2] === typeFilter.toLowerCase());
-
-            if (matchesKeyword && matchesType) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
-        });
-        fixTableBorders();
+        currentPage = 1; // Reset về trang đầu khi lọc
+        renderTable(); // Gọi lại renderTable để cập nhật phân trang
     }
 
     searchInput.addEventListener("input", filterCustomers);
     filterSelect.addEventListener("change", filterCustomers);
 
-    // Gọi fixTableBorders khi trang vừa load
-    fixTableBorders();
+    renderTable(); // Thêm dòng này để bảng hiển thị đúng ngay từ đầu
 });
 
 function showToast(message) {
@@ -381,3 +393,150 @@ function showToast(message) {
         toast.classList.remove("show");
     }, 3000);
 }
+
+const PAGE_SIZE = 50;
+let currentPage = 1;
+let currentSort = "id"; // mặc định sắp xếp theo mã KH
+
+function getAllRows() {
+    return Array.from(document.querySelectorAll(".table tbody tr"));
+}
+
+function renderTable() {
+    // Lấy dữ liệu lọc
+    const searchInput = document.querySelector(".search-input");
+    const filterSelect = document.querySelector(".filter-select");
+    const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+    const typeFilter = filterSelect ? filterSelect.value : "all";
+
+    // Lấy tất cả dòng (không ẩn)
+    let rows = getAllRows();
+
+    // LỌC
+    rows = rows.filter(row => {
+        const cells = [
+            row.children[1]?.textContent.toLowerCase() || "", // Mã KH
+            row.children[2]?.textContent.toLowerCase() || "", // Họ tên
+            row.children[3]?.textContent.toLowerCase() || "", // Số điện thoại
+            row.children[4]?.textContent.toLowerCase() || "", // Loại
+        ];
+        const matchesKeyword = cells.some(text => text.includes(keyword));
+        const matchesType = (typeFilter === "all" || cells[3] === typeFilter.toLowerCase());
+        return matchesKeyword && matchesType;
+    });
+
+    // Sắp xếp
+    rows.sort((a, b) => {
+        if (currentSort === "id") {
+            return a.children[1].textContent.localeCompare(b.children[1].textContent, undefined, {numeric: true});
+        }
+        if (currentSort === "name") {
+            return a.children[2].textContent.localeCompare(b.children[2].textContent, 'vi');
+        }
+        if (currentSort === "debt-asc" || currentSort === "debt-desc") {
+            const debtA = parseInt(a.children[5].textContent.replace(/\./g, "")) || 0;
+            const debtB = parseInt(b.children[5].textContent.replace(/\./g, "")) || 0;
+            return currentSort === "debt-asc" ? debtA - debtB : debtB - debtA;
+        }
+        return 0;
+    });
+
+    // GẮN LẠI các dòng vào tbody theo thứ tự mới
+    const tbody = document.querySelector(".table tbody");
+    getAllRows().forEach(row => row.style.display = "none"); // Ẩn tất cả trước
+    rows.forEach(row => tbody.appendChild(row));
+
+    // Phân trang
+    const totalRows = rows.length;
+    const totalPages = Math.max(1, Math.ceil(totalRows / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+
+    // Ẩn tất cả dòng
+    rows.forEach(row => row.style.display = "none");
+    // Hiện dòng thuộc trang hiện tại
+    rows.slice(start, end).forEach(row => row.style.display = "");
+
+    // Cập nhật phân trang
+    document.querySelector(".page-info").textContent = `${currentPage}/${totalPages}`;
+    document.querySelector(".page-btn.prev").disabled = currentPage === 1;
+    document.querySelector(".page-btn.next").disabled = currentPage === totalPages;
+
+    // Đánh lại số thứ tự STT cho các dòng đang hiển thị
+    rows.slice(start, end).forEach((row, idx) => {
+        row.children[0].textContent = (start + idx + 1);
+    });
+    fixTableBorders();
+}
+
+// Sự kiện phân trang
+document.querySelector(".page-btn.prev").addEventListener("click", () => {
+    if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+    }
+});
+document.querySelector(".page-btn.next").addEventListener("click", () => {
+    const totalRows = getAllRows().length;
+    const totalPages = Math.max(1, Math.ceil(totalRows / PAGE_SIZE));
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderTable();
+    }
+});
+
+// Dropdown cho sắp xếp Nợ
+const sortPriceBtn = document.getElementById("sortPriceBtn");
+const sortPriceMenu = document.getElementById("sortPriceMenu");
+
+// Gán nhãn cho từng lựa chọn
+const sortDebtLabels = {
+    "debt-asc": "Nợ: Tăng dần",
+    "debt-desc": "Nợ: Giảm dần"
+};
+
+sortPriceBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    sortPriceMenu.classList.toggle("show");
+    sortPriceBtn.classList.toggle("sort-dropdown-active");
+});
+
+// Ẩn dropdown khi click ra ngoài
+document.addEventListener("click", () => {
+    sortPriceMenu.classList.remove("show");
+    sortPriceBtn.classList.remove("sort-dropdown-active");
+});
+
+// Chọn sắp xếp theo nợ
+document.querySelectorAll(".sort-dropdown-item").forEach(item => {
+    item.addEventListener("click", function(e) {
+        document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".sort-dropdown-item").forEach(i => i.classList.remove("active"));
+        this.classList.add("active");
+        sortPriceBtn.classList.add("sort-dropdown-active");
+        currentSort = this.getAttribute("data-sort");
+        currentPage = 1;
+        // Đổi nhãn nút chính
+        sortPriceBtn.querySelector(".label").textContent = sortDebtLabels[currentSort];
+        sortPriceBtn.classList.add("active");
+        renderTable();
+        sortPriceMenu.classList.remove("show");
+    });
+});
+
+// Đổi lại sự kiện cho các nút sort-btn thường (trừ sortPriceBtn)
+document.querySelectorAll(".sort-btn:not(.sort-dropdown-toggle)").forEach(btn => {
+    btn.addEventListener("click", function() {
+        document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".sort-dropdown-item").forEach(i => i.classList.remove("active"));
+        this.classList.add("active");
+        sortPriceBtn.classList.remove("sort-dropdown-active");
+        // Đặt lại nhãn nút "Nợ" về mặc định
+        sortPriceBtn.querySelector(".label").textContent = "Tiền nợ ";
+        sortPriceBtn.classList.remove("active");
+        currentSort = this.getAttribute("data-sort");
+        currentPage = 1;
+        renderTable();
+    });
+});
