@@ -1,10 +1,9 @@
 <?php
 session_start();
-include __DIR__ . '/../admin/connect.php';  // Kết nối CSDL, đảm bảo đường dẫn đúng
+include __DIR__ . '/../connect.php';
 
-// Xử lý form khi submit
-if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['username']) && isset($_POST['password'])) {
+if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
+    if (!empty($_POST['username']) && !empty($_POST['password'])) {
         $username = trim($_POST['username']);
         $password = trim($_POST['password']);
 
@@ -15,23 +14,20 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($result && $result->num_rows === 1) {
             $user = $result->fetch_assoc();
-            if ($password === $user['MatKhau']) {
 
-                session_regenerate_id(true);
+            // Không dùng hash → so sánh trực tiếp
+            if ($password === $user['MatKhau']) {
                 $_SESSION['username'] = $username;
                 $_SESSION['loggedin'] = true;
-                $stmt->close();
-                $conn->close();
-                header("Location: home.html");  // Chuyển hướng nếu đăng nhập đúng
+                header("Location: admin/home.html");
                 exit;
             }
         }
 
-        // Lưu lỗi vào session
+        // Nếu sai tài khoản hoặc mật khẩu
         $_SESSION['login_error'] = "Tên đăng nhập hoặc mật khẩu không đúng.";
-        $stmt->close();
-        $conn->close();
-        header("Location: login.html");
+        header("Location: ../login.html"); // Điều hướng lại trang login
         exit;
     }
 }
+?>
