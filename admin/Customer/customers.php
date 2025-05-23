@@ -31,10 +31,32 @@ $result = $mysqli->query("SELECT * FROM khachhang");
                 <button class="add-button" onclick="createNewCustomer()">+ Thêm khách hàng</button>
             </div>
         </div>
+
+        <div class="sort-pagination-bar">
+            <span>Sắp xếp theo</span>
+            <button class="sort-btn active" data-sort="id">Mã KH</button>
+            <button class="sort-btn" data-sort="name">Tên</button>
+            <div class="sort-dropdown">
+                <button class="sort-btn sort-dropdown-toggle" id="sortPriceBtn">
+                    <span class="label">Tiền nợ</span>
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="sort-dropdown-menu" id="sortPriceMenu">
+                    <div class="sort-dropdown-item" data-sort="debt-asc">Nợ: Tăng dần</div>
+                    <div class="sort-dropdown-item" data-sort="debt-desc">Nợ: Giảm dần</div>
+                </div>
+            </div>
+            <span class="pagination">
+                <button class="page-btn prev">&lt;</button>
+                <span class="page-info">1/1</span>
+                <button class="page-btn next">&gt;</button>
+            </span>
+        </div>
         <!-- Bảng khách hàng -->
-        <table class="customer-table">
+        <table class="table">
             <thead>
                 <tr>
+                    <th class="stt">STT</th>
                     <th class="id">Mã khách hàng</th>
                     <th>Họ tên</th>
                     <th>Số điện thoại</th>
@@ -45,6 +67,7 @@ $result = $mysqli->query("SELECT * FROM khachhang");
             </thead>
             <tbody>
                 <tr>
+                    <td class="stt"></td>
                     <td>KH001</td>
                     <td>Nguyễn Văn A</td>
                     <td>0901234567</td>
@@ -56,6 +79,7 @@ $result = $mysqli->query("SELECT * FROM khachhang");
                     </td>
                 </tr>
                 <tr>
+                    <td class="stt"></td>
                     <td>KH002</td>
                     <td>Trần Thị B</td>
                     <td>0912345678</td>
