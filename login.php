@@ -7,7 +7,7 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") 
         $username = trim($_POST['username']);
         $password = trim($_POST['password']);
 
-        $stmt = $conn->prepare("SELECT * FROM users WHERE TenDangNhap = ?");
+        $stmt = $conn->prepare("SELECT * FROM taikhoan WHERE TenDN = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -16,7 +16,7 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") 
             $user = $result->fetch_assoc();
 
             // Không dùng hash → so sánh trực tiếp
-            if ($password === $user['MatKhau']) {
+            if ($password === $user['MatKhauGoc']) {
                 $_SESSION['username'] = $username;
                 $_SESSION['loggedin'] = true;
                 header("Location: admin/home.html");
