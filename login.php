@@ -1,6 +1,6 @@
 <?php
 session_start();
-include __DIR__ . '/../connect.php';
+include __DIR__ . '/connect.php';
 
 if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
     if (!empty($_POST['username']) && !empty($_POST['password'])) {

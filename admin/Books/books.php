@@ -1,6 +1,6 @@
 <?php
-include '../../database_connect.php';
-
+session_start();
+include __DIR__ . '/../../connect.php';
 // Đọc danh mục sách
 $danhMucArr = [];
 $result = $mysqli->query("SELECT MaDMS, TenDanhMuc FROM danhmucsach");
@@ -13,7 +13,7 @@ $result->free();
 $theLoaiArr = [];
 $result = $mysqli->query("SELECT MaTL, TenTheLoai FROM theloai");
 while ($row = $result->fetch_assoc()) {
-    $theLoaiArr[$row['MaTL']] = $row['TenTheLoai']; 
+    $theLoaiArr[$row['MaTL']] = $row['TenTheLoai'];
 }
 $result->free();
 

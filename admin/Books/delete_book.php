@@ -1,7 +1,7 @@
 <?php
-include '../../database_connect.php';
+include '../../connect.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
     $masach = $_POST['ma_sach'];
     $queries = [
         'DELETE FROM sach_theloai WHERE MaSach = ?',
