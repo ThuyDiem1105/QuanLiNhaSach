@@ -2,73 +2,49 @@
 include '../../connect.php';
 
 $formMode   = $_POST['form_mode']   ?? '';
-$maSach     = $_POST['ma_sach']     ?? '';
-$tenSach    = $_POST['ten_sach']    ?? '';
-$danhMuc    = $_POST['danh_muc']    ?? '';
-$theLoaiStr = $_POST['the_loai']    ?? '';
-$theLoaiArr = explode(',', $theLoaiStr);
-$tacGia     = $_POST['tac_gia']     ?? '';
-$nhaxb      = $_POST['nxb']         ?? '';
-$ngayxb     = $_POST['ngay_xb']     ?? '';
-$ngonNgu    = $_POST['ngon_ngu']    ?? '';
-$soluongTon = $_POST['sl_ton']      ?? '';
-$giaBan     = $_POST['gia_ban']     ?? '';
+$maKH       = $_POST['ma_kh']       ?? '';
+$hoTen      = $_POST['ho_ten']      ?? '';
+$sdt        = $_POST['sdt']         ?? '';
+$loai       = $_POST['loai']        ?? '';
+$soTienNo   = $_POST['so_tien_no'] ?? '';
 
 if (
-    $formMode === '' || $maSach === '' || $tenSach === '' ||
-    $danhMuc === '' || $theLoaiStr === '' || $tacGia === '' ||
-    $nhaxb === '' || $ngayxb === '' || $ngonNgu === '' ||
-    $soluongTon === '' || $giaBan === ''
+    $formMode === '' || $maKH === '' || $hoTen === '' ||
+    $sdt === '' || $loai === '' || $soTienNo === ''
 ) {
-    echo "Nhập đầy đủ thông tin sách.";
+    echo "Nhập đầy đủ thông tin khách hàng.";
     $mysqli->close();
     exit;
 }
 
 // ...phần xử lý tiếp theo...
-if ($formMode === "new"){
-    // kiểm tra xem sách đã tồn tại chưa
-    $stmt = $mysqli->prepare("SELECT MaSach FROM sach WHERE MaSach = ? AND TenSach = ? AND TacGia = ?");
-    $stmt->bind_param("sss", $maSach, $tenSach, $tacGia);
+if ($formMode === "new") {
+    // Kiểm tra xem khách hàng đã tồn tại chưa
+    $stmt = $mysqli->prepare("SELECT MaKH FROM khachhang WHERE MaKH = ?");
+    $stmt->bind_param("s", $maKH);
     $stmt->execute();
     $stmt->store_result();
 
-    //đã tồn tại rồi
     if ($stmt->num_rows > 0) {
-        echo "book_exists";
+        echo "customer_exists"; // Khách hàng đã tồn tại
+        $stmt->close();
+        $mysqli->close();
         exit;
-    } else {
-        $stmt = $mysqli->prepare("INSERT INTO sach (MaSach, TenSach, MaDMS, TheLoai, NhaXuatBan, NgayXuatBan, TacGia, NgonNgu, GiaBan, SoLuongTon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('ssssssssdi', $maSach, $tenSach, $danhMuc, $theLoaiStr, $nhaxb, $ngayxb, $tacGia, $ngonNgu, $giaBan, $soluongTon);
-        if ($stmt->execute()) {
-            echo "OK";
-        } else {
-            echo "ERROR: " . $stmt->error;
-        }
-        $stmt->close();
-
-        foreach ($theLoaiArr as $theloai){
-        $stmt = $mysqli->prepare('INSERT INTO sach_theloai(MaSach, MaTL) VALUES(?, ?)');
-        $stmt->bind_param('ss', $maSach, $theloai);
-        $stmt->execute();
-        $stmt->close();
-        }
     }
-} else if($formMode === "edit"){
-    $stmt = $mysqli->prepare("DELETE FROM sach_theloai WHERE MaSach = ?");
-    $stmt->bind_param('s', $maSach);
-    $stmt->execute();
     $stmt->close();
 
-    foreach ($theLoaiArr as $theloai){
-        $stmt = $mysqli->prepare('INSERT INTO sach_theloai(MaSach, MaTL) VALUES(?, ?)');
-        $stmt->bind_param('ss', $maSach, $theloai);
-        $stmt->execute();
-        $stmt->close();
+    // Thêm khách hàng mới
+    $stmt = $mysqli->prepare("INSERT INTO khachhang (MaKH, HoTen, SDT, Loai, SoTienNo) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssi', $maKH, $hoTen, $sdt, $loai, $soTienNo);
+    if ($stmt->execute()) {
+        echo "OK"; // Thêm thành công
+    } else {
+        echo "ERROR: " . $stmt->error; // Lỗi khi thêm
     }
-
-    $stmt = $mysqli->prepare("UPDATE sach SET MaDMS = ?, TheLoai = ?, NhaXuatBan = ?, NgayXuatBan = ?, TacGia = ?, NgonNgu = ?, GiaBan = ?, SoLuongTon = ? WHERE MaSach = ?");
-    $stmt->bind_param('ssssssdis', $danhMuc, $theLoaiStr, $nhaxb, $ngayxb, $tacGia, $ngonNgu, $giaBan, $soluongTon, $maSach);
+    $stmt->close();
+} else if($formMode === "edit"){
+    $stmt = $mysqli->prepare("UPDATE khachhang SET HoTen = ?, SDT = ?, Loai = ?, SoTienNo = ? WHERE MaKH = ?");
+    $stmt->bind_param('ssssi', $hoTen, $sdt, $loai, $soTienNo, $maKH);
     if ($stmt->execute()) {
         echo "OK";
     } else {

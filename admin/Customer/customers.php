@@ -105,9 +105,11 @@ $result = $mysqli->query("SELECT * FROM sach");
 
       <input type="hidden" name="form_mode" id="form_mode" value="new">
 
-      <button type="submit">Lưu</button>
-      <button type="button" onclick="closeForm()">Hủy</button>
-    </form>
+      <div class="form-buttons">
+          <button type="submit" class="btn-save" onclick="saveBook()" style="display: none;">Lưu</button>
+          <button type="button" class="btn-cancel" onclick="closeForm()">Đóng</button>
+        </div>
+      </form>
   </div>
   <script>
     let customerFormOverlay = document.getElementById('customerFormOverlay');
@@ -134,8 +136,8 @@ $result = $mysqli->query("SELECT * FROM sach");
     function enableEditing() {
       const inputs = customerForm.querySelectorAll('input, select');
       inputs.forEach(input => input.removeAttribute('readonly'));
-      document.querySelector('.btn-save').style.display = 'inline-block';
-      document.querySelector('.btn-edit').style.display = 'none';
+      document.querySelector('.btn-edit').style.display = 'inline-block';
+      document.querySelector('.btn-save').style.display = 'none';
 
       const maKH = form.ma_kh.value;
     }
@@ -183,26 +185,37 @@ $result = $mysqli->query("SELECT * FROM sach");
 
     //Button Thêm khách hàng mới
     function createNewCustomer() {
-      const customerFormOverlay = document.getElementById('customerFormOverlay');
-      const formModeInput = document.getElementById('form_mode');
-      const form = document.getElementById('customerForm');
-      if (!customerFormOverlay || !formModeInput || !form) {
-        console.error('Form elements not found!');
-        return;
-      }
-      form.reset();
-      // Sinh mã khách hàng tự động theo số lượng dòng hiện tại
-      const table = document.getElementById("customerTable").getElementsByTagName("tbody")[0];
-      const nextId = "KH" + String(table.rows.length + 1).padStart(3, '0');
-      form.ma_kh.value = nextId;
-      customerFormOverlay.classList.add('show'); // Hiển thị form
-      formModeInput.value = 'new'; // Đặt chế độ form là thêm mới
-      // Reset các trường nhập liệu khác
-      document.getElementById('ho_ten').value = '';
-      document.getElementById('sdt').value = '';
-      document.getElementById('loai').value = 'Thường';
-      document.getElementById('so_tien_no').value = '';
+    const customerFormOverlay = document.getElementById('customerFormOverlay');
+    const formModeInput = document.getElementById('form_mode');
+    const form = document.getElementById('customerForm');
+
+    if (!customerFormOverlay || !formModeInput || !form) {
+      console.error('Form elements not found!');
+      return;
     }
+
+    form.reset();
+
+    const table = document.getElementById("customerTable").getElementsByTagName("tbody")[0];
+    const nextId = "KH" + String(table.rows.length + 1).padStart(3, '0');
+    form.ma_kh.value = nextId;
+
+    // Hiển thị form và thiết lập chế độ
+    customerFormOverlay.classList.add('show');
+    formModeInput.value = 'new';
+
+    // Reset các trường
+    document.getElementById('ho_ten').value = '';
+    document.getElementById('sdt').value = '';
+    document.getElementById('loai').value = 'Thường';
+    document.getElementById('so_tien_no').value = '';
+
+    // Hiện nút Lưu & Đóng (nếu đã ẩn trước đó)
+    document.querySelector('.btn-save').style.display = 'inline-block';
+    document.querySelector('.btn-close').style.display = 'inline-block';
+  }
+
+
 
     //Hiển thị tin nhắn thông báo
     function showToast(message) {

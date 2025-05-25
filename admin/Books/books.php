@@ -199,7 +199,6 @@ $result = $mysqli->query("SELECT * FROM sach");
 
       //đang ở chế độ xem nên ẩn nút Lưu
       document.querySelector(".btn-save").style.display = "none";
-      document.querySelector(".btn-edit").style.display = "inline-block";
       document.getElementById("bookFormOverlay").classList.add("show");
       bookFormOverlay.classList.add("show");
     }
@@ -217,8 +216,8 @@ $result = $mysqli->query("SELECT * FROM sach");
 
       const maSach = form.ma_sach.value;
 
-      document.querySelector(".btn-save").style.display = "inline-block";
-      document.querySelector(".btn-edit").style.display = "none";
+      document.querySelector(".btn-edit").style.display = "inline-block";
+      document.querySelector(".btn-save").style.display = "none";
     }
 
     // Kiểm tra thông tin form

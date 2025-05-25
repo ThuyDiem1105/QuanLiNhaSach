@@ -7,7 +7,7 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") 
         $username = trim($_POST['username']);
         $password = trim($_POST['password']);
 
-        $stmt = $conn->prepare("SELECT * FROM taikhoan WHERE TenDN = ?");
+        $stmt = $mysqli->prepare("SELECT * FROM taikhoan WHERE TenDN = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
