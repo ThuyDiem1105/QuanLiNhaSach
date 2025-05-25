@@ -83,38 +83,31 @@ $result = $mysqli->query("SELECT * FROM sach");
   </div>
 
   <div id="customerFormOverlay" class="overlay">
-    <div class="form-popup">
-      <h3>Chi tiết khách hàng</h3>
-      <form id="customerForm" onsubmit="return false;" action="" method="post" novalidate>
-        <input type="hidden" id="form_mode" name="form_mode" value="new">
+    <form id="customerForm" class="form-popup" method="POST" action="/QuanLiNhaSach/admin/Customer/save_customer.php">
+      <h2>Thêm Khách Hàng Mới</h2>
+      <label for="ma_kh">Mã Khách Hàng:</label>
+      <input type="text" name="ma_kh" id="ma_kh" required>
 
-        <label>Mã khách hàng:</label><input type="text" name="ma_kh" required readonly>
-        <span class="error" id="error_makh"></span>
+      <label for="ho_ten">Họ Tên:</label>
+      <input type="text" name="ho_ten" id="ho_ten" required>
 
-        <label>Họ tên:</label><input type="text" name="ho_ten" required readonly>
-        <span class="error" id="error_hoten"></span>
+      <label for="sdt">Số Điện Thoại:</label>
+      <input type="text" name="sdt" id="sdt" required>
 
-        <label>Số điện thoại:</label><input type="text" name="sdt" required readonly>
-        <span class="error" id="error_sdt"></span>
+      <label for="loai">Loại Khách Hàng:</label>
+      <select name="loai" id="loai" required>
+        <option value="Thường">Thường</option>
+        <option value="VIP">VIP</option>
+      </select>
 
-        <label>Loại:</label><input type="text" name="loai" required readonly>
-        <select name="loai" id="loai" required>
-          <option value="Thường">Thường</option>
-          <option value="VIP">VIP</option>
-          <option value="Thân thiết">Thân thiết</option>
-        </select>
-        <span class="error" id="error_loai"></span>
+      <label for="so_tien_no">Số Tiền Nợ:</label>
+      <input type="number" name="so_tien_no" id="so_tien_no" required>
 
-        <label>Số tiền nợ:</label><input type="text" name="so_tien_no" required readonly>
-        <span class="error" id="error_sotienno"></span>
+      <input type="hidden" name="form_mode" id="form_mode" value="new">
 
-        <div class="form-buttons">
-          <button type="submit" class="btn-save" onclick="saveCustomer()" style="display: none;">Lưu</button>
-          <button type="button" class="btn-edit" onclick="enableEditing()">Sửa</button>
-          <button type="button" class="btn-cancel" onclick="closeForm()">Đóng</button>
-        </div>
-      </form>
-    </div>
+      <button type="submit">Lưu</button>
+      <button type="button" onclick="closeForm()">Hủy</button>
+    </form>
   </div>
   <script>
     let customerFormOverlay = document.getElementById('customerFormOverlay');
@@ -143,33 +136,103 @@ $result = $mysqli->query("SELECT * FROM sach");
       inputs.forEach(input => input.removeAttribute('readonly'));
       document.querySelector('.btn-save').style.display = 'inline-block';
       document.querySelector('.btn-edit').style.display = 'none';
+
+      const maKH = form.ma_kh.value;
     }
 
-    function createNewCustomer() {
-      openForm('', '', '', 'Thường', '');
-      formModeInput.value = 'new';
-    }
-
+    //Button Lưu khách hàng
     function saveCustomer() {
-      const formData = new FormData(customerForm);
-      fetch('./save_customer.php', {
-        method: 'POST',
-        body: formData
+      const form = document.forms['customerForm'];
+      const table = document.getElementById("customerTable").getElementsByTagName("tbody")[0];
+      if(!checkValidFormValues(form)) return;
+
+      const formMode = document.getElementById("form_mode").value;
+      const maKH = form.ma_kh.value.trim();
+      const hoTen = form.ho_ten.value.trim();
+      const sdt = form.sdt.value.trim();
+      const loai = form.loai.value;
+      const soTienNo = form.so_tien_no.value;
+
+      const formData = new FormData(form);
+      formData.append("form_mode", formMode);
+      formData.append("so_tien_no", soTienNo);
+      fetch('save_customer.php', {
+        method: "POST",
+        body: formData,
       })
-      .then(response => response.text())
-      .then(data => {
-        if (data === "OK") {
-          showToast("Lưu thành công!", "success");
-          location.reload();
-        } else if (data === "book_exists") {
-          showToast("Khách hàng đã tồn tại!", "error");
+      .then(res => res.text())
+      .then (response => {
+        console.log("Raw response:", response);
+        if(response.trim() === "OK") {
+          showToast("Lưu thông tin thành công!");
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        } else if (response.trim() === "book_exists") {
+          alert("Sách đã tồn tại! Bạn có thể cập nhật lại thông tin sách.");
         } else {
-          showToast("Lỗi: " + data, "error");
+          alert("Lỗi: " + response);
         }
       })
-      .catch(error => showToast("Lỗi kết nối: " + error.message, "error"));
+      .catch(error => {
+        console.error("Lỗi: ", error);
+        alert("Lỗi khi gửi dữ liệu.");
+      });
+      closeForm();
     }
 
+    //Button Thêm khách hàng mới
+    function createNewCustomer() {
+      const customerFormOverlay = document.getElementById('customerFormOverlay');
+      const formModeInput = document.getElementById('form_mode');
+      const form = document.getElementById('customerForm');
+      if (!customerFormOverlay || !formModeInput || !form) {
+        console.error('Form elements not found!');
+        return;
+      }
+      form.reset();
+      // Sinh mã khách hàng tự động theo số lượng dòng hiện tại
+      const table = document.getElementById("customerTable").getElementsByTagName("tbody")[0];
+      const nextId = "KH" + String(table.rows.length + 1).padStart(3, '0');
+      form.ma_kh.value = nextId;
+      customerFormOverlay.classList.add('show'); // Hiển thị form
+      formModeInput.value = 'new'; // Đặt chế độ form là thêm mới
+      // Reset các trường nhập liệu khác
+      document.getElementById('ho_ten').value = '';
+      document.getElementById('sdt').value = '';
+      document.getElementById('loai').value = 'Thường';
+      document.getElementById('so_tien_no').value = '';
+    }
+
+    //Hiển thị tin nhắn thông báo
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeForm();
+    });
+
+    document.getElementById("customerFormOverlay").addEventListener("click", e => {
+      if (e.target === e.currentTarget) closeForm();
+    });
+
+    
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const circle = document.createElement('span');
+        circle.classList.add('ripple');
+        circle.style.left = `${e.offsetX}px`;
+        circle.style.top = `${e.offsetY}px`;
+        btn.appendChild(circle);
+        setTimeout(() => circle.remove(), 600);
+      });
+    });
+
+  
     function deleteCustomer(maKH) {
       if (confirm("Bạn có chắc chắn muốn xóa khách hàng này?")) {
         fetch('./delete_customer.php', {
@@ -187,10 +250,6 @@ $result = $mysqli->query("SELECT * FROM sach");
           }
         });
       }
-    }
-
-    function createNewCustomer() {
-      window.location.href = 'add_customer.php';
     }
   </script>
 </body>
