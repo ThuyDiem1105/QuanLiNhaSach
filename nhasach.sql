@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 24, 2025 at 07:32 AM
+-- Generation Time: May 25, 2025 at 05:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -97,6 +97,27 @@ INSERT INTO `danhmucsach` (`MaDMS`, `TenDanhMuc`) VALUES
 ('DM010', 'Thiếu nhi'),
 ('DM011', 'Phát triển bản thân'),
 ('DM012', 'Công nghệ - Kỹ thuật');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `khachhang`
+--
+
+CREATE TABLE `khachhang` (
+  `MaKH` varchar(10) NOT NULL,
+  `HoTen` varchar(100) NOT NULL,
+  `SDT` varchar(15) NOT NULL,
+  `Loai` enum('Thường','VIP') NOT NULL DEFAULT 'Thường',
+  `SoTienNo` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `khachhang`
+--
+
+INSERT INTO `khachhang` (`MaKH`, `HoTen`, `SDT`, `Loai`, `SoTienNo`) VALUES
+('KH002', 'Trần Thị B', '0912345678', 'VIP', 0);
 
 -- --------------------------------------------------------
 
@@ -282,6 +303,12 @@ ALTER TABLE `calam`
 --
 ALTER TABLE `danhmucsach`
   ADD PRIMARY KEY (`MaDMS`);
+
+--
+-- Indexes for table `khachhang`
+--
+ALTER TABLE `khachhang`
+  ADD PRIMARY KEY (`MaKH`);
 
 --
 -- Indexes for table `lichlamviec`
