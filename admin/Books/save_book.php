@@ -1,19 +1,31 @@
 <?php
-include '../../database_connect.php';
+include '../../connect.php';
 
-$formMode = $_POST['form_mode'];
-$maSach = $_POST['ma_sach'];
-$tenSach = $_POST['ten_sach'];
-$danhMuc = $_POST['danh_muc'];
-$theLoaiStr = $_POST['the_loai'];
+$formMode   = $_POST['form_mode']   ?? '';
+$maSach     = $_POST['ma_sach']     ?? '';
+$tenSach    = $_POST['ten_sach']    ?? '';
+$danhMuc    = $_POST['danh_muc']    ?? '';
+$theLoaiStr = $_POST['the_loai']    ?? '';
 $theLoaiArr = explode(',', $theLoaiStr);
-$tacGia = $_POST['tac_gia'];
-$nhaxb = $_POST['nxb'];
-$ngayxb = $_POST['ngay_xb'];
-$ngonNgu = $_POST['ngon_ngu'];
-$soluongTon = $_POST['sl_ton'];
-$giaBan = $_POST['gia_ban'];
+$tacGia     = $_POST['tac_gia']     ?? '';
+$nhaxb      = $_POST['nxb']         ?? '';
+$ngayxb     = $_POST['ngay_xb']     ?? '';
+$ngonNgu    = $_POST['ngon_ngu']    ?? '';
+$soluongTon = $_POST['sl_ton']      ?? '';
+$giaBan     = $_POST['gia_ban']     ?? '';
 
+if (
+    $formMode === '' || $maSach === '' || $tenSach === '' ||
+    $danhMuc === '' || $theLoaiStr === '' || $tacGia === '' ||
+    $nhaxb === '' || $ngayxb === '' || $ngonNgu === '' ||
+    $soluongTon === '' || $giaBan === ''
+) {
+    echo "Nhập đầy đủ thông tin sách.";
+    $mysqli->close();
+    exit;
+}
+
+// ...phần xử lý tiếp theo...
 if ($formMode === "new"){
     // kiểm tra xem sách đã tồn tại chưa
     $stmt = $mysqli->prepare("SELECT MaSach FROM sach WHERE MaSach = ? AND TenSach = ? AND TacGia = ?");
