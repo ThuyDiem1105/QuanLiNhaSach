@@ -1,6 +1,6 @@
 <?php
 /* session_start(); if (isset($_POST['account_loggedin'])){     header('Location: ../loginFunction/mainPage.php'); } */
-include __DIR__ . '/../../database_connect.php';
+include __DIR__ . '/../../connect.php';
 
 $result = $mysqli->query("SELECT MaSach, TenSach FROM sach WHERE SoLuongTon < 300");
 $bookIds = [];

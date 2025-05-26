@@ -1,5 +1,5 @@
 <?php
-include '../../database_connect.php';
+include __DIR__ . '/../../connect.php';
 
 $maNV = $_POST['tk_ma_nv'];
 $tenDN = $_POST['ten_dn'];

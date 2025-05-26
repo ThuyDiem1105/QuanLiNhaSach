@@ -24,6 +24,32 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `phieunhap`
+--
+
+CREATE TABLE `PHIEUNHAP` (
+  `MaPN` varchar(10) NOT NULL PRIMARY KEY,
+  `NgayLapPhieu` DATE DEFAULT CURRENT_DATE NOT NULL,
+  `NgayNhap` DATE NOT NULL,
+  `TongTien` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Table structure for table `chitiet_phieunhap`
+--
+
+CREATE TABLE `CHITIET_PHIEUNHAP` (
+  `MaCTPN ` INT PRIMARY KEY NOT NULL,
+  `MaPN` varchar(10) NOT NULL,
+  `MaSach` varchar(10) NOT NULL,
+  `SoLuong` int(11) NOT NULL,
+  `DonGiaNhap` DECIMAL(12,2) NOT NULL,
+  `ThanhTien` DECIMAL(12,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+--- số lượng nhập tối thiểu là 150
+ALTER TABLE chitiet_phieunhap ADD CONSTRAINT check_soluong CHECK(SoLuong >= 150);
+
+--
 -- Table structure for table `calam`
 --
 

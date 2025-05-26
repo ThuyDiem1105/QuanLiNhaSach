@@ -217,8 +217,8 @@ $result = $mysqli->query("SELECT * FROM sach");
 
       const maSach = form.ma_sach.value;
 
-      document.querySelector(".btn-edit").style.display = "inline-block";
-      document.querySelector(".btn-save").style.display = "none";
+      document.querySelector(".btn-edit").style.display = "none";
+      document.querySelector(".btn-save").style.display = "inline-block";
     }
 
     // Kiểm tra thông tin form

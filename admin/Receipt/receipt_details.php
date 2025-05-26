@@ -1,5 +1,5 @@
 <?php
-include '../../database_connect.php';
+include __DIR__ . '/../../connect.php';
 $maPN = $_GET['ma_pn'];
 
 //lấy thông tin phiếu nhập có mã phiếu được chọn
