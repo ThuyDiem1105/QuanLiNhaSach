@@ -126,7 +126,28 @@ $result = $mysqli->query("SELECT * FROM sach");
       customerForm.querySelector('input[name="sdt"]').value = sdt;
       customerForm.querySelector('select[name="loai"]').value = loai;
       customerForm.querySelector('input[name="so_tien_no"]').value = soTienNo;
-      enableEditing();
+
+      // Set fields to readonly
+      const inputs = customerForm.querySelectorAll('input, select');
+      inputs.forEach(input => input.setAttribute('readonly', true));
+
+      // Adjust buttons
+      const saveButton = document.querySelector('.btn-save');
+      const cancelButton = document.querySelector('.btn-cancel');
+      let editButton = document.querySelector('.btn-edit');
+
+      if (!editButton) {
+        editButton = document.createElement('button');
+        editButton.type = 'button';
+        editButton.className = 'btn-edit';
+        editButton.textContent = 'Sửa';
+        editButton.onclick = enableEditing;
+        document.querySelector('.form-buttons').insertBefore(editButton, cancelButton);
+      }
+
+      saveButton.style.display = 'none';
+      editButton.style.display = 'inline-block';
+      cancelButton.style.display = 'inline-block';
     }
 
     function closeForm() {
