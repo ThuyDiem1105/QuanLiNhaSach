@@ -2,7 +2,7 @@
 /* session_start(); if (isset($_POST['account_loggedin'])){     header('Location: ../loginFunction/mainPage.php'); } */
 include __DIR__ . '/../../database_connect.php';
 $result = $mysqli->query("SELECT * FROM nhanvien");
-$results  =$mysqli->query("SELECT * FROM taikhoan");
+$results = $mysqli->query("SELECT * FROM taikhoan");
 ?>
 
 <!DOCTYPE html>

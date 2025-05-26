@@ -462,6 +462,7 @@ $result = $mysqli->query("SELECT * FROM sach");
   </div>
 
   <script>
+    
     let editingIndex = -1;
     let danhmucChoices, theloaiChoices;
 
@@ -765,3 +766,4 @@ $result = $mysqli->query("SELECT * FROM sach");
   </script>
 </body>
 </html>
+

@@ -110,16 +110,30 @@ CREATE TABLE IF NOT EXISTS `KHACHHANG` (
     `SoTienNo` DECIMAL(12,2)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `PhieuNhapSach` (
-    `MaPhieu` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `MaSach` VARCHAR(10) NOT NULL,
-    `NgayLapPhieu` DATETIME CURRENT_TIMESTAMP NOT NULL,
-    `NgayNhap` DATETIME NOT NULL,
-    `SoLuong` INT NOT NULL,
-    `DonGiaNhap` DECIMAL(12,2) NOT NULL,
-    `NguonNhap` VARCHAR(255) NOT NULL,
-    `ThanhTien` DECIMAL(12,2) NOT NULL
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--- BẢNG PHIẾU NHẬP SÁCH VÀ CHI TIẾT PHIẾU NHẬP
+CREATE TABLE `PHIEUNHAP` (
+  `MaPN` varchar(10) NOT NULL PRIMARY KEY,
+  `NgayLapPhieu` DATE DEFAULT CURRENT_DATE NOT NULL,
+  `NgayNhap` DATE NOT NULL,
+  `TongTien` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `CHITIET_PHIEUNHAP` (
+  `MaCTPN ` INT PRIMARY KEY NOT NULL,
+  `MaPN` varchar(10) NOT NULL,
+  `MaSach` varchar(10) NOT NULL,
+  `SoLuong` int(11) NOT NULL,
+  `DonGiaNhap` DECIMAL(12,2) NOT NULL,
+  `ThanhTien` DECIMAL(12,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+--- số lượng nhập tối thiểu là 150
+ALTER TABLE chitiet_phieunhap ADD CONSTRAINT check_soluong CHECK(SoLuong >= 150);
+
+
+
+
+
+
 
 
 // $categories = [
