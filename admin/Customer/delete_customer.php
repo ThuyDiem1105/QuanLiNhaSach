@@ -2,15 +2,14 @@
 include '../../connect.php';
 
 if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
-    $masach = $_POST['ma_sach'];
+    $makh = $_POST['ma_kh'];
     $queries = [
-        'DELETE FROM sach_theloai WHERE MaSach = ?',
-        'DELETE FROM sach WHERE MaSach = ?'
+        'DELETE FROM khachhang WHERE MaKH = ?'
     ];
 
     foreach ($queries as $sql) {
         if ($stmt = $mysqli->prepare($sql)) {
-            $stmt->bind_param('s', $masach);
+            $stmt->bind_param('s', $makh);
             if (!$stmt->execute()) {
                 echo "ERROR: " . $stmt->error;
                 $stmt->close();

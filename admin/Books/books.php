@@ -1,6 +1,6 @@
 <?php
-include '../../database_connect.php';
-
+session_start();
+include __DIR__ . '/../../connect.php';
 // Đọc danh mục sách
 $danhMucArr = [];
 $result = $mysqli->query("SELECT MaDMS, TenDanhMuc FROM danhmucsach");
@@ -13,7 +13,7 @@ $result->free();
 $theLoaiArr = [];
 $result = $mysqli->query("SELECT MaTL, TenTheLoai FROM theloai");
 while ($row = $result->fetch_assoc()) {
-    $theLoaiArr[$row['MaTL']] = $row['TenTheLoai']; 
+    $theLoaiArr[$row['MaTL']] = $row['TenTheLoai'];
 }
 $result->free();
 
@@ -26,318 +26,9 @@ $result = $mysqli->query("SELECT * FROM sach");
 <head>
   <meta charset="UTF-8">
   <title>Quản lý sách</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <link rel="stylesheet" href="../../style.css" type="text/css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-  <style>
-  * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: linear-gradient(135deg, #f9fff6, #edfaf9, #d8ddd3);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-    }
-
-    /* Layout */
-    .main-content {
-      padding: 20px;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .search-filter {
-      display: flex;
-      gap: 10px;
-    }
-
-    .search-filter input {
-      font-family: fontweb;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      transition: all 0.25s ease;
-    }
-
-    .search-filter input:hover {
-      border-color: #81c784;
-      background-color: #f0fff4;
-      box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
-    }
-
-    .add-button {
-      background-color: #c8ffe5;
-      font-family: fontweb;
-      color: #0d3c6b;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    .add-button:hover {
-      transform: scale(1.05);
-      filter: brightness(1.1);
-    }
-
-    button {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .ripple {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.6);
-      border-radius: 50%;
-      transform: scale(0);
-      animation: rippleAnim 0.6s linear;
-      width: 100px;
-      height: 100px;
-      pointer-events: none;
-    }
-
-    @keyframes rippleAnim {
-      to {
-        transform: scale(2.5);
-        opacity: 0;
-      }
-    }
-
-    /* Table */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 12px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #c8ffe5;
-      color: #0d3c6b;
-    }
-
-    tbody tr {
-      transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-
-    tbody tr:hover {
-      transform: scale(1.01);
-      background-color: #e8f5e9;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      cursor: pointer;
-    }
-
-    tr.new-row {
-      animation: highlightNewRow 1.5s ease;
-    }
-
-    @keyframes highlightNewRow {
-      from { background-color: #d6f0f1; }
-      to { background-color: transparent; }
-    }
-
-    .action-buttons button {
-      margin-right: 5px;
-      padding: 6px 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: fontweb;
-      transition: all 0.2s ease;
-    }
-
-    .action-buttons button:hover {
-      transform: scale(1.05);
-      filter: brightness(1.1);
-    }
-
-    .view-btn { background-color: #64b5f6; color: white; }
-    .edit-btn { background-color: #ffb74d; color: white; }
-    .delete-btn { background-color: #e57373; color: white; }
-
-    /* Overlay */
-    .overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-      backdrop-filter: blur(6px);
-    }
-
-    .overlay.show {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .form-popup {
-      background: #fff;
-      padding: 32px 24px;
-      width: 100%;
-      max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
-      border-radius: 16px;
-      border: 1px solid #81c784;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-      position: relative;
-      transform: translateY(-20px) scale(0.98);
-      opacity: 0;
-      transition: all 0.4s ease;
-    }
-
-    .overlay.show .form-popup {
-      animation: popupIn 0.4s ease forwards;
-    }
-
-    @keyframes popupIn {
-      0% { transform: scale(0.95); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .form-popup::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 6px;
-      width: 100%;
-      background-color: #81c784;
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
-    }
-
-    .form-popup h3 {
-      margin-bottom: 24px;
-      color: #2c3e50;
-      text-align: center;
-      font-size: 22px;
-    }
-
-    .form-popup label {
-      display: block;
-      margin-top: 16px;
-      font-weight: 600;
-      color: #444;
-      font-size: 14px;
-    }
-
-    .form-popup input {
-      width: 100%;
-      padding: 10px 12px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    .form-popup input:focus {
-      border-color: #81c784;
-      outline: none;
-      box-shadow: 0 0 6px rgba(129, 199, 132, 0.3);
-    }
-
-    .form-popup input[readonly] {
-      background-color: #f4f4f4;
-      border-color: #ddd;
-      color: #666;
-      cursor: not-allowed;
-    }
-
-    .form-buttons {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 28px;
-      gap: 12px;
-    }
-
-    .btn-save,
-    .btn-cancel,
-    .btn-edit {
-      padding: 10px 20px;
-      font-family: fontweb;
-      font-size: 14px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.2s ease;
-    }
-
-    .btn-save { background-color: #81c784; color: white; }
-    .btn-cancel { background-color: #e57373; color: white; }
-    .btn-edit { background-color: #ffb74d; color: white; }
-
-    .btn-save:hover { background-color: #66bb6a; transform: scale(1.05); }
-    .btn-cancel:hover { background-color: #ef5350; transform: scale(1.05); }
-    .btn-edit:hover { background-color: #ffa726; transform: scale(1.05); }
-
-  .choices__item--choice.is-highlighted {
-    background-color: #84ffc6 !important; 
-    color: #0d3c6b !important;
-  }
-
-  .choices__inner {
-    min-height: 36px !important;
-    font-size: 14px;
-    padding: 4px 8px !important;
-  }
-
-  .choices__list--dropdown .choices__item {
-    font-size: 14px;
-    padding: 6px 10px;
-  }
-    /* Toast */
-    #toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #b3ffdc;
-      color: #1c5083;
-      padding: 12px 20px;
-      border-radius: 8px;
-      opacity: 0;
-      transform: translateY(20px);
-      z-index: 10000;
-      font-size: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    #toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .error {
-  color: red;
-  font-size: 16px;
-  margin-top: 4px;
-  display: block;
-}
-  </style>
 </head>
 <body>
   <div class="main-content">
@@ -508,7 +199,6 @@ $result = $mysqli->query("SELECT * FROM sach");
 
       //đang ở chế độ xem nên ẩn nút Lưu
       document.querySelector(".btn-save").style.display = "none";
-      document.querySelector(".btn-edit").style.display = "inline-block";
       document.getElementById("bookFormOverlay").classList.add("show");
       bookFormOverlay.classList.add("show");
     }
@@ -526,8 +216,8 @@ $result = $mysqli->query("SELECT * FROM sach");
 
       const maSach = form.ma_sach.value;
 
-      document.querySelector(".btn-save").style.display = "inline-block";
-      document.querySelector(".btn-edit").style.display = "none";
+      document.querySelector(".btn-edit").style.display = "inline-block";
+      document.querySelector(".btn-save").style.display = "none";
     }
 
     // Kiểm tra thông tin form
