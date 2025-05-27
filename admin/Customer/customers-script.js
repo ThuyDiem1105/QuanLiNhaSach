@@ -1,4 +1,4 @@
-// Hàm xử lý border-bottom cho dòng cuối cùng đang hiển thị
+a// Hàm xử lý border-bottom cho dòng cuối cùng đang hiển thị
 function fixTableBorders() {
     const rows = Array.from(document.querySelectorAll('.table tbody tr'))
         .filter(row => row.style.display !== "none");
@@ -16,9 +16,19 @@ function fixTableBorders() {
     }
 }
 
-function openCustomerForm(maKH, tenKH, sdt, diaChi, email, loaiKH, tienNo) {
+// Thêm vào đầu file hoặc trước các hàm sử dụng
+function isValidEmail(email) {
+    // Regex kiểm tra email cơ bản
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function isValidPhone(phone) {
+    return /^[0-9]{9,11}$/.test(phone); // Ví dụ: chỉ chấp nhận số từ 9–11 chữ số
+}
+
+function viewCustomer(customerId) {
     const row = [...document.querySelectorAll(".table tbody tr")]
-        .find(tr => tr.children[0].textContent === maKH);
+        .find(tr => tr.children[1].textContent === customerId);
 
     if (!row) return;
 
@@ -48,7 +58,7 @@ function openCustomerForm(maKH, tenKH, sdt, diaChi, email, loaiKH, tienNo) {
         <div class="detail-form">
             <h2>Thông tin khách hàng</h2>
             <div class="form-group">
-                <label for="id">Mã KH</label>
+                <label for="id">Mã khách hàng</label>
                 <input type="text" id="id" value="${id}" disabled>
             </div>
             <div class="form-group">
