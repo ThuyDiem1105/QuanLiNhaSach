@@ -25,6 +25,7 @@ SET time_zone = "+00:00";
 
 --
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 -- Table structure for table `hoadon`
 --
 
@@ -80,6 +81,8 @@ CREATE TABLE `CHITIET_PHIEUNHAP` (
 ALTER TABLE chitiet_phieunhap ADD CONSTRAINT check_soluong CHECK(SoLuong >= 200);
 
 --
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 -- Table structure for table `calam`
