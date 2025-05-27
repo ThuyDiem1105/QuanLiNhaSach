@@ -1,5 +1,5 @@
 <?php
-include '../../connect.php';
+include __DIR__ . '/../../connect.php';
 
 if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
     $masach = $_POST['ma_sach'];

@@ -2,7 +2,7 @@
 session_start();
 include __DIR__ . '/../../connect.php';
 $result = $mysqli->query("SELECT * FROM nhanvien");
-$results  =$mysqli->query("SELECT * FROM taikhoan");
+$results = $mysqli->query("SELECT * FROM taikhoan");
 ?>
 
 <!DOCTYPE html>

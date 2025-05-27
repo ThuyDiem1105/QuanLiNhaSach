@@ -1,5 +1,5 @@
 <?php
-include '../../database_connect.php';
+include __DIR__ . '/../../connect.php';
 
 $maNV = $_POST['ma_nv'];
 $hoTen = $_POST['ho_ten'];

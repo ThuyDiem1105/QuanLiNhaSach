@@ -1,5 +1,5 @@
 <?php
-include '../../connect.php';
+include __DIR__ . '/../../connect.php';
 
 $formMode   = $_POST['form_mode']   ?? '';
 $maSach     = $_POST['ma_sach']     ?? '';

@@ -153,6 +153,7 @@ $result = $mysqli->query("SELECT * FROM sach");
   </div>
 
   <script>
+    
     let editingIndex = -1;
     let danhmucChoices, theloaiChoices;
 
@@ -216,8 +217,8 @@ $result = $mysqli->query("SELECT * FROM sach");
 
       const maSach = form.ma_sach.value;
 
-      document.querySelector(".btn-edit").style.display = "inline-block";
-      document.querySelector(".btn-save").style.display = "none";
+      document.querySelector(".btn-edit").style.display = "none";
+      document.querySelector(".btn-save").style.display = "inline-block";
     }
 
     // Kiểm tra thông tin form
@@ -455,3 +456,4 @@ $result = $mysqli->query("SELECT * FROM sach");
   </script>
 </body>
 </html>
+
