@@ -24,6 +24,35 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hoadon`
+--
+
+CREATE TABLE IF NOT EXISTS `HOADON` (
+  `MaHD` VARCHAR(10) NOT NULL PRIMARY KEY,
+  `MaKH` VARCHAR(10) NOT NULL,
+  `NgayLap` DATE DEFAULT CURRENT_DATE NOT NULL,
+  `TongTien` DECIMAL(20,2) NOT NULL,
+  `TienTra` DECIMAL(20,2) NOT NULL,
+  `TienNo` DECIMAL(20,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Table structure for table `hoadon`
+--
+CREATE TABLE `chitiet_hoadon` (
+  `MaCTHD` INT(11) NOT NULL AUTO_INCREMENT,
+  `MaHD` VARCHAR(10) NOT NULL,
+  `MaSach` VARCHAR(10) NOT NULL,
+  `SoLuong` INT(11) NOT NULL,
+  `GiaBan` DECIMAL(20,2) NOT NULL,
+  `ThanhTien` DECIMAL(20,2) NOT NULL,
+  PRIMARY KEY (`MaCTHD`),
+  FOREIGN KEY (`MaHD`) REFERENCES `hoadon`(`MaHD`),
+  FOREIGN KEY (`MaSach`) REFERENCES `sach`(`MaSach`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--
 -- Table structure for table `phieunhap`
 --
 
@@ -46,8 +75,8 @@ CREATE TABLE `CHITIET_PHIEUNHAP` (
   `DonGiaNhap` DECIMAL(12,2) NOT NULL,
   `ThanhTien` DECIMAL(12,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
---- số lượng nhập tối thiểu là 150
-ALTER TABLE chitiet_phieunhap ADD CONSTRAINT check_soluong CHECK(SoLuong >= 150);
+--- số lượng nhập tối thiểu là 200
+ALTER TABLE chitiet_phieunhap ADD CONSTRAINT check_soluong CHECK(SoLuong >= 200);
 
 --
 -- Table structure for table `calam`

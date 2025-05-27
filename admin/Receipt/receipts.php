@@ -644,7 +644,7 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
         <label>Ngày nhập sách:</label><input type="date" name="ngay_nhap" required readonly>
         <span class="error" id="error_ngaynhap"></span>
 
-        <label>Nhập thông tin đầu sách được nhập:</label>
+        <label>Thông tin đầu sách được nhập:</label>
         <table id="booksReceiptTable" style="border-collapse: collapse; width: 100%; text-align: center;">
           <thead>
             <tr>
@@ -704,33 +704,10 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
         toggleReadonly(true);
         document.getElementById("ngay_lap").style.display = "block";
         document.getElementById("btnAdd").style.display = "none";
-        document.getElementById("btnAdd").style.display = "none";
         document.getElementById("btnSave").style.display = "none";
         document.getElementById("receiptFormOverlay").classList.add("show");
       });
     }
-    // function openForm(maPhieu, maSach, soLuong, donGia, index = -1) {
-    //   const form = document.forms.receiptForm;
-    //   form.ma_phieu.value = maPhieu;
-    //   form.ma_sach.value = maSach;
-    //   form.so_luong.value = soLuong;
-    //   form.don_gia.value = donGia;
-    //   form.thanh_tien.value = soLuong * donGia;
-
-    //   editingIndex = index;
-
-    //   toggleReadonly(true);
-    //   document.getElementById("btnSave").style.display = "none";
-    //   document.getElementById("btnEdit").style.display = "inline-block";
-
-    //   document.getElementById("receiptFormOverlay").classList.add("show");
-    // }
-
-    // function enableEdit() {
-    //   toggleReadonly(false);
-    //   document.getElementById("btnSave").style.display = "inline-block";
-    //   document.getElementById("btnEdit").style.display = "none";
-    // }
 
     function toggleReadonly(state) {
       const form = document.forms["receiptForm"];
@@ -776,7 +753,7 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
         if (!soLuong) {
           document.getElementById("error_sach").textContent = `Vui lòng nhập số lượng cho dòng ${index + 1}`;
           isValid = false;
-        } else if (soLuong < 150) {
+        } else if (soLuong < 200) {
           document.getElementById("error_sach").textContent = `Số lượng nhập tối thiểu cho dòng ${index + 1} phải là 150.`;
           isValid = false;
         }

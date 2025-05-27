@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const pageMap = {
     dashboardBtn: 'dashboard.html',
-    ordersBtn: 'orders.html',
+    ordersBtn: 'Order/orders.php',
     booksBtn: 'Books/books.php',
     customersBtn: 'Customer/customers.php',
     staffBtn: 'Employee/staff.php',

@@ -8,6 +8,7 @@ $ngayLap = $data['ngay_lap'];
 $ngayNhap = $data['ngay_nhap'];
 $tongTien = $data['tong_tien'];
 $sachNhap = $data['books'];
+$markup = 1.05;
 
 error_log(print_r($sachNhap, true));
 $mysqli->begin_transaction();
@@ -40,6 +41,12 @@ try {
         // Update số lượng tồn của sách được chọn nhập
         $stmtUpdate = $mysqli->prepare("UPDATE sach SET SoLuongTon = SoLuongTon + ? WHERE MaSach = ?");
         $stmtUpdate->bind_param("is", $book['so_luong'], $book['ma_sach']);
+        $stmtUpdate->execute();
+        $stmtUpdate->close();
+
+        // Update giá bản của sách được chọn nhập, giá bán = 105% giá nhập
+        $stmtUpdate = $mysqli->prepare("UPDATE sach SET GiaBan = GiaBan * (1 + ?) WHERE MaSach = ?");
+        $stmtUpdate->bind_param("is", $book['don_gia'], $book['ma_sach']);
         $stmtUpdate->execute();
         $stmtUpdate->close();
     }

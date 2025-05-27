@@ -342,6 +342,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       </div>
       <button class="add-button" onclick="createNewEmployee()">+ Thêm nhân viên</button>
     </div>
+    
     <table id="employeeTable">
       <thead>
         <tr>

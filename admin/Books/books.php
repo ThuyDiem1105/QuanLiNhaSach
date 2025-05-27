@@ -97,7 +97,7 @@ $result = $mysqli->query("SELECT * FROM sach");
     <div class="form-popup">
       <h3>Chi tiết sách</h3>
       <form id="bookForm" onsubmit="return false;" action="" method="post" novalidate>
-        <input type="hidden" id="form_mode" name="form_mode" value="new">
+        <input type="hidden" id="form_mode" name="form_mode" value="view">
 
         <label>Mã sách:</label><input type="text" name="ma_sach" required readonly>
         <span class="error" id="error_masach"></span>
@@ -106,7 +106,7 @@ $result = $mysqli->query("SELECT * FROM sach");
         <span class="error" id="error_tensach"></span>
         
         <label>Danh mục sách:</label>
-        <select id="danh_muc" name="danh_muc" required>
+        <select id="danh_muc" name="danh_muc" required readonly>
           <option value="">-- Chọn danh mục sách --</option>
           <?php foreach ($danhMucArr as $ma_danhmuc => $ten_danhmuc): ?>
               <option value="<?= $ma_danhmuc ?>"><?= $ten_danhmuc ?></option>
@@ -115,7 +115,7 @@ $result = $mysqli->query("SELECT * FROM sach");
         <span class="error" id="error_danhmuc"></span>
 
         <label>Thể loại tương ứng:</label>
-         <select id="the_loai" name="the_loai[]" multiple required>
+        <select id="the_loai" name="the_loai[]" multiple required readonly>
             <option value="">-- Chọn thể loại tương ứng --</option>
             <?php foreach ($theLoaiArr as $ma_theloai => $ten_theloai): ?>
               <option value="<?= $ma_theloai ?>"><?= $ten_theloai ?></option>
@@ -135,7 +135,6 @@ $result = $mysqli->query("SELECT * FROM sach");
         
         <label>Ngày xuất bản:</label><input type="date" name="ngay_xb" required readonly>
         <span class="error" id="error_ngayxb"></span>
-
         
         <label>Số lượng tồn:</label><input type="number" name="sl_ton" required readonly>
         <span class="error" id="error_slton"></span>
@@ -169,6 +168,8 @@ $result = $mysqli->query("SELECT * FROM sach");
     // Button Xem chi tiết sách
     function openForm(maSach, tenSach, danhMuc, theLoaiStr, tacGia, nhaXB, ngayXB, ngonNgu, soluongTon, giaBan) {
       document.getElementById("bookFormOverlay").classList.add("show");
+      document.querySelectorAll(".error").forEach(el => el.textContent = "");
+      document.getElementById("form_mode").value = "view";
 
       const form = document.forms['bookForm'];
       form.ma_sach.value = maSach;
@@ -190,7 +191,7 @@ $result = $mysqli->query("SELECT * FROM sach");
       }
 
       //lấy vị trí dòng (sách) được chọn để xem
-      editingIndex = Array.from(document.querySelector('#sachTable tbody').rows)
+      editingIndex = Array.from(document.querySelector('#bookTable tbody').rows)
         .findIndex(row => row.cells[0].textContent === maSach);
       
       // hiện tại chỉ được phép xem, không được chỉnh sửa thông tin  
@@ -200,7 +201,7 @@ $result = $mysqli->query("SELECT * FROM sach");
 
       //đang ở chế độ xem nên ẩn nút Lưu
       document.querySelector(".btn-save").style.display = "none";
-      document.getElementById("bookFormOverlay").classList.add("show");
+      document.querySelector(".btn-edit").style.display = "inline-block";
       bookFormOverlay.classList.add("show");
     }
 
@@ -217,8 +218,8 @@ $result = $mysqli->query("SELECT * FROM sach");
 
       const maSach = form.ma_sach.value;
 
-      document.querySelector(".btn-edit").style.display = "none";
       document.querySelector(".btn-save").style.display = "inline-block";
+      document.querySelector(".btn-edit").style.display = "none";
     }
 
     // Kiểm tra thông tin form
@@ -453,6 +454,22 @@ $result = $mysqli->query("SELECT * FROM sach");
     function closeForm() {
       document.getElementById("bookFormOverlay").classList.remove("show");
     }
+
+    document.getElementById("bookFormOverlay").addEventListener("click", e => {
+      if (e.target === e.currentTarget) closeForm("bookFormOverlay");
+    });
+
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const circle = document.createElement('span');
+        circle.classList.add('ripple');
+        circle.style.left = `${e.offsetX}px`;
+        circle.style.top = `${e.offsetY}px`;
+        btn.appendChild(circle);
+        setTimeout(() => circle.remove(), 600);
+      });
+    });
+
   </script>
 </body>
 </html>
