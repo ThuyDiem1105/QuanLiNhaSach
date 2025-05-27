@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2025 at 05:15 PM
+-- Generation Time: May 27, 2025 at 05:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,6 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+<<<<<<< Updated upstream
 -- Table structure for table `hoadon`
 --
 
@@ -79,6 +80,8 @@ CREATE TABLE `CHITIET_PHIEUNHAP` (
 ALTER TABLE chitiet_phieunhap ADD CONSTRAINT check_soluong CHECK(SoLuong >= 200);
 
 --
+=======
+>>>>>>> Stashed changes
 -- Table structure for table `calam`
 --
 
@@ -123,6 +126,21 @@ INSERT INTO `calam` (`MaCa`, `Thu`, `LoaiCa`, `BatDau`, `KetThuc`) VALUES
 ('Wed-ca2', 'Thứ 4', 'Ca 2', '10:30:00', '14:00:00'),
 ('Wed-ca3', 'Thứ 4', 'Ca 3', '14:00:00', '17:30:00'),
 ('Wed-ca4', 'Thứ 4', 'Ca 4', '17:30:00', '21:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chitiet_phieunhap`
+--
+
+CREATE TABLE `chitiet_phieunhap` (
+  `MaCTPN` int(11) NOT NULL,
+  `MaPN` varchar(10) NOT NULL,
+  `MaSach` varchar(10) NOT NULL,
+  `SoLuong` int(11) NOT NULL,
+  `DonGiaNhap` decimal(12,2) NOT NULL,
+  `ThanhTien` decimal(12,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -173,6 +191,21 @@ CREATE TABLE `khachhang` (
 
 INSERT INTO `khachhang` (`MaKH`, `HoTen`, `SDT`, `Loai`, `SoTienNo`) VALUES
 ('KH002', 'Trần Thị B', '0912345678', 'VIP', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `khuyenmai`
+--
+
+CREATE TABLE `khuyenmai` (
+  `MaKM` varchar(10) NOT NULL,
+  `TenKM` varchar(100) DEFAULT NULL,
+  `NgayBatDau` date DEFAULT NULL,
+  `NgayKetThuc` date DEFAULT NULL,
+  `DieuKienApDung` text DEFAULT NULL,
+  `TrangThai` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -229,6 +262,19 @@ INSERT INTO `nhanvien` (`MaNV`, `HoTen`, `NgaySinh`, `SDT`, `NoiO`, `ChucVu`, `C
 ('NV001', 'Nguyễn Văn A', '2004-03-12', '0912345678', 'Hà Nội', 'Bán hàng', 'Mon-ca1,Tue-ca2,Wed-ca3,Thu-ca4', 25000.00),
 ('NV002', 'Nguyễn Văn B', '2004-01-31', '0312345678', 'Thành Phố Hồ Chí Minh', 'Thu ngân', 'Tue-ca1,Wed-ca1,Thu-ca1,Fri-ca1', 50000.00),
 ('NV003', 'Nguyễn Thị C', '2001-01-01', '0712345678', 'Quảng Ngãi', 'Marketing và chăm sóc khách hàng', 'Wed-ca4,Thu-ca3,Fri-ca2,Sat-ca1,Sun-ca1', 65000.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phieunhap`
+--
+
+CREATE TABLE `phieunhap` (
+  `MaPN` varchar(10) NOT NULL,
+  `NgayLapPhieu` date NOT NULL DEFAULT curdate(),
+  `NgayNhap` date NOT NULL,
+  `TongTien` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -354,6 +400,12 @@ ALTER TABLE `calam`
   ADD PRIMARY KEY (`MaCa`);
 
 --
+-- Indexes for table `chitiet_phieunhap`
+--
+ALTER TABLE `chitiet_phieunhap`
+  ADD PRIMARY KEY (`MaCTPN`);
+
+--
 -- Indexes for table `danhmucsach`
 --
 ALTER TABLE `danhmucsach`
@@ -364,6 +416,12 @@ ALTER TABLE `danhmucsach`
 --
 ALTER TABLE `khachhang`
   ADD PRIMARY KEY (`MaKH`);
+
+--
+-- Indexes for table `khuyenmai`
+--
+ALTER TABLE `khuyenmai`
+  ADD PRIMARY KEY (`MaKM`);
 
 --
 -- Indexes for table `lichlamviec`
@@ -378,6 +436,12 @@ ALTER TABLE `lichlamviec`
 ALTER TABLE `nhanvien`
   ADD PRIMARY KEY (`MaNV`),
   ADD UNIQUE KEY `SDT` (`SDT`);
+
+--
+-- Indexes for table `phieunhap`
+--
+ALTER TABLE `phieunhap`
+  ADD PRIMARY KEY (`MaPN`);
 
 --
 -- Indexes for table `sach`
