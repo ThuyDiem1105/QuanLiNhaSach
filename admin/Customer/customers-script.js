@@ -16,19 +16,9 @@ function fixTableBorders() {
     }
 }
 
-// Thêm vào đầu file hoặc trước các hàm sử dụng
-function isValidEmail(email) {
-    // Regex kiểm tra email cơ bản
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function isValidPhone(phone) {
-    return /^[0-9]{9,11}$/.test(phone); // Ví dụ: chỉ chấp nhận số từ 9–11 chữ số
-}
-
-function viewCustomer(customerId) {
+function openCustomerForm(maKH, tenKH, sdt, diaChi, email, loaiKH, tienNo) {
     const row = [...document.querySelectorAll(".table tbody tr")]
-        .find(tr => tr.children[0].textContent === customerId);
+        .find(tr => tr.children[0].textContent === maKH);
 
     if (!row) return;
 

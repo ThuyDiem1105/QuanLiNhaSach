@@ -1,5 +1,5 @@
 <?php
-include '../../database_connect.php';
+include __DIR__ . '/../../connect.php';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $manv = $_POST['ma_nv'];

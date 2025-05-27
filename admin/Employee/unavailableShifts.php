@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/../../database_connect.php';
+include __DIR__ . '/../../connect.php';
 
 $shifts = [];
 $manv = $_GET['ma_nv'] ?? null;

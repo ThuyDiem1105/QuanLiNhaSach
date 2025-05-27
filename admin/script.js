@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     booksBtn: 'Books/books.php',
     customersBtn: 'Customer/customers.php',
     staffBtn: 'Employee/staff.php',
-    receiptsBtn: 'Receipt/receipts.html',
+    receiptsBtn: 'Receipt/receipts.php',
     dealsBtn: 'deals.html',
     reportsBtn: 'reports.html',
     rulesBtn: 'rules.html',

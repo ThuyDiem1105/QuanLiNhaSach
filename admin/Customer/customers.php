@@ -127,9 +127,12 @@ $result = $mysqli->query("SELECT * FROM sach");
       customerForm.querySelector('select[name="loai"]').value = loai;
       customerForm.querySelector('input[name="so_tien_no"]').value = soTienNo;
 
-      // Set fields to readonly
-      const inputs = customerForm.querySelectorAll('input, select');
-      inputs.forEach(input => input.setAttribute('readonly', true));
+      // Set only the MaKH field to readonly
+      customerForm.querySelector('input[name="ma_kh"]').setAttribute('readonly', true);
+
+      // Allow user input for other fields
+      const editableInputs = customerForm.querySelectorAll('input:not([name="ma_kh"]), select');
+      editableInputs.forEach(input => input.removeAttribute('readonly'));
 
       // Adjust buttons
       const saveButton = document.querySelector('.btn-save');
@@ -206,35 +209,41 @@ $result = $mysqli->query("SELECT * FROM sach");
 
     //Button Thêm khách hàng mới
     function createNewCustomer() {
-    const customerFormOverlay = document.getElementById('customerFormOverlay');
-    const formModeInput = document.getElementById('form_mode');
-    const form = document.getElementById('customerForm');
+  const customerFormOverlay = document.getElementById('customerFormOverlay');
+  const formModeInput = document.getElementById('form_mode');
+  const form = document.getElementById('customerForm');
 
-    if (!customerFormOverlay || !formModeInput || !form) {
-      console.error('Form elements not found!');
-      return;
-    }
-
-    form.reset();
-
-    const table = document.getElementById("customerTable").getElementsByTagName("tbody")[0];
-    const nextId = "KH" + String(table.rows.length + 1).padStart(3, '0');
-    form.ma_kh.value = nextId;
-
-    // Hiển thị form và thiết lập chế độ
-    customerFormOverlay.classList.add('show');
-    formModeInput.value = 'new';
-
-    // Reset các trường
-    document.getElementById('ho_ten').value = '';
-    document.getElementById('sdt').value = '';
-    document.getElementById('loai').value = 'Thường';
-    document.getElementById('so_tien_no').value = '';
-
-    // Hiện nút Lưu & Đóng (nếu đã ẩn trước đó)
-    document.querySelector('.btn-save').style.display = 'inline-block';
-    document.querySelector('.btn-close').style.display = 'inline-block';
+  if (!customerFormOverlay || !formModeInput || !form) {
+    console.error('Form elements not found!');
+    return;
   }
+
+  form.reset();
+
+  const table = document.getElementById("customerTable").getElementsByTagName("tbody")[0];
+  let nextId = 1;
+  const existingIds = Array.from(table.rows).map(row => row.cells[0].textContent.trim());
+
+  while (existingIds.includes("KH" + String(nextId).padStart(3, '0'))) {
+    nextId++;
+  }
+
+  form.ma_kh.value = "KH" + String(nextId).padStart(3, '0');
+
+  // Hiển thị form và thiết lập chế độ
+  customerFormOverlay.classList.add('show');
+  formModeInput.value = 'new';
+
+  // Reset các trường
+  document.getElementById('ho_ten').value = '';
+  document.getElementById('sdt').value = '';
+  document.getElementById('loai').value = 'Thường';
+  document.getElementById('so_tien_no').value = '';
+
+  // Hiện nút Lưu & Đóng (nếu đã ẩn trước đó)
+  document.querySelector('.btn-save').style.display = 'inline-block';
+  document.querySelector('.btn-close').style.display = 'inline-block';
+}
 
 
 
