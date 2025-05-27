@@ -11,7 +11,7 @@
     src: url("../assets/RobotoSlab-Medium.ttf");
 }
 
-body, input, button, select {
+body, input, button, select, textarea {
     color: #393939;
     font-family: fontweb;
     font-size: 14px;
@@ -31,14 +31,17 @@ body, input, button, select {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .search-filter-group {
+    margin-right: 20px;
     display: flex;
     gap: 10px;
     flex: 1;
     min-width: 100px;
+    align-items: center;
 }
 
 .search-box {
@@ -92,15 +95,24 @@ body, input, button, select {
     box-shadow: 0 0 0 2px #b2ebf2; /* Hiệu ứng bóng nhẹ (tùy chọn) */
 }
 
+.icon-add {
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
 .add-button {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
     padding: 8px 16px;
     background-color: #beffe1;
     color: #0d3c6b;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     white-space: nowrap;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.3s;
 }
 
 .add-button:hover {
@@ -213,7 +225,8 @@ body, input, button, select {
     background: #ffffff;
     padding: 24px;
     border-radius: 12px;
-    width: 400px;
+    width: 500px;      /* hoặc lớn hơn nếu muốn */
+    max-width: 95vw;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     position: fixed;
     top: 50%; left: 50%;
@@ -299,7 +312,8 @@ button.edit-btn.save-mode {
     background: #ffffff;
     padding: 24px;
     border-radius: 12px;
-    width: 400px;
+    width: 500px;      /* hoặc lớn hơn nếu muốn */
+    max-width: 95vw;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     position: fixed;
     top: 50%; left: 50%;
@@ -324,6 +338,19 @@ button.edit-btn.save-mode {
 .add-form .form-actions .save-btn:hover {
     transform: scale(1.1);
     filter: brightness(1.1);
+}
+
+.add-form textarea,
+.detail-form textarea,
+.form-group textarea {
+    min-height: 100px;
+    width: 100%;
+    resize: vertical;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
 .toast {
@@ -351,37 +378,61 @@ button.edit-btn.save-mode {
 .sort-pagination-bar {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin: 20px 0 10px 0;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    border-radius: 8px;
+}
+
+.sort-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.sort-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sort-bar .sort-icon {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+}
+
+.sort-bar .sort-label {
+    color: #393939;
     font-size: 14px;
-    background: #f0f2f7;
-    padding: 8px 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.sort-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .sort-btn {
     border: none;
-    background: #ffffff;
+    background: #f0f0f0;
     color: #393939;
-    padding: 6px 15px;
-    border-radius: 4px;
-    margin-right: 4px;
+    padding: 7px 13px;
+    border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
-    border: 1px solid #d0d0d0;
     position: relative;
 }
 
 .sort-btn.active,
 .sort-btn.sort-dropdown-active {
-    background: #ffc5e6;
-    color: #000000;
-    border: 1px solid #ffc5e6;
+    background: #111;
+    color: #fff;
 }
 
-.sort-btn:hover:not(.active):not(.sort-dropdown-active) {
-    background: #e0e0e0;
+.sort-btn:not(.active):hover {
+    background: #e4e4e4;
 }
 
 .sort-dropdown {
@@ -389,43 +440,9 @@ button.edit-btn.save-mode {
     display: inline-block;
 }
 
-#sortPriceBtn {
-    min-width: 150px;   /* hoặc lớn hơn nếu bạn muốn */
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* label trái, arrow phải */
-    padding-right: 16px;
-    padding-left: 16px;
-}
-
-#sortPriceBtn .label {
-    flex: 1;
-    text-align: left;
-}
-
 .sort-dropdown-toggle .arrow {
     margin-left: 8px;
     font-size: 12px;
-}
-
-#sortPriceBtn .arrow {
-    margin-left: 8px;
-    font-size: 14px;
-    flex-shrink: 0;
-}
-
-.sort-dropdown-menu {
-    display: none;
-    position: absolute;
-    left: 0;
-    top: 110%;
-    min-width: 150px;
-    background: #fff;
-    border: 1px solid #d0d0d0;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    z-index: 10;
-    overflow: hidden;
 }
 
 .sort-dropdown-menu.show {
@@ -446,16 +463,15 @@ button.edit-btn.save-mode {
 }
 
 .sort-dropdown-item.active {
-    background: #ffc5e6;
-    color: #000000;
-    border: 1px solid #ffc5e6;
+    background: #111;
+    color: #fff;
 }
 
 .pagination {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .page-btn {
