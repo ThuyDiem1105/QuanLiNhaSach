@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản lý khuyến mãi</title>
-    <link rel="stylesheet" href="../assets/general-style.css" />
-    <link rel="stylesheet" href="../assets/deals-style.css" />
+    <link rel="stylesheet" href="../../assets/general-style.css" />
+    <link rel="stylesheet" href="../../assets/deals-style.css" />
     <script src="deals-script.js" defer></script>
 </head>
 <body>

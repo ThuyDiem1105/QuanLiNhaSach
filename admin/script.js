@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     customersBtn: 'Customer/customers.php',
     staffBtn: 'Employee/staff.php',
     receiptsBtn: 'Receipt/receipts.php',
-    dealsBtn: 'deals.html',
+    dealsBtn: 'Deals/deals.php',
     reportsBtn: 'reports.html',
     rulesBtn: 'rules.html',
     logoutBtn: 'logout.html'
