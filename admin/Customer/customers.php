@@ -84,7 +84,7 @@ $result = $mysqli->query("SELECT * FROM sach");
   </div>
 
   <div id="customerFormOverlay" class="overlay">
-    <form id="customerForm" class="form-popup" method="POST" action="/QuanLiNhaSach/admin/Customer/save_customer.php">
+    <form id="customerForm" class="form-popup" onsubmit="return false;">
       <h2>Thêm Khách Hàng Mới</h2>
       <label for="ma_kh">Mã Khách Hàng:</label>
       <input type="text" name="ma_kh" id="ma_kh" required>
@@ -107,7 +107,7 @@ $result = $mysqli->query("SELECT * FROM sach");
       <input type="hidden" name="form_mode" id="form_mode" value="new">
 
       <div class="form-buttons">
-          <button type="submit" class="btn-save" onclick="saveBook()" style="display: none;">Lưu</button>
+          <button type="submit" class="btn-save" onclick="saveCustomer()" style="display: none;">Lưu</button>
           <button type="button" class="btn-cancel" onclick="closeForm()">Đóng</button>
         </div>
       </form>
@@ -117,96 +117,76 @@ $result = $mysqli->query("SELECT * FROM sach");
     let customerForm = document.getElementById('customerForm');
     let formModeInput = document.getElementById('form_mode');
 
-    function openForm(maKH, hoTen, sdt, loai, soTienNo) {
-      console.log('openForm called with:', { maKH, hoTen, sdt, loai, soTienNo }); // Debug log
-      customerFormOverlay.classList.add('show'); // Add the 'show' class
-      customerForm.reset();
-      formModeInput.value = 'edit';
-      customerForm.querySelector('input[name="ma_kh"]').value = maKH;
-      customerForm.querySelector('input[name="ho_ten"]').value = hoTen;
-      customerForm.querySelector('input[name="sdt"]').value = sdt;
-      customerForm.querySelector('select[name="loai"]').value = loai;
-      customerForm.querySelector('input[name="so_tien_no"]').value = soTienNo;
+ function openForm(maKH, hoTen, sdt, loai, soTienNo) {
+  customerFormOverlay.classList.add('show');
+  formModeInput.value = 'edit';
+  customerForm.reset();
+  customerForm.querySelector('input[name="ma_kh"]').value = maKH || '';
+  customerForm.querySelector('input[name="ho_ten"]').value = hoTen || '';
+  customerForm.querySelector('input[name="sdt"]').value = sdt || '';
+  customerForm.querySelector('select[name="loai"]').value = loai || 'Thường';
+  customerForm.querySelector('input[name="so_tien_no"]').value = soTienNo || '';
 
-      // Set only the MaKH field to readonly
-      customerForm.querySelector('input[name="ma_kh"]').setAttribute('readonly', true);
+  // Set all fields to readonly/disabled (view mode)
+  customerForm.querySelectorAll('input').forEach(input => input.setAttribute('readonly', true));
+  customerForm.querySelector('select[name="loai"]').setAttribute('disabled', true);
 
-      // Allow user input for other fields
-      const editableInputs = customerForm.querySelectorAll('input:not([name="ma_kh"]), select');
-      editableInputs.forEach(input => input.removeAttribute('readonly'));
+  // Adjust buttons
+  const saveButton = document.querySelector('.btn-save');
+  const cancelButton = document.querySelector('.btn-cancel');
+  let editButton = document.querySelector('.btn-edit');
 
-      // Adjust buttons
-      const saveButton = document.querySelector('.btn-save');
-      const cancelButton = document.querySelector('.btn-cancel');
-      let editButton = document.querySelector('.btn-edit');
+  if (!editButton) {
+    editButton = document.createElement('button');
+    editButton.type = 'button';
+    editButton.className = 'btn-edit';
+    editButton.textContent = 'Sửa';
+    editButton.onclick = enableEditing;
+    document.querySelector('.form-buttons').insertBefore(editButton, cancelButton);
+  }
 
-      if (!editButton) {
-        editButton = document.createElement('button');
-        editButton.type = 'button';
-        editButton.className = 'btn-edit';
-        editButton.textContent = 'Sửa';
-        editButton.onclick = enableEditing;
-        document.querySelector('.form-buttons').insertBefore(editButton, cancelButton);
-      }
+  saveButton.style.display = 'none';
+  editButton.style.display = 'inline-block';
+  cancelButton.style.display = 'inline-block';
+}
 
-      saveButton.style.display = 'none';
-      editButton.style.display = 'inline-block';
-      cancelButton.style.display = 'inline-block';
+function closeForm() {
+  customerFormOverlay.classList.remove('show'); // Remove the 'show' class
+}
+
+function enableEditing() {
+  // Chỉ cho phép sửa các trường ngoại trừ mã khách hàng
+  customerForm.querySelectorAll('input:not([name="ma_kh"])').forEach(input => input.removeAttribute('readonly'));
+  customerForm.querySelector('select[name="loai"]').removeAttribute('disabled');
+  document.querySelector('.btn-save').style.display = 'inline-block';
+  document.querySelector('.btn-edit').style.display = 'none';
+}
+
+// Button Lưu khách hàng
+function saveCustomer() {
+  const form = document.forms['customerForm'];
+  const formData = new FormData(form);
+  fetch('save_customer.php', {
+    method: 'POST',
+    body: formData,
+  })
+  .then(res => res.text())
+  .then(response => {
+    if (response.trim() === 'OK') {
+      showToast('Lưu thông tin thành công!');
+      setTimeout(() => { location.reload(); }, 1000);
+    } else if (response.trim() === 'customer_exists') {
+      alert('Khách hàng đã tồn tại! Bạn có thể cập nhật lại thông tin khách hàng.');
+    } else {
+      alert('Lỗi: ' + response);
     }
-
-    function closeForm() {
-      customerFormOverlay.classList.remove('show'); // Remove the 'show' class
-    }
-
-    function enableEditing() {
-      const inputs = customerForm.querySelectorAll('input, select');
-      inputs.forEach(input => input.removeAttribute('readonly'));
-      document.querySelector('.btn-edit').style.display = 'inline-block';
-      document.querySelector('.btn-save').style.display = 'none';
-
-      const maKH = form.ma_kh.value;
-    }
-
-    //Button Lưu khách hàng
-    function saveCustomer() {
-      const form = document.forms['customerForm'];
-      const table = document.getElementById("customerTable").getElementsByTagName("tbody")[0];
-      if(!checkValidFormValues(form)) return;
-
-      const formMode = document.getElementById("form_mode").value;
-      const maKH = form.ma_kh.value.trim();
-      const hoTen = form.ho_ten.value.trim();
-      const sdt = form.sdt.value.trim();
-      const loai = form.loai.value;
-      const soTienNo = form.so_tien_no.value;
-
-      const formData = new FormData(form);
-      formData.append("form_mode", formMode);
-      formData.append("so_tien_no", soTienNo);
-      fetch('save_customer.php', {
-        method: "POST",
-        body: formData,
-      })
-      .then(res => res.text())
-      .then (response => {
-        console.log("Raw response:", response);
-        if(response.trim() === "OK") {
-          showToast("Lưu thông tin thành công!");
-          setTimeout(() => {
-            location.reload();
-          }, 1000);
-        } else if (response.trim() === "book_exists") {
-          alert("Sách đã tồn tại! Bạn có thể cập nhật lại thông tin sách.");
-        } else {
-          alert("Lỗi: " + response);
-        }
-      })
-      .catch(error => {
-        console.error("Lỗi: ", error);
-        alert("Lỗi khi gửi dữ liệu.");
-      });
-      closeForm();
-    }
+  })
+  .catch(error => {
+    console.error('Lỗi: ', error);
+    alert('Lỗi khi gửi dữ liệu.');
+  });
+  closeForm();
+ }
 
     //Button Thêm khách hàng mới
     function createNewCustomer() {
