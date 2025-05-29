@@ -10,7 +10,6 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
 <head>
   <meta charset="UTF-8">
   <title>Quản lý nhân viên</title>
-  <link rel="stylesheet" href="../assets/style.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
   <link rel="stylesheet" href="../../assets/style.css" type="text/css">
   <!-- #region STYLE -->
@@ -529,6 +528,9 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
     </div>
   </div>
 
+  <body>
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
   <script>
     //biến editingIndex dùng để lưu vị trí của dòng đang được click button Xem/Sửa/Xóa
     let editingIndex = -1;
@@ -551,17 +553,17 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
     //region NHÂN VIÊN
     function openEmployeeForm(maNV, hoTen, ngaySinh, sdt, noiO, chucVu, caLam, luong) {
       const form = document.forms['employeeForm'];
+      document.querySelectorAll(".error").forEach(el => el.textContent = ""); // Xóa lỗi cũ
       form.ma_nv.value = maNV;
       form.ho_ten.value = hoTen;
       form.ngay_sinh.value = ngaySinh;
       form.sdt.value = sdt;
       form.noi_o.value = noiO;
 
-      form.chuc_vu.value = chucVu;
+      // Cập nhật giá trị cho Choices.js
+      // Đảm bảo chucVu và luong ở đây là các giá trị VAlUE của option, không phải text hiển thị
       chucVuChoices.setChoiceByValue(chucVu);
-      //vì lương được lưu ở dạng thập phân trong database nên cần parseInt
-      form.luong.value = parseInt(luong);
-      luongChoices.setChoiceByValue(String(parseInt(luong))); 
+      luongChoices.setChoiceByValue(String(parseInt(luong))); // Đảm bảo truyền string cho setChoiceByValue
 
       //tất cả checkbox ca làm đều trống khi load
       const checkboxes = document.querySelectorAll('#shiftTable input[type=checkbox]');
@@ -580,8 +582,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       //lấy vị trí dòng (nhân viên) được chọn để xem
       editingIndex = Array.from(document.querySelector('#employeeTable tbody').rows)
         .findIndex(row => row.cells[0].textContent === maNV);
-      
-      // hiện tại chỉ được phép xem, không được chỉnh sửa thông tin  
+
+      // hiện tại chỉ được phép xem, không được chỉnh sửa thông tin  
       for (let input of form.querySelectorAll("input")) input.readOnly = true;
       chucVuChoices.disable();
       luongChoices.disable();
@@ -591,7 +593,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       document.querySelector(".btn-save").style.display = "none";
       document.querySelector(".btn-edit").style.display = "inline-block";
       document.getElementById("employeeFormOverlay").classList.add("show");
-      employeeFormOverlay.classList.add("show");
+      // employeeFormOverlay.classList.add("show"); // Dòng này bị trùng lặp, có thể xóa
     };
 
     // Button Sửa nhân viên
@@ -625,12 +627,13 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
     //Button Thêm nhân viên
     function createNewEmployee() {
       const form = document.forms['employeeForm'];
+      document.querySelectorAll(".error").forEach(el => el.textContent = ""); // Xóa lỗi cũ
       form.reset();
       const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
       const nextId = "NV" + String(table.rows.length + 1).padStart(3, '0');
 
-      form.reset();
-      form.ma_nv.value = nextId;
+      form.ma_nv.value = nextId; // Gán ID trước khi cài đặt readonly
+
       for (let input of form.querySelectorAll("input")) {
         if (input.name !== "ma_nv") input.readOnly = false;
       }
@@ -640,8 +643,9 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       editingIndex = -1;
       chucVuChoices.enable();
       luongChoices.enable();
-      form.chuc_vu.selectedIndex = 0;
-      form.luong.selectedIndex = 0;
+      // Reset Choices.js selected values
+      chucVuChoices.setChoiceByValue(''); // Đặt lại về option đầu tiên
+      luongChoices.setChoiceByValue(''); // Đặt lại về option đầu tiên
 
 
       const checkboxes = document.querySelectorAll('#shiftTable input[type=checkbox]');
@@ -671,11 +675,13 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       const sdt = form.sdt.value.trim();
       const noiO = form.noi_o.value.trim();
       const chucVu = form.chuc_vu.value.trim();
-      const caLam = Array.from(document.querySelectorAll('#shiftTable input[type=checkbox]')).some(cb => cb.checked);
-      const caLamArr = Array.from(document.querySelectorAll('#shiftTable input[type=checkbox]')).map(cb => cb.value);
-      var count = 0;
-      for(var i = 0; i < caLamArr.length; ++i) count++;
+
+      // Lấy các ca làm đã chọn
+      const checkedShifts = Array.from(document.querySelectorAll('#shiftTable input[type=checkbox]:checked'));
+      const caLamCheckedCount = checkedShifts.length;
+
       const luong = parseInt(form.luong.value);
+
       // Họ tên
       if (!hoTen) {
         document.getElementById("error_ho_ten").textContent = "Họ tên không được để trống!";
@@ -708,12 +714,12 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
         isValid = false;
       }
       // Ca làm
-      if (!caLam || count <= 3) {
+      if (caLamCheckedCount < 4) { // Kiểm tra số lượng ca làm đã chọn
         document.getElementById("error_ca_lam").textContent = "Vui lòng chọn ít nhất 4 ca làm trong một tuần!";
         isValid = false;
       }
       // Lương
-      if (!luong) {
+      if (isNaN(luong) || luong <= 0) { // Kiểm tra nếu luong không hợp lệ
         document.getElementById("error_luong").textContent = "Vui lòng chọn mức lương phù hợp!";
         isValid = false;
       }
@@ -725,15 +731,15 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       const form = document.forms['employeeForm'];
       const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
 
+      if(!checkValidEmployeeForm(form)) return; // Thêm check form hợp lệ
+
       const maNV = form.ma_nv.value;
       const hoTen = form.ho_ten.value;
       const ngaySinh = form.ngay_sinh.value;
       const sdt = form.sdt.value;
       const noiO = form.noi_o.value;
-      const chucVu = form.chuc_vu.value;
-      const luong = form.luong.value;
-
-      if(!checkValidEmployeeForm(form)) return;
+      const chucVu = form.chuc_vu.value; // Lấy value trực tiếp từ select
+      const luong = form.luong.value; // Lấy value trực tiếp từ select
 
       const checkedShifts = [];
       document.querySelectorAll('#shiftTable input[type=checkbox]:checked').forEach(cb => {
@@ -743,8 +749,9 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
 
       const formData = new FormData(form);
       formData.append("ca_lam", caLam);
-      formData.append("chuc_vu", chucVu);
-      formData.append("luong", luong);
+      formData.append("chuc_vu", chucVu); // Đảm bảo gửi đúng value
+      formData.append("luong", luong); // Đảm bảo gửi đúng value
+
       fetch('save_employee.php', {
         method: "POST",
         body: formData,
@@ -757,9 +764,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
           setTimeout(() => {
             location.reload();
           }, 1000);
-        closeForm("employeeFormOverlay");
-        setupRowHighlighting();
-
+          // closeForm("employeeFormOverlay"); // Dòng này có thể được xóa nếu muốn reload trang
+          // setupRowHighlighting(); // Sẽ chạy sau reload
         } else if (response.trim() === "sdt_exists") {
           document.getElementById("error_sdt").textContent = "SĐT đã tồn tại! Vui lòng nhập số khác.";
         } else {
@@ -770,35 +776,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
         console.error("Lỗi: ", error);
         alert("Lỗi khi gửi dữ liệu.");
       });
-      // if (editingIndex >= 0) {
-      //   const row = table.rows[editingIndex];
-      //   row.cells[0].textContent = maNV;
-      //   row.cells[1].textContent = hoTen;
-      //   row.cells[2].textContent = chucVu;
-      // } else {
-      //   const row = table.insertRow();
-      //   row.classList.add("new-row");
-      //   row.innerHTML = `
-      //     <td>${maNV}</td>
-      //     <td>${hoTen}</td>
-      //     <td>${chucVu}</td>
-      //     <td class="action-buttons">
-      //       <button class="view-btn" onclick="openForm('${maNV}', '${hoTen}', '${ngaySinh}', '${sdt}', '${noiO}', '${chucVu}', '${caLam}', '${luong}')">Xem</button>
-      //       <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
-      //     </td>
-      //   `;
-      // }
     }
-
-    //what is this FE guys???? currently i dont use this tho
-    // function deleteRow(button) {
-    //   if (confirm("Bạn có chắc muốn xóa nhân viên này không?")) {
-    //     const row = button.closest("tr");
-    //     row.style.transition = "opacity 0.4s ease";
-    //     row.style.opacity = 0;
-    //     setTimeout(() => row.remove(), 400);
-    //   }
-    // }
 
     // Button Xóa nhân viên
     function deleteEmployee(maNV) {
@@ -851,7 +829,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
           row.style.display = "none";
         }
       });
-    }    
+    }    
     //endregion
 
     //region HÀM BỔ TRỢ UI
@@ -953,6 +931,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
     //region TÀI KHOẢN
     function openAccountForm(maNV, tenDN, email, quyen, matkhauhash, matkhaugoc) {
       const form = document.forms['accountForm'];
+      document.querySelectorAll(".error").forEach(el => el.textContent = ""); // Xóa lỗi cũ
       form.tk_ma_nv.value = maNV;
       form.ten_dn.value = tenDN;
       form.email.value = email;
@@ -964,8 +943,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       //lấy vị trí dòng (nhân viên) được chọn để xem
       editingAccountIndex = Array.from(document.querySelector('#accountTable tbody').rows)
         .findIndex(row => row.cells[0].textContent === maNV);
-      
-      // hiện tại chỉ được phép xem, không được chỉnh sửa thông tin  
+
+      // hiện tại chỉ được phép xem, không được chỉnh sửa thông tin  
       for (let input of form.querySelectorAll("input")) input.readOnly = true;
       quyenChoices.disable();
 
@@ -973,7 +952,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       form.querySelector(".btn-save").style.display = "none";
       form.querySelector(".btn-edit").style.display = "inline-block";
       document.getElementById("accountFormOverlay").classList.add("show");
-      accountFormOverlay.classList.add("show");
+      // accountFormOverlay.classList.add("show"); // Dòng này bị trùng lặp, có thể xóa
     };
 
     // Button Sửa tài khoản
@@ -991,6 +970,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
     //Button Thêm tài khoản
     function createNewAccount(maNV) {
       const form = document.forms['accountForm'];
+      document.querySelectorAll(".error").forEach(el => el.textContent = ""); // Xóa lỗi cũ
       form.reset();
       const table = document.getElementById("accountTable").getElementsByTagName("tbody")[0];
       form.tk_ma_nv.value = maNV;
@@ -1000,9 +980,9 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       form.querySelector(".btn-save").style.display = "inline-block";
       form.querySelector(".btn-edit").style.display = "none";
 
-      editingIndex = -1;
+      editingIndex = -1; // Nên là editingAccountIndex = -1
       quyenChoices.enable();
-      form.quyen.selectedIndex = 0;
+      quyenChoices.setChoiceByValue(''); // Đặt lại về option đầu tiên
       document.getElementById("accountFormOverlay").classList.add("show");
     }
 
@@ -1059,14 +1039,14 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       const form = document.forms['accountForm'];
       const table = document.getElementById("accountTable").getElementsByTagName("tbody")[0];
 
+      if(!checkValidAccountForm(form)) return; // Thêm check form hợp lệ
+
       const maNV = form.tk_ma_nv.value.trim();
       const tenDN = form.ten_dn.value.trim();
       const email = form.email.value.trim();
       const matKhau = form.matkhau.value.trim();
       const xacnhanMK = form.xacnhan_mk.value.trim();
       const quyen = form.quyen.value;
-      
-      if(!checkValidAccountForm(form)) return;
 
       const formData = new FormData(form);
       formData.append("quyen", quyen);
@@ -1082,9 +1062,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
           setTimeout(() => {
             location.reload();
           }, 1000);
-          closeForm("accountFormOverlay");
-          setupRowHighlighting();
-
+          // closeForm("accountFormOverlay"); // Có thể xóa nếu reload trang
+          // setupRowHighlighting(); // Sẽ chạy sau reload
         } else if (response.trim() === "tenDN_exists") {
           document.getElementById("error_tendn").textContent = "Tên đăng nhập đã tồn tại. Vui lòng nhập tên khác!";
         } else if (response.trim() === "email_exists") {
@@ -1097,24 +1076,6 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
         console.error("Lỗi: ", error);
         alert("Lỗi khi gửi dữ liệu.");
       });
-      // if (editingIndex >= 0) {
-      //   const row = table.rows[editingIndex];
-      //   row.cells[0].textContent = maNV;
-      //   row.cells[1].textContent = hoTen;
-      //   row.cells[2].textContent = chucVu;
-      // } else {
-      //   const row = table.insertRow();
-      //   row.classList.add("new-row");
-      //   row.innerHTML = `
-      //     <td>${maNV}</td>
-      //     <td>${hoTen}</td>
-      //     <td>${chucVu}</td>
-      //     <td class="action-buttons">
-      //       <button class="view-btn" onclick="openForm('${maNV}', '${hoTen}', '${ngaySinh}', '${sdt}', '${noiO}', '${chucVu}', '${caLam}', '${luong}')">Xem</button>
-      //       <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
-      //     </td>
-      //   `;
-      // }
     }
 
     // Button Xóa tài khoản
@@ -1172,7 +1133,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
           row.style.display = "none";
         }
       });
-    }    
+    } 
     //endregion
   </script>
 </body>
