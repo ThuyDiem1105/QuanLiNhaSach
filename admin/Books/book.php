@@ -1,6 +1,8 @@
+
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
+// git test
 // Đọc danh mục sách
 $danhMucArr = [];
 $result = $mysqli->query("SELECT MaDMS, TenDanhMuc FROM danhmucsach");
@@ -34,7 +36,7 @@ $result = $mysqli->query("SELECT * FROM sach");
   <div class="main-content">
     <div class="header">
       <div class="search-filter">
-        <input type="text" id="searchTensach" name="ten_sach" placeholder="Tìm theo tên...">
+        <input type="text" id="searchTensach" name="ten_sach" placeholder="Tìm theo tên sách...">
         <input type="text" id="searchDanhmuc" name="danh_muc" placeholder="Tìm theo danh mục..">
         <input type="text" id="searchTheloai" name="the_loai" placeholder="Tìm theo thể loại...">
       </div>
