@@ -8,9 +8,7 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <!-- Container bao gồm cả sidebar và nội dung chính -->
     <div class="container">
-        <!-- Sidebar -->
         <aside>
             <div class="logo">
                 <img src="../assets/logo.png" class="icon-logo" alt="Logo Icon" />
@@ -25,7 +23,7 @@
                     <img src="../assets/order.png" id="order-icon" class="icon" alt="Order Icon" />
                     Hóa đơn
                 </a>
-                <a href="Book/books.php" id="booksBtn" class="sidebar-link">
+                <a href="Book/book.php" id="booksBtn" class="sidebar-link">
                     <img src="../assets/book.png" id="book-icon" class="icon" alt="Book Icon" />
                     Sách
                 </a>
@@ -53,14 +51,12 @@
                     <img src="../assets/rule.png" id="rule-icon" class="icon" alt="Rule Icon" />
                     Quy định
                 </a>
-                <a href="#" id="logoutBtn" class="sidebar-link">
-                    <img src="../assets/logout.png" id="logout-icon" class="icon" alt="Logout Icon" />
+                <a href="../login.php" id="logoutBtn" class="sidebar-link"> <img src="../assets/logout.png" id="logout-icon" class="icon" alt="Logout Icon" />
                     Đăng xuất
                 </a>
             </nav>
         </aside>
 
-        <!-- Nội dung chính -->
         <main class="main-content">
             <iframe id="contentFrame" src="dashboard.html" frameborder="0" style="width:100%; height:100vh;"></iframe>
         </main>
