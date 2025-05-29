@@ -150,8 +150,9 @@ $result = $mysqli->query("SELECT * FROM sach");
       </form>
     </div>
   </div>
-
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
   <script>
+    
     
     let editingIndex = -1;
     let danhmucChoices, theloaiChoices;
