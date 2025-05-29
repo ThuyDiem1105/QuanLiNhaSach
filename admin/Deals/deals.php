@@ -1,108 +1,217 @@
+<?php
+session_start();
+include __DIR__ . '/../../connect.php';
+
+$danhMucArr = [];
+$result = $mysqli->query("SELECT MaKM, TenKM FROM khuyenmai");
+while ($row = $result->fetch_assoc()) {
+    $danhMucArr[$row['MaKM']] = $row['TenKM'];
+}
+$result->free();
+
+$result = $mysqli->query("SELECT * FROM khuyenmai");
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản lý khuyến mãi</title>
-    <link rel="stylesheet" href="../../assets/general-style.css" />
-    <link rel="stylesheet" href="../../assets/deals-style.css" />
-    <script src="deals-script.js" defer></script>
+  <meta charset="UTF-8">
+  <title>Quản lý khuyến mãi</title>
+  <link rel="stylesheet" href="../../style.css" type="text/css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 </head>
 <body>
-    <div class="main-content">
-        <div class="toolbar">
-            <div class="toolbar-row">
-                <div class="search-filter-group">
-                    <div class="search-box">
-                        <input type="text" placeholder="Tìm kiếm khuyến mãi..." class="search-input" />
-                        <button class="search-button">🔍</button>
-                    </div>
-                    <select class="filter-select">
-                        <option value="all">Tất cả</option>
-                        <option value="active">Đang áp dụng</option>
-                        <option value="expired">Hết hạn</option>
-                    </select>
-                    <div class="date-range-group">
-                        <input type="date" id="date-from" class="date-from" placeholder="Từ ngày">
-                        <span style="margin: 0 4px;">-</span>
-                        <input type="date" id="date-to" class="date-to" placeholder="Đến ngày">
-                    </div>
-                </div>
-                <button class="add-button" onclick="createNewDeal()">
-                    <img src="../assets/plus.png" class="icon-add" alt="Add Icon" /> 
-                    Thêm khuyến mãi
-                </button>
-            </div>
-        </div>
-
-        <div class="sort-pagination-bar">
-            <div class="sort-bar">
-                <div class="sort-title-group">
-                    <span class="sort-icon">
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="4" y="7" width="16" height="2" rx="1" fill="#393939"/><rect x="4" y="11" width="10" height="2" rx="1" fill="#393939"/><rect x="4" y="15" width="6" height="2" rx="1" fill="#393939"/></svg>
-                    </span>
-                    <span class="sort-label">Sắp xếp theo</span>
-                </div>
-                <div class="sort-tabs">
-                    <button class="sort-btn active" data-sort="id">Mã KM</button>
-                    <button class="sort-btn" data-sort="name">Tên KM</button>
-                    <div class="sort-dropdown">
-                        <button class="sort-btn time sort-dropdown-toggle" id="sortTimeBtn">
-                            <span class="label">Thời gian</span>
-                            <span class="arrow">&#9660;</span>
-                        </button>
-                        <div class="sort-dropdown time sort-dropdown-menu" id="sortTimeMenu">
-                            <div class="sort-dropdown-item" data-sort="time-desc">Thời gian: Mới nhất</div>
-                            <div class="sort-dropdown-item" data-sort="time-asc">Thời gian: Cũ nhất</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <span class="pagination">
-                <button class="page-btn prev">&lt;</button>
-                <span class="page-info">1/1</span>
-                <button class="page-btn next">&gt;</button>
-            </span>
-        </div>
-        <!-- Bảng khuyến mãi -->
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="stt">STT</th>
-                    <th class="id">Mã khuyến mãi</th>
-                    <th>Tên khuyến mãi</th>
-                    <th>Thời gian áp dụng</th>
-                    <th>Trạng thái</th>
-                    <th class="actions">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="stt"></td>
-                    <td>KM001</td>
-                    <td>Giảm 10% toàn bộ sách</td>
-                    <td>01/06/2025 - 15/06/2025</td>
-                    <td>Đang áp dụng</td>
-                    <td class="action-buttons">
-                        <button class="view-btn" onclick="viewDeal('KM001')">Xem</button>
-                        <button class="delete-btn" onclick="deleteDeal(this)">Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="stt"></td>
-                    <td>KM002</td>
-                    <td>Mua 2 tặng 1</td>
-                    <td>01/05/2025 - 10/05/2025</td>
-                    <td>Hết hạn</td>
-                    <td class="action-buttons">
-                        <button class="view-btn" onclick="viewDeal('KM002')">Xem</button>
-                        <button class="delete-btn" onclick="deleteDeal(this)">Xóa</button>
-                    </td>
-                </tr>
-                <!-- Các dòng khác -->
-            </tbody>
-        </table>
+  <div class="main-content">
+    <div class="header">
+      <div class="search-filter">
+        <input type="text" id="searchTenKM" name="ten_km" placeholder="Tìm theo tên...">
+        <input type="text" id="searchNgayBatDau" name="ngay_bat_dau" placeholder="Tìm theo ngày bắt đầu...">
+      </div>
+      <button class="add-button" onclick="createNew()">+ Thêm khuyến mãi mới</button>
     </div>
-    <div class="toast" id="toast"></div>
+
+    <table id="bookTable">
+      <thead>
+        <tr>
+          <th>Mã khuyến mãi</th>
+          <th>Tên khuyến mãi</th>
+          <th>Ngày bắt đầu</th>
+          <th>Ngày kết thúc</th>
+          <th>Điều kiện áp dụng</th>
+          <th>Trạng thái</th>
+          <th>Chi tiết</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php while ($row = $result->fetch_assoc()): ?>
+        <?php
+            $ngayBatDau = date('Y-m-d', strtotime($row['NgayBatDau']));
+            $ngayKetThuc = date('Y-m-d', strtotime($row['NgayKetThuc']));
+            $trangThai = $row['TrangThai'] ? 'Đang áp dụng' : 'Ngừng áp dụng';
+        ?>
+        <tr>
+          <td><?= htmlspecialchars($row['MaKM']) ?></td>
+          <td><?= htmlspecialchars($row['TenKM']) ?></td>
+          <td><?= htmlspecialchars(date('d/m/Y', strtotime($row['NgayBatDau']))) ?></td>
+          <td><?= htmlspecialchars(date('d/m/Y', strtotime($row['NgayKetThuc']))) ?></td>
+          <td><?= htmlspecialchars($row['DieuKienApDung']) ?></td>
+          <td><?= htmlspecialchars($trangThai) ?></td>
+          <td class="action-buttons">
+            <button class="view-btn" onclick="openForm(
+              '<?= $row['MaKM'] ?>',
+              '<?= $row['TenKM'] ?>',
+              '<?= $ngayBatDau ?>',
+              '<?= $ngayKetThuc ?>',
+              '<?= $row['DieuKienApDung'] ?>',
+              '<?= $trangThai ?>'
+            )">Xem</button>
+            <button class="delete-btn" onclick="deleteKM('<?= $row['MaKM'] ?>')">Xóa</button>
+          </td>
+        </tr>
+        <?php endwhile; ?>
+      </tbody>
+    </table>
+    <div id="toast"></div>
+  </div>
+
+  <div id="kmFormOverlay" class="overlay">
+    <div class="form-popup">
+      <h3>Chi tiết khuyến mãi</h3>
+      <form id="kmForm" onsubmit="return false;" action="" method="post" novalidate>
+        <input type="hidden" id="form_mode" name="form_mode" value="new">
+
+        <label>Mã khuyến mãi:</label><input type="text" name="ma_km" required readonly>
+        <span class="error" id="error_makm"></span>
+
+        <label>Tên khuyến mãi:</label><input type="text" name="ten_km" required readonly>
+        <span class="error" id="error_tenkm"></span>
+
+        <label>Ngày bắt đầu:</label><input type="date" name="ngay_bat_dau" required readonly>
+        <span class="error" id="error_ngaybatdau"></span>
+
+        <label>Ngày kết thúc:</label><input type="date" name="ngay_ket_thuc" required readonly>
+        <span class="error" id="error_ngayketthuc"></span>
+
+        <label>Điều kiện áp dụng:</label><textarea name="dieu_kien_ap_dung" required readonly></textarea>
+        <span class="error" id="error_dieukienapdung"></span>
+
+        <label>Trạng thái:</label>
+        <select name="trang_thai" required disabled>
+          <option value="1">Đang áp dụng</option>
+          <option value="0">Ngừng áp dụng</option>
+        </select>
+        <span class="error" id="error_trangthai"></span>
+
+        <div class="form-buttons">
+          <button type="submit" class="btn-save" onclick="saveKM()" style="display: none;">Lưu</button>
+          <button type="button" class="btn-edit" onclick="enableEditing()">Sửa</button>
+          <button type="button" class="btn-cancel" onclick="closeForm()">Đóng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function createNew() {
+      document.getElementById('kmForm').reset();
+      document.getElementById('form_mode').value = 'new';
+      document.querySelector('.btn-save').style.display = 'inline-block';
+      document.querySelector('.btn-edit').style.display = 'none';
+      document.querySelector('.form-popup h3').textContent = 'Thêm khuyến mãi mới';
+      openForm();
+    }
+
+    function openForm(maKM, tenKM, ngayBatDau, ngayKetThuc, dieuKienApDung, trangThai) {
+      const form = document.getElementById('kmForm');
+      form.ma_km.value = maKM || '';
+      form.ten_km.value = tenKM || '';
+      form.ngay_bat_dau.value = ngayBatDau || '';
+      form.ngay_ket_thuc.value = ngayKetThuc || '';
+      form.dieu_kien_ap_dung.value = dieuKienApDung || '';
+      form.trang_thai.value = trangThai === 'Đang áp dụng' ? '1' : '0';
+
+      document.querySelector('.btn-save').style.display = maKM ? 'none' : 'inline-block';
+      document.querySelector('.btn-edit').style.display = maKM ? 'inline-block' : 'none';
+      document.querySelector('.form-popup h3').textContent = maKM ? 'Chi tiết khuyến mãi' : 'Thêm khuyến mãi mới';
+
+      document.getElementById('kmFormOverlay').style.display = 'block';
+    }
+
+    function closeForm() {
+      document.getElementById('kmFormOverlay').style.display = 'none';
+    }
+
+    function enableEditing() {
+      const inputs = document.querySelectorAll('#kmForm input, #kmForm textarea');
+      inputs.forEach(input => input.removeAttribute('readonly'));
+      document.querySelector('#kmForm select').removeAttribute('disabled');
+      document.querySelector('.btn-save').style.display = 'inline-block';
+    }
+
+    function saveKM() {
+      const formData = new FormData(document.getElementById('kmForm'));
+
+      fetch('save_km.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        if (data === "OK") {
+          showToast("Lưu thành công!", "success");
+          location.reload();
+        } else {
+          showToast(data, "error");
+        }
+      });
+    }
+
+    function deleteKM(maKM) {
+      if (confirm("Bạn có chắc chắn muốn xóa khuyến mãi này?")) {
+        fetch('delete_km.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'ma_km=' + encodeURIComponent(maKM)
+        })
+        .then(response => response.text())
+        .then(data => {
+          if (data === 'OK') {
+            showToast("Xóa thành công!", "success");
+            location.reload();
+          } else {
+            showToast(data, "error");
+          }
+        });
+      }
+    }
+
+    function showToast(message, type) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = type;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }
+  </script>
 </body>
 </html>
+<script>
+
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        // Xóa hiệu ứng ripple cũ nếu có
+        const oldRipple = this.querySelector('.ripple');
+        if (oldRipple) oldRipple.remove();
+        // Tạo hiệu ứng ripple mới
+        const circle = document.createElement('span');
+        circle.classList.add('ripple');
+        this.appendChild(circle);
+        circle.style.left = `${e.offsetX}px`;
+        circle.style.top = `${e.offsetY}px`;
+        setTimeout(() => circle.remove(), 600);
+      });
+    });
+</script>

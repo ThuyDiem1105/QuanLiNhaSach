@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2025 at 05:15 PM
+-- Generation Time: May 29, 2025 at 07:06 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,59 +24,34 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hoadon`
+-- Table structure for table `baocaocongno`
 --
 
-CREATE TABLE IF NOT EXISTS `HOADON` (
-  `MaHD` VARCHAR(10) NOT NULL PRIMARY KEY,
-  `MaKH` VARCHAR(10) NOT NULL,
-  `NgayLap` DATE DEFAULT CURRENT_DATE NOT NULL,
-  `TongTien` DECIMAL(20,2) NOT NULL,
-  `TienTra` DECIMAL(20,2) NOT NULL,
-  `TienNo` DECIMAL(20,2) NOT NULL
+CREATE TABLE `baocaocongno` (
+  `Thang` int(11) NOT NULL,
+  `Nam` int(11) NOT NULL,
+  `MaKhachHang` varchar(50) NOT NULL,
+  `NoDau` float DEFAULT NULL,
+  `PhatSinh` float DEFAULT NULL,
+  `NoCuoi` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `hoadon`
---
-CREATE TABLE `chitiet_hoadon` (
-  `MaCTHD` INT(11) NOT NULL AUTO_INCREMENT,
-  `MaHD` VARCHAR(10) NOT NULL,
-  `MaSach` VARCHAR(10) NOT NULL,
-  `SoLuong` INT(11) NOT NULL,
-  `GiaBan` DECIMAL(20,2) NOT NULL,
-  `ThanhTien` DECIMAL(20,2) NOT NULL,
-  PRIMARY KEY (`MaCTHD`),
-  FOREIGN KEY (`MaHD`) REFERENCES `hoadon`(`MaHD`),
-  FOREIGN KEY (`MaSach`) REFERENCES `sach`(`MaSach`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
+-- --------------------------------------------------------
 
 --
--- Table structure for table `phieunhap`
+-- Table structure for table `baocaokho`
 --
 
-CREATE TABLE `PHIEUNHAP` (
-  `MaPN` varchar(10) NOT NULL PRIMARY KEY,
-  `NgayLapPhieu` DATE DEFAULT CURRENT_DATE NOT NULL,
-  `NgayNhap` DATE NOT NULL,
-  `TongTien` float DEFAULT NULL
+CREATE TABLE `baocaokho` (
+  `Thang` int(11) NOT NULL,
+  `Nam` int(11) NOT NULL,
+  `MaSach` varchar(50) NOT NULL,
+  `TonDau` int(11) DEFAULT NULL,
+  `PhatSinh` int(11) DEFAULT NULL,
+  `TonCuoi` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `chitiet_phieunhap`
---
-
-CREATE TABLE `CHITIET_PHIEUNHAP` (
-  `MaCTPN ` INT PRIMARY KEY NOT NULL,
-  `MaPN` varchar(10) NOT NULL,
-  `MaSach` varchar(10) NOT NULL,
-  `SoLuong` int(11) NOT NULL,
-  `DonGiaNhap` DECIMAL(12,2) NOT NULL,
-  `ThanhTien` DECIMAL(12,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
---- số lượng nhập tối thiểu là 200
-ALTER TABLE chitiet_phieunhap ADD CONSTRAINT check_soluong CHECK(SoLuong >= 200);
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `calam`
@@ -127,6 +102,21 @@ INSERT INTO `calam` (`MaCa`, `Thu`, `LoaiCa`, `BatDau`, `KetThuc`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `chitiet_phieunhap`
+--
+
+CREATE TABLE `chitiet_phieunhap` (
+  `MaCTPN` int(11) NOT NULL,
+  `MaPN` varchar(10) NOT NULL,
+  `MaSach` varchar(10) NOT NULL,
+  `SoLuong` int(11) NOT NULL,
+  `DonGiaNhap` decimal(12,2) NOT NULL,
+  `ThanhTien` decimal(12,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `danhmucsach`
 --
 
@@ -173,6 +163,21 @@ CREATE TABLE `khachhang` (
 
 INSERT INTO `khachhang` (`MaKH`, `HoTen`, `SDT`, `Loai`, `SoTienNo`) VALUES
 ('KH002', 'Trần Thị B', '0912345678', 'VIP', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `khuyenmai`
+--
+
+CREATE TABLE `khuyenmai` (
+  `MaKM` varchar(10) NOT NULL,
+  `TenKM` varchar(100) DEFAULT NULL,
+  `NgayBatDau` date DEFAULT NULL,
+  `NgayKetThuc` date DEFAULT NULL,
+  `DieuKienApDung` text DEFAULT NULL,
+  `TrangThai` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -229,6 +234,19 @@ INSERT INTO `nhanvien` (`MaNV`, `HoTen`, `NgaySinh`, `SDT`, `NoiO`, `ChucVu`, `C
 ('NV001', 'Nguyễn Văn A', '2004-03-12', '0912345678', 'Hà Nội', 'Bán hàng', 'Mon-ca1,Tue-ca2,Wed-ca3,Thu-ca4', 25000.00),
 ('NV002', 'Nguyễn Văn B', '2004-01-31', '0312345678', 'Thành Phố Hồ Chí Minh', 'Thu ngân', 'Tue-ca1,Wed-ca1,Thu-ca1,Fri-ca1', 50000.00),
 ('NV003', 'Nguyễn Thị C', '2001-01-01', '0712345678', 'Quảng Ngãi', 'Marketing và chăm sóc khách hàng', 'Wed-ca4,Thu-ca3,Fri-ca2,Sat-ca1,Sun-ca1', 65000.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phieunhap`
+--
+
+CREATE TABLE `phieunhap` (
+  `MaPN` varchar(10) NOT NULL,
+  `NgayLapPhieu` date NOT NULL DEFAULT curdate(),
+  `NgayNhap` date NOT NULL,
+  `TongTien` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -348,10 +366,28 @@ INSERT INTO `theloai` (`MaTL`, `TenTheLoai`) VALUES
 --
 
 --
+-- Indexes for table `baocaocongno`
+--
+ALTER TABLE `baocaocongno`
+  ADD PRIMARY KEY (`Thang`,`Nam`,`MaKhachHang`);
+
+--
+-- Indexes for table `baocaokho`
+--
+ALTER TABLE `baocaokho`
+  ADD PRIMARY KEY (`Thang`,`Nam`,`MaSach`);
+
+--
 -- Indexes for table `calam`
 --
 ALTER TABLE `calam`
   ADD PRIMARY KEY (`MaCa`);
+
+--
+-- Indexes for table `chitiet_phieunhap`
+--
+ALTER TABLE `chitiet_phieunhap`
+  ADD PRIMARY KEY (`MaCTPN`);
 
 --
 -- Indexes for table `danhmucsach`
@@ -366,6 +402,12 @@ ALTER TABLE `khachhang`
   ADD PRIMARY KEY (`MaKH`);
 
 --
+-- Indexes for table `khuyenmai`
+--
+ALTER TABLE `khuyenmai`
+  ADD PRIMARY KEY (`MaKM`);
+
+--
 -- Indexes for table `lichlamviec`
 --
 ALTER TABLE `lichlamviec`
@@ -378,6 +420,12 @@ ALTER TABLE `lichlamviec`
 ALTER TABLE `nhanvien`
   ADD PRIMARY KEY (`MaNV`),
   ADD UNIQUE KEY `SDT` (`SDT`);
+
+--
+-- Indexes for table `phieunhap`
+--
+ALTER TABLE `phieunhap`
+  ADD PRIMARY KEY (`MaPN`);
 
 --
 -- Indexes for table `sach`

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     staffBtn: 'Employee/staff.php',
     receiptsBtn: 'Receipt/receipts.php',
     dealsBtn: 'Deals/deals.php',
-    reportsBtn: 'reports.html',
+    reportsBtn: 'Report/report.php',
     rulesBtn: 'rules.html',
     logoutBtn: 'logout.html'
   };
