@@ -19,7 +19,8 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
 <head>
   <meta charset="UTF-8">
   <title>Quản lý phiếu nhập</title>
-  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+  <link rel="stylesheet" href="../../assets/style.css" type="text/css">
   <style> 
     * {
       box-sizing: border-box;
@@ -31,19 +32,7 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
       background: linear-gradient(135deg, #f9fff6, #edfaf9, #d8ddd3);
       background-size: 400% 400%;
       animation: gradientShift 15s ease infinite;
-    }
-
-/*
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f8f9fa;
-    }
-
-    i[data-lucide] {
-      width: 18px;
-      height: 18px;
-      color: inherit;
-    } */
+    } 
 
     .main-content {
       padding: 20px;

@@ -11,9 +11,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
   <meta charset="UTF-8">
   <title>Quản lý nhân viên</title>
   <link rel="stylesheet" href="../assets/style.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+  <link rel="stylesheet" href="../../assets/style.css" type="text/css">
   <!-- #region STYLE -->
    <style>
   * {
