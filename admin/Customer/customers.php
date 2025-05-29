@@ -1,8 +1,9 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
-// Đọc danh mục sách
+
 $danhMucArr = [];
+// Lấy danh sách khách hàng từ cơ sở dữ liệu
 $result = $mysqli->query("SELECT MaKH, HoTen, SDT, Loai, SoTienNo FROM khachhang");
 
 if ($result) {

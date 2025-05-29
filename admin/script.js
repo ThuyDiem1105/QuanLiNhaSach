@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     customersBtn: 'Customer/customers.php',
     staffBtn: 'Employee/staff.php',
     receiptsBtn: 'Receipt/receipts.php',
-    dealsBtn: 'deals.html',
-    reportsBtn: 'reports.html',
+    dealsBtn: 'Deals/deals.php',
+    reportsBtn: 'Report/report.php',
     rulesBtn: 'rules.html',
     logoutBtn: 'logout.html'
   };

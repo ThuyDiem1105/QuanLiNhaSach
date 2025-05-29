@@ -2,7 +2,6 @@
 session_start();
 include __DIR__ . '/../../connect.php';
 
-// Đọc danh mục sách
 $danhMucArr = [];
 $result = $mysqli->query("SELECT MaKM, TenKM FROM khuyenmai");
 while ($row = $result->fetch_assoc()) {
