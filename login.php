@@ -3,6 +3,7 @@ session_start();
 include __DIR__ . '/connect.php';
 
 $error_message = "";
+
 if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
     if (!empty($_POST['username']) && !empty($_POST['password'])) {
         $username = trim($_POST['username']);
@@ -31,6 +32,7 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") 
     } else{ $error_message = "Vui lòng nhập tên đăng nhập và mật khẩu.";}
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>

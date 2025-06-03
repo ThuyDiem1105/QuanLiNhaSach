@@ -1,11 +1,33 @@
+<?php
+session_start();
+include __DIR__ . '/../../connect.php';
+// Đọc danh mục khách hàng từ cơ sở dữ liệu
+$danhMucArr = [];
+$result = $mysqli->query("SELECT MaKH, HoTen, SDT, DiaChi, Email, Loai, SoTienNo FROM khachhang ORDER BY MaKH ASC");
+while ($row = $result->fetch_assoc()) {
+    $row['SoTienNo'] = number_format($row['SoTienNo'], 0, ',', '.');
+    $row['DiaChi'] = htmlspecialchars($row['DiaChi']);  
+    $row['Email'] = htmlspecialchars($row['Email']);
+    $row['SDT'] = htmlspecialchars($row['SDT']);
+    $row['Loai'] = htmlspecialchars($row['Loai']);
+    $row['HoTen'] = htmlspecialchars($row['HoTen']);
+    $row['MaKH'] = htmlspecialchars($row['MaKH']);
+    $danhMucArr[] = $row;
+
+}
+$result->free();
+
+$result = $mysqli->query("SELECT * FROM sach");
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản lý khách hàng</title>
-    <link rel="stylesheet" href="../assets/general-style.css" />
-    <link rel="stylesheet" href="../assets/customers-style.css" />
+    <link rel="stylesheet" href="../../assets/general-style.css" />
+    <link rel="stylesheet" href="../../assets/customers-style.css" />
     <script src="customers-script.js" defer></script>
 </head>
 <body>
@@ -24,7 +46,6 @@
                     </select>
                 </div>
                 <button class="add-button" onclick="createNewCustomer()">
-                    <img src="../assets/plus.png" class="icon-add" alt="Add Icon" /> 
                     Thêm khách hàng
                 </button>
             </div>
@@ -73,33 +94,36 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="stt"></td>
-                    <td>KH001</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>0901234567</td>
-                    <td>Thường</td>
-                    <td>150.000</td>
-                    <td class="action-buttons">
-                        <button class="view-btn" onclick="viewCustomer('KH001')">Xem</button>
-                        <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="stt"></td>
-                    <td>KH002</td>
-                    <td>Trần Thị B</td>
-                    <td>0912345678</td>
-                    <td>VIP</td>
-                    <td>0</td>
-                    <td class="action-buttons">
-                        <button class="view-btn" onclick="viewCustomer('KH002')">Xem</button>
-                        <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
-                    </td>
-                </tr>
-                <!-- Các dòng khác -->
-            </tbody>
-        </table>
+<?php 
+// Đảm bảo con trỏ dữ liệu ở đầu bảng
+$result->data_seek(0);
+$stt = 1;
+while ($row = $result->fetch_assoc()): ?>
+<tr>
+    <td><?= $stt++ ?></td>
+    <td><?= htmlspecialchars($row['MaKH'] ?? '') ?></td>
+    <td><?= htmlspecialchars($row['HoTen'] ?? '') ?></td>
+    <td><?= htmlspecialchars($row['SDT'] ?? '') ?></td>
+    <td><?= htmlspecialchars($row['DiaChi'] ?? '') ?></td>
+    <td><?= htmlspecialchars($row['Email'] ?? '') ?></td>
+    <td><?= htmlspecialchars($row['Loai'] ?? '') ?></td>
+    <td><?= htmlspecialchars(number_format($row['SoTienNo'] ?? 0, 0, ',', '.')) ?> VNĐ</td>
+    <td class="action-buttons">
+        <button class="view-btn" onclick="openForm(
+            '<?= htmlspecialchars($row['MaKH'] ?? '') ?>',
+            '<?= htmlspecialchars($row['HoTen'] ?? '') ?>',
+            '<?= htmlspecialchars($row['SDT'] ?? '') ?>',
+            '<?= htmlspecialchars($row['DiaChi'] ?? '') ?>',
+            '<?= htmlspecialchars($row['Email'] ?? '') ?>',
+            '<?= htmlspecialchars($row['Loai'] ?? '') ?>',
+            '<?= htmlspecialchars($row['SoTienNo'] ?? '') ?>'
+        )">Xem</button>
+        <button class="delete-btn" onclick="deleteCustomer('<?= htmlspecialchars($row['MaKH'] ?? '') ?>')">Xóa</button>
+    </td>
+</tr>
+<?php endwhile; ?>
+</tbody>
+                </table>
     </div>
     <script src="customers-script.js" defer></script>
     <div class="toast" id="toast"></div>

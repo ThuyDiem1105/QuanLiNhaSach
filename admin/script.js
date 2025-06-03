@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         dashboardBtn: 'dashboard.html',
         ordersBtn: 'Order/orders.php',
         booksBtn: 'Books/books.php',
-        customersBtn: 'Customer/customers.php',
+        customersBtn: 'Customers/customers.php',
         staffBtn: 'Employee/staff.php',
         receiptsBtn: 'Receipt/receipts.php',
         dealsBtn: 'Deals/deals.php',

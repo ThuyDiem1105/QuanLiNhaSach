@@ -368,6 +368,27 @@ function generateCustomerId() {
     return `KH${next.toString().padStart(3, "0")}`;
 }
 
+// Fetch và render danh sách khách hàng từ API
+window.addEventListener('DOMContentLoaded', () => {
+    fetch('customers.php?api=true')  // Thêm tham số api=true để lấy JSON
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.customers && Array.isArray(data.customers)) {
+                renderCustomerTable(data.customers);
+            } else {
+                console.error('Invalid data format:', data);
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching customer data:', err);
+        });
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector(".search-input");
     const filterSelect = document.querySelector(".filter-select");
