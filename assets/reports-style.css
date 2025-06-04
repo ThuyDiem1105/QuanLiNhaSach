@@ -1,0 +1,150 @@
+.report-section {
+    background: #fff;
+    padding: 32px;
+    border-radius: 12px;
+    margin: 32px auto;
+    max-width: 1100px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+.report-title {  
+    font-size: 28px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+    color: #0d3c6b;
+    border-bottom: 2px solid #a4b8d0;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.report-icon {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+}
+
+.report-tabs {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+    margin-bottom: 18px;
+}
+
+.report-tab {
+    border: none;
+    background: #f3f3f3;
+    color: #222;
+    font-size: 16px;
+    padding: 10px 32px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.report-tab.active {
+    background: #222;
+    color: #fff;
+}
+
+.filter-group {
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.filter-group input[type="month"] {
+    border: 1.5px solid #a6abb0;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 14px;
+    background: #ffffff;
+    color: #0d3c6b;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+    box-shadow: none;
+    height: 40px;
+    opacity: 0.85;
+}
+
+.filter-group input[type="month"]:focus,
+.filter-group input[type="month"].has-value {
+    border: 1.5px solid #6a8caf;
+    background: #e3f0ff;
+    color: #222e50;
+    opacity: 1;
+}
+
+.filter-btn, .export-btn {
+    display: flex;
+    align-items: center;    
+    background: #beffe1;
+    color: #0d3c6b;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background 0.2s color 0.2s;
+    box-shadow: 0 1px 4px rgba(163,201,249,0.10);
+    gap: 6px;
+    height: 40px; /* Đảm bảo chiều cao đồng nhất */
+}
+
+.export-icon {
+    align-items: center;
+    font-size: 15px;
+    margin-right: 4px;
+}
+
+.filter-btn:hover, .export-btn:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+.hidden {
+    display: none !important;
+}
+
+h3 {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: #0d3c6b;
+    margin-bottom: 12px;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    background: #fafbfc;
+}
+.report-table th, .report-table td {
+    border: 1px solid #ddd;
+    padding: 10px 8px;
+    text-align: left;
+}
+.report-table th {
+    background: #f3f3f3;
+    font-weight: 600;
+}
+.report-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Responsive: Ẩn bớt cột phụ trên mobile */
+@media (max-width: 700px) {
+    .report-table th:nth-child(2),
+    .report-table td:nth-child(2),
+    .report-table th:nth-child(3),
+    .report-table td:nth-child(3) {
+        display: none;
+    }
+}
