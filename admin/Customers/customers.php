@@ -1,14 +1,15 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
-
+// Đọc danh mục khách hàng từ cơ sở dữ liệu
 $danhMucArr = [];
-$result = $mysqli->query("SELECT MaKH, HoTen FROM khachhang");
+$result = $mysqli->query("SELECT MaKH, HoTen, SDT, DiaChi, Email, Loai, SoTienNo FROM khachhang ORDER BY MaKH ASC");
 while ($row = $result->fetch_assoc()) {
     $danhMucArr[$row['MaKH']] = $row['HoTen'];
 }
 $result->free();
 
+// Sửa ở đây: lấy lại danh sách khách hàng
 $result = $mysqli->query("SELECT * FROM khachhang");
 ?>
 
@@ -20,8 +21,6 @@ $result = $mysqli->query("SELECT * FROM khachhang");
     <title>Quản lý khách hàng</title>
     <link rel="stylesheet" href="../../assets/general-style.css" />
     <link rel="stylesheet" href="../../assets/customers-style.css" />
-    <link rel="stylesheet" href="../../style.css" />
-    <script src="customers-script.js" defer></script>
 </head>
 <body>
     <div class="main-content">
@@ -39,7 +38,7 @@ $result = $mysqli->query("SELECT * FROM khachhang");
                     </select>
                 </div>
                 <button class="add-button" onclick="createNewCustomer()">
-                    Thêm khách hàng mới
+                    Thêm khách hàng
                 </button>
             </div>
         </div>
@@ -73,45 +72,43 @@ $result = $mysqli->query("SELECT * FROM khachhang");
                 <button class="page-btn next">&gt;</button>
             </span>
         </div>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th class="id">Mã khách hàng</th>
-                <th>Họ tên</th>
-                <th>Số điện thoại</th>
-                <th>Loại</th>
-                <th class="debt">Số tiền nợ</th>
-                <th class="actions">Thao tác</th>
-            </tr>
-        </thead>
-        <tbody>
-<?php while ($row = $result->fetch_assoc()): ?>
-<tr>
-    <td><?= htmlspecialchars($row['MaKH']) ?></td>
-    <td><?= htmlspecialchars($row['HoTen']) ?></td>
-    <td><?= htmlspecialchars($row['SDT']) ?></td>
-    <td><?= htmlspecialchars($row['Loai']) ?></td>
-    <td><?= htmlspecialchars($row['SoTienNo']) ?></td>
-    <td class="action-buttons">
-        <button class="view-btn" onclick="openForm(
-            '<?= $row['MaKH'] ?>',
-            '<?= $row['HoTen'] ?>',
-            '<?= $row['SDT'] ?>',
-            '<?= $row['DiaChi'] ?>',
-            '<?= $row['Email'] ?>',
-            '<?= $row['Loai'] ?>',
-            '<?= $row['SoTienNo'] ?>'
-        )">Xem</button>
-        <button class="delete-btn" onclick="deleteCustomer('<?= $row['MaKH'] ?>','<?= $row['HoTen'] ?>','<?= $row['SDT'] ?>','<?= $row['DiaChi'] ?>','<?= $row['Email'] ?>','<?= $row['Loai'] ?>','<?= $row['SoTienNo'] ?>')">Xóa</button>
-    </td>
-</tr>
-<?php endwhile; ?>
-</tbody>
-    </table>
-    <div id="toast"></div>
+        <!-- Bảng khách hàng -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="id">Mã khách hàng</th>
+                    <th>Họ tên</th>
+                    <th>Số điện thoại</th>
+                    <th>Loại</th>
+                    <th class="debt">Số tiền nợ</th>
+                    <th class="actions">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                <tr>
+                <td><?= $row['MaKH'] ?></td>
+                <td><?= $row['HoTen'] ?></td>
+                <td><?= $row['SDT'] ?></td>
+                <td><?= $row['Loai'] ?></td>
+                <td><?= number_format($row['SoTienNo'], 0, ',', '.') ?> VNĐ</td>
+                <td class="action-buttons">
+                    <button class="view-btn" onclick="openForm(
+                    '<?= $row['MaKH'] ?>',
+                    '<?= $row['HoTen'] ?>',
+                    '<?= $row['SDT'] ?>',
+                    '<?= $row['DiaChi'] ?>',
+                    '<?= $row['Email'] ?>',
+                    '<?= $row['Loai'] ?>',
+                    '<?= $row['SoTienNo'] ?>'
+                    )">Xem</button>
+                    <button class="delete-btn" onclick="deleteCustomer('<?= $row['MaKH'] ?>')">Xóa</button>
+                </td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
+                </table>
     </div>
-
     <div id="customerFormOverlay" class="overlay">
         <div class="form-popup">
         <h3>Chi tiết khách hàng</h3>
@@ -151,195 +148,7 @@ $result = $mysqli->query("SELECT * FROM khachhang");
         </form>
         </div>
     </div>
-<script>
-    let customerFormOverlay = document.getElementById('customerFormOverlay');
-    let customerForm = document.getElementById('customerForm');
-    let formModeInput = document.getElementById('form_mode');
-    let customerFormContent = customerForm.querySelector('.form-popup');
-
-    function openForm(maKH, hoTen, sdt, diachi, email, loai, soTienNo) {
-        customerFormOverlay.classList.add('show');
-        formModeInput.value = 'edit'; // Đặt chế độ edit để khi lưu sẽ cập nhật
-        customerForm.querySelector('input[name="ma_kh"]').value = maKH;
-        customerForm.querySelector('input[name="ten_kh"]').value = hoTen;
-        customerForm.querySelector('input[name="sdt"]').value = sdt;
-        customerForm.querySelector('input[name="diachi"]').value = diachi;
-        customerForm.querySelector('input[name="email"]').value = email;
-        customerForm.querySelector('select[name="loai"]').value = loai;
-        customerForm.querySelector('input[name="so_tien_no"]').value = soTienNo;
-
-        // Đặt tất cả các trường về readonly/disabled (chế độ chỉ xem)
-        customerForm.querySelectorAll('input, textarea').forEach(input => input.setAttribute('readonly', true));
-        customerForm.querySelector('select[name="loai"]').setAttribute('disabled', true);
-
-        // Hiện nút Sửa, Ẩn nút Lưu
-        document.querySelector('.btn-save').style.display = 'none';
-        document.querySelector('.btn-edit').style.display = 'inline-block';
-        document.querySelector('.btn-cancel').style.display = 'inline-block';
-    }
-
-    function closeForm() {
-        customerFormOverlay.classList.remove('show');
-    }
-
-    function enableEditing() {
-        // Chỉ cho phép sửa các trường ngoại trừ mã khách hàng
-        customerForm.querySelectorAll('input:not([name="ma_kh"])').forEach(input => input.removeAttribute('readonly'));
-        customerForm.querySelector('select[name="loai"]').removeAttribute('disabled');
-        document.querySelector('.btn-save').style.display = 'inline-block';
-        document.querySelector('.btn-edit').style.display = 'none';
-    }
-
-    
-
-    function saveCustomer() {
-        const form = document.forms['customerForm'];
-        // Lấy giá trị các trường
-        const maKH = form.ma_kh.value.trim();
-        const hoTen = form.ten_kh.value.trim();
-        const sdt = form.sdt.value.trim();
-        const diachi = form.diachi.value.trim();
-        const email = form.email.value.trim();
-        const loai = form.loai.value.trim();
-        const soTienNo = parseFloat(form.so_tien_no.value.trim()) || 0;
-        const formMode = document.getElementById('form_mode').value;
-
-        const formData = new FormData(form);
-        formData.append('form_mode', formMode);
-        formData.append('ma_kh', maKH);
-        formData.append('ten_kh', hoTen);
-        formData.append('sdt', sdt);
-        formData.append('diachi', diachi);
-        formData.append('email', email);
-        formData.append('loai', loai);
-        formData.append('so_tien_no', soTienNo);
-
-        fetch('save_customers.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(res => res.text())
-        .then(response => {
-            if (response.trim() === 'OK') {
-                showToast('Lưu thông tin thành công!');
-                // Chỉ cập nhật đúng dòng khách hàng vừa sửa/thêm
-                const rows = document.querySelectorAll('.table tbody tr');
-                for (const row of rows) {
-                    if (row.cells[0].textContent === maKH) {
-                        row.cells[1].textContent = hoTen;
-                        row.cells[2].textContent = sdt;
-                        row.cells[3].textContent = loai;
-                        row.cells[4].textContent = soTienNo;
-                        break; // Dừng ngay khi đã cập nhật đúng dòng
-                    }
-                }
-                closeForm();
-            } else if (response.trim() === 'Khách hàng đã tồn tại.') {
-                alert('Khách hàng đã tồn tại. Vui lòng kiểm tra lại thông tin.');
-            } else {
-                alert('Lỗi khi lưu thông tin: ' + response);
-            }
-        })
-        .catch(error => {
-            console.error('Lỗi khi gửi yêu cầu:', error);
-            alert('Đã xảy ra lỗi khi lưu thông tin. Vui lòng thử lại sau.');
-        });
-    }
-    function createNewCustomer() {
-        const customerFormOverlay = document.getElementById('customerFormOverlay');
-        const formModeInput = document.getElementById('form_mode');
-        const form = document.getElementById('customerForm');
-
-        if (!customerFormOverlay || !formModeInput || !form) {
-            console.error('Một trong các phần tử không tồn tại.');
-            return;
-        }
-
-        form.reset();
-
-        // Tìm mã khách hàng tiếp theo
-        const table = document.querySelector('.table tbody');
-        let nextId = 1;
-        const existingIds = Array.from(table ? table.rows : []).map(row => row.cells[0].textContent.trim());
-        while (existingIds.includes("KH" + String(nextId).padStart(3, '0'))) {
-            nextId++;
-        }
-        form.ma_kh.value = "KH" + String(nextId).padStart(3, '0');
-        formModeInput.value = 'new'; // Đặt chế độ thêm mới
-        customerFormOverlay.classList.add('show');
-
-        // Reset các trường
-        form.ten_kh.value = '';
-        form.sdt.value = '';
-        form.diachi.value = '';
-        form.email.value = '';
-        form.loai.value = 'Thường';
-        form.so_tien_no.value = '0';
-
-        // Cho phép nhập tất cả các trường (trừ mã KH readonly)
-        form.querySelectorAll('input, textarea').forEach(input => input.removeAttribute('readonly'));
-        form.querySelector('select[name="loai"]').removeAttribute('disabled');
-        form.querySelector('input[name="ma_kh"]').setAttribute('readonly', true);
-
-        document.querySelector('.btn-save').style.display = 'inline-block';
-        document.querySelector('.btn-edit').style.display = 'none';
-        document.querySelector('.btn-cancel').style.display = 'inline-block';
-    }
-
-    function deleteCustomer(maKH) {
-      if (confirm("Bạn có chắc chắn muốn xóa khách hàng này?")) {
-        fetch('./delete_customers.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ ma_kh: maKH })
-        })
-        .then(response => response.text())
-        .then(data => {
-          if (data === 'OK') {
-            alert('Xóa khách hàng thành công.');
-            location.reload();
-          } else {
-            alert('Lỗi khi xóa khách hàng: ' + data);
-          }
-        });
-      }
-    }
-
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
-
-    document.addEventListener("keydown", e => {
-        if (e.key === "Escape") {
-            closeForm();
-        }
-    });
-
-    document.getElementById("customerFormOverlay").addEventListener("click", e => {
-        if (e.target === e.currentTarget) closeForm();
-    });
-
-    document.querySelectorAll('button').foreach(btn => {
-        btn.addEventListener('click', e => {
-            const circle = document.createElement('span');
-            circle.classList.add('ripple');
-            circle.style.left = `${e.offsetX}px`;
-            circle.style.top = `${e.offsetY}px`;
-            btn.appendChild(circle);
-            setTimeout(() => {
-                circle.remove();
-            }, 600);
-        });
-    });
-
-
-</script>
+    <div id="toast"></div>
+    <script src="customer-script.js" defer></script>
 </body>
 </html>
-
-

@@ -181,7 +181,7 @@
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       background: rgba(0, 0, 0, 0.3);
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       z-index: 9999;
@@ -193,9 +193,9 @@
 
     .overlay.show {
       display: flex;
-    opacity: 1;
-    pointer-events: all;
-}
+      opacity: 1;
+      pointer-events: all;
+    }
     
 
     .form-popup {
@@ -343,3 +343,31 @@
   margin-top: 4px;
   display: block;
 }
+
+/* Hiển thị overlay khi display: flex */
+/* ===== SỬA ĐỂ KHÔNG XUNG ĐỘT OVERLAY ===== */
+/* Overlay dùng chung */
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  backdrop-filter: blur(6px);
+}
+.overlay.show {
+  display: flex;
+  opacity: 1;
+  pointer-events: all;
+}
+/* XÓA các đoạn dưới đây nếu có (đã bị trùng):
+#customerFormOverlay.overlay { ... }
+#customerFormOverlay.overlay.show { ... }
+#customerFormOverlay.overlay:not(.show) { ... }
+*/
