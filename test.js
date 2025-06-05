@@ -21,9 +21,9 @@ function renderTable() {
     // LỌC
     rows = rows.filter(row => {
         const maKH = row.children[1]?.textContent.toLowerCase() || ""; // Mã KH
-        const tenKH = row.children[2]?.textContent.toLowerCase() || ""; // Họ tên
+        const hoTen = row.children[2]?.textContent.toLowerCase() || ""; // Họ tên
         const loaiKH = row.children[4]?.textContent.toLowerCase() || ""; // Loại
-        const matchName = tenKH.includes(keyword);
+        const matchName = hoTen.includes(keyword);
         const matchType = (typeFilter === "all" || loaiKH === typeFilter.toLowerCase());
         return matchName && matchType;
     });

@@ -194,8 +194,26 @@ $result = $mysqli->query("SELECT * FROM khachhang");
 
     function saveCustomer() {
         const form = document.forms['customerForm'];
+        // Lấy giá trị các trường
+        const maKH = form.ma_kh.value.trim();
+        const hoTen = form.ten_kh.value.trim();
+        const sdt = form.sdt.value.trim();
+        const diachi = form.diachi.value.trim();
+        const email = form.email.value.trim();
+        const loai = form.loai.value.trim();
+        const soTienNo = parseFloat(form.so_tien_no.value.trim()) || 0;
+        const formMode = document.getElementById('form_mode').value;
+
         const formData = new FormData(form);
-        // Giữ nguyên form_mode (new hoặc edit) để backend biết là thêm mới hay cập nhật
+        formData.append('form_mode', formMode);
+        formData.append('ma_kh', maKH);
+        formData.append('ten_kh', hoTen);
+        formData.append('sdt', sdt);
+        formData.append('diachi', diachi);
+        formData.append('email', email);
+        formData.append('loai', loai);
+        formData.append('so_tien_no', soTienNo);
+
         fetch('save_customers.php', {
             method: 'POST',
             body: formData,
@@ -204,20 +222,29 @@ $result = $mysqli->query("SELECT * FROM khachhang");
         .then(response => {
             if (response.trim() === 'OK') {
                 showToast('Lưu thông tin thành công!');
-                setTimeout(() => { location.reload(); }, 1000);
+                // Chỉ cập nhật đúng dòng khách hàng vừa sửa/thêm
+                const rows = document.querySelectorAll('.table tbody tr');
+                for (const row of rows) {
+                    if (row.cells[0].textContent === maKH) {
+                        row.cells[1].textContent = hoTen;
+                        row.cells[2].textContent = sdt;
+                        row.cells[3].textContent = loai;
+                        row.cells[4].textContent = soTienNo;
+                        break; // Dừng ngay khi đã cập nhật đúng dòng
+                    }
+                }
+                closeForm();
             } else if (response.trim() === 'Khách hàng đã tồn tại.') {
-                alert('Khách hàng đã tồn tại!');
+                alert('Khách hàng đã tồn tại. Vui lòng kiểm tra lại thông tin.');
             } else {
-                alert('Lỗi: ' + response);
+                alert('Lỗi khi lưu thông tin: ' + response);
             }
         })
         .catch(error => {
-            console.error('Lỗi: ', error);
-            alert('Lỗi khi gửi dữ liệu.');
+            console.error('Lỗi khi gửi yêu cầu:', error);
+            alert('Đã xảy ra lỗi khi lưu thông tin. Vui lòng thử lại sau.');
         });
-        closeForm();
     }
-
     function createNewCustomer() {
         const customerFormOverlay = document.getElementById('customerFormOverlay');
         const formModeInput = document.getElementById('form_mode');

@@ -49,3 +49,6 @@ if ($formMode === "new") {
     }
     $stmt->close();
 }
+
+$mysqli->close();
+?>
