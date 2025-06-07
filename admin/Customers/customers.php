@@ -1,16 +1,27 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
-// Đọc danh mục khách hàng từ cơ sở dữ liệu
+// Đọc danh mục sách
 $danhMucArr = [];
-$result = $mysqli->query("SELECT MaKH, HoTen, SDT, DiaChi, Email, Loai, SoTienNo FROM khachhang ORDER BY MaKH ASC");
-while ($row = $result->fetch_assoc()) {
-    $danhMucArr[$row['MaKH']] = $row['HoTen'];
+$result = $mysqli->query("SELECT MaKH, HoTen, SDT, DiaChi, Email, Loai, SoTienNo FROM khachhang");
+
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        // Lưu toàn bộ thông tin của khách hàng theo mã khách
+        $danhMucArr[$row['MaKH']] = [
+            'HoTen' => $row['HoTen'],
+            'SDT' => $row['SDT'],
+            'DiaChi' => $row['DiaChi'],
+            'Email' => $row['Email'],
+            'Loai' => $row['Loai'],
+            'SoTienNo' => $row['SoTienNo']
+        ];
+    }
 }
 $result->free();
 
-// Sửa ở đây: lấy lại danh sách khách hàng
-$result = $mysqli->query("SELECT * FROM khachhang");
+
+$result = $mysqli->query("SELECT * FROM khachhang ORDER BY MaKH");
 ?>
 
 <!DOCTYPE html>
@@ -21,6 +32,7 @@ $result = $mysqli->query("SELECT * FROM khachhang");
     <title>Quản lý khách hàng</title>
     <link rel="stylesheet" href="../../assets/general-style.css" />
     <link rel="stylesheet" href="../../assets/customers-style.css" />
+    <script src="customers-script.js" defer></script>
 </head>
 <body>
     <div class="main-content">
@@ -38,6 +50,7 @@ $result = $mysqli->query("SELECT * FROM khachhang");
                     </select>
                 </div>
                 <button class="add-button" onclick="createNewCustomer()">
+                    <img src="../../assets/plus.png" class="icon-add" alt="Add Icon" /> 
                     Thêm khách hàng
                 </button>
             </div>
@@ -76,6 +89,7 @@ $result = $mysqli->query("SELECT * FROM khachhang");
         <table class="table">
             <thead>
                 <tr>
+                    <th class="stt">STT</th>
                     <th class="id">Mã khách hàng</th>
                     <th>Họ tên</th>
                     <th>Số điện thoại</th>
@@ -86,69 +100,34 @@ $result = $mysqli->query("SELECT * FROM khachhang");
             </thead>
             <tbody>
                 <?php while ($row = $result->fetch_assoc()): ?>
-                <tr>
-                <td><?= $row['MaKH'] ?></td>
-                <td><?= $row['HoTen'] ?></td>
-                <td><?= $row['SDT'] ?></td>
-                <td><?= $row['Loai'] ?></td>
-                <td><?= number_format($row['SoTienNo'], 0, ',', '.') ?> VNĐ</td>
-                <td class="action-buttons">
-                    <button class="view-btn" onclick="openForm(
-                    '<?= $row['MaKH'] ?>',
-                    '<?= $row['HoTen'] ?>',
-                    '<?= $row['SDT'] ?>',
-                    '<?= $row['DiaChi'] ?>',
-                    '<?= $row['Email'] ?>',
-                    '<?= $row['Loai'] ?>',
-                    '<?= $row['SoTienNo'] ?>'
-                    )">Xem</button>
-                    <button class="delete-btn" onclick="deleteCustomer('<?= $row['MaKH'] ?>')">Xóa</button>
-                </td>
-                </tr>
+                    <tr 
+                        data-address="<?php echo htmlspecialchars($row['DiaChi'], ENT_QUOTES); ?>" 
+                        data-email="<?php echo htmlspecialchars($row['Email'], ENT_QUOTES); ?>"
+                    >
+                        <td class="stt"></td>
+                        <td><?php echo htmlspecialchars($row['MaKH']); ?></td>
+                        <td><?php echo htmlspecialchars($row['HoTen']); ?></td>
+                        <td><?php echo htmlspecialchars($row['SDT']); ?></td>
+                        <td><?php echo htmlspecialchars($row['Loai']); ?></td>
+                        <td><?php echo htmlspecialchars($row['SoTienNo']); ?></td>
+                        <td class="action-buttons">
+                            <button class="view-btn" onclick="viewCustomer(
+                                '<?= $row['MaKH']; ?>',
+                                '<?= $row['HoTen']; ?>',
+                                '<?= $row['SDT']; ?>',
+                                '<?php echo htmlspecialchars($row['DiaChi'], ENT_QUOTES); ?>',
+                                '<?php echo htmlspecialchars($row['Email'], ENT_QUOTES); ?>',
+                                '<?= $row['Loai']; ?>',
+                                '<?= $row['SoTienNo']; ?>'
+                            )">Xem</button>
+                            <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
+                        </td>
+                    </tr>
                 <?php endwhile; ?>
             </tbody>
-                </table>
+        </table>
     </div>
-    <div id="customerFormOverlay" class="overlay">
-        <div class="form-popup">
-        <h3>Chi tiết khách hàng</h3>
-        <form id="customerForm" onsubmit="return false;" action="" method="post" novalidate>
-            <input type="hidden" id="form_mode" name="form_mode" value="new">
-
-            <label>Mã khách hàng:</label><input type="text" name="ma_kh" required readonly>
-            <span class="error" id="error_makh"></span>
-
-            <label>Tên khách hàng:</label><input type="text" name="ten_kh" required readonly>
-            <span class="error" id="error_tenkh"></span>
-
-            <label>Số điện thoại:</label><input type="text" name="sdt" required readonly>
-            <span class="error" id="error_sdt"></span>
-
-            <label>Địa chỉ:</label><input type="text" name="diachi" required readonly>
-            <span class="error" id="error_diachi"></span>
-
-            <label>Email:</label><input type="email" name="email" required readonly>
-            <span class="error" id="error_email"></span>
-
-            <label>Loại khách hàng:</label>
-            <select name="loai" required disabled>
-                <option value="Thường">Khách thường</option>
-                <option value="VIP">Khách VIP</option>
-            </select>
-            <span class="error" id="error_loai"></span>
-
-            <label>Số tiền nợ:</label><input type="number" name="so_tien_no" required readonly>
-            <span class="error" id="error_sotienno"></span>
-
-            <div class="form-buttons">
-            <button type="submit" class="btn-save" onclick="saveCustomer()" style="display: none;">Lưu</button>
-            <button type="button" class="btn-edit" onclick="enableEditing()">Sửa</button>
-            <button type="button" class="btn-cancel" onclick="closeForm()">Đóng</button>
-            </div>
-        </form>
-        </div>
-    </div>
-    <div id="toast"></div>
-    <script src="customer-script.js" defer></script>
+    <script src="customers-script.js" defer></script>
+    <div class="toast" id="toast"></div>
 </body>
 </html>

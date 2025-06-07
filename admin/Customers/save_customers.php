@@ -1,65 +1,71 @@
 <?php
-session_start();
-include __DIR__ . '/../../connect.php';
+// save_customers.php
+require_once '../../connect.php';
 
+// Kiểm tra phương thức POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo "Invalid request.";
+    http_response_code(405);
+    echo 'Phương thức không hợp lệ';
     exit;
 }
 
-$ma_kh = trim($_POST['ma_kh'] ?? '');
-$ten_kh = trim($_POST['ten_kh'] ?? '');
-$sdt = trim($_POST['sdt'] ?? '');
-$diachi = trim($_POST['diachi'] ?? '');
-$email = trim($_POST['email'] ?? '');
-$loai = trim($_POST['loai'] ?? '');
-$so_tien_no = floatval($_POST['so_tien_no'] ?? 0);
-$form_mode = trim($_POST['form_mode'] ?? '');
+// Lấy dữ liệu từ POST (dùng đúng tên trường phía client gửi lên)
+$form_mode = $_POST['form_mode'] ?? '';
+$ma_kh = $_POST['ma_kh'] ?? '';
+$ten_kh = $_POST['ten_kh'] ?? '';
+$sdt = $_POST['sdt'] ?? '';
+$diachi = $_POST['diachi'] ?? '';
+$email = $_POST['email'] ?? '';
+$loai = $_POST['loai'] ?? '';
+$so_tien_no = isset($_POST['so_tien_no']) ? $_POST['so_tien_no'] : null;
 
-// Validate required fields
-if ($ma_kh === '' || $ten_kh === '' || $sdt === '' || $diachi === '' || $email === '' || $loai === '') {
-    echo "Vui lòng nhập đầy đủ thông tin.";
-    exit;
-}
-
-if (!in_array($loai, ['Thường', 'VIP'])) {
-    echo "Loại khách hàng không hợp lệ.";
-    exit;
-}
-
-if ($form_mode === 'new') {
-    // Check if MaKH already exists
-    $stmt = $mysqli->prepare("SELECT MaKH FROM khachhang WHERE MaKH = ?");
-    $stmt->bind_param("s", $ma_kh);
-    $stmt->execute();
-    $stmt->store_result();
-    if ($stmt->num_rows > 0) {
-        echo "Khách hàng đã tồn tại.";
+// Validate cơ bản
+if ($form_mode === 'add') {
+    if (!$ten_kh || !$diachi || !$email || !$sdt || !$loai || $so_tien_no === null) {
+        echo 'Thiếu thông tin bắt buộc';
         exit;
     }
-    $stmt->close();
-
-    // Insert new customer
+    // Tạo mã khách hàng mới
+    $result = $mysqli->query("SELECT MAX(CAST(SUBSTRING(MaKH, 3) AS UNSIGNED)) AS max_id FROM khachhang");
+    $row = $result ? $result->fetch_assoc() : null;
+    $next_id = (int)($row['max_id'] ?? 0) + 1;
+    $ma_kh = 'KH' . str_pad($next_id, 3, '0', STR_PAD_LEFT);
     $stmt = $mysqli->prepare("INSERT INTO khachhang (MaKH, HoTen, SDT, DiaChi, Email, Loai, SoTienNo) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssd", $ma_kh, $ten_kh, $sdt, $diachi, $email, $loai, $so_tien_no);
+    if (!$stmt) {
+        echo 'Lỗi: Không thể chuẩn bị truy vấn.';
+        $mysqli->close();
+        exit;
+    }
+    $stmt->bind_param('ssssssi', $ma_kh, $ten_kh, $sdt, $diachi, $email, $loai, $so_tien_no);
     if ($stmt->execute()) {
-        echo "OK";
+        echo 'OK';
     } else {
-        echo "Lỗi khi thêm khách hàng: " . $stmt->error;
+        echo 'Lỗi: ' . $stmt->error;
     }
     $stmt->close();
+    $mysqli->close();
+    exit;
 } elseif ($form_mode === 'edit') {
-    // Update existing customer
+    if (!$ma_kh || !$ten_kh || !$sdt || !$diachi || !$email || !$loai) {
+        echo 'Thiếu thông tin bắt buộc';
+        exit;
+    }
     $stmt = $mysqli->prepare("UPDATE khachhang SET HoTen = ?, SDT = ?, DiaChi = ?, Email = ?, Loai = ?, SoTienNo = ? WHERE MaKH = ?");
-    $stmt->bind_param("ssssssd", $ten_kh, $sdt, $diachi, $email, $loai, $so_tien_no, $ma_kh);
+    if (!$stmt) {
+        echo 'Lỗi: Không thể chuẩn bị truy vấn.';
+        $mysqli->close();
+        exit;
+    }
+    $stmt->bind_param('sssssis', $ten_kh, $sdt, $diachi, $email, $loai, $so_tien_no, $ma_kh);
     if ($stmt->execute()) {
-        echo "OK";
+        echo 'OK';
     } else {
-        echo "Lỗi khi cập nhật khách hàng: " . $stmt->error;
+        echo 'Lỗi: ' . $stmt->error;
     }
     $stmt->close();
+    $mysqli->close();
+    exit;
 } else {
-    echo "Dữ liệu form không hợp lệ.";
+    echo 'Chế độ không hợp lệ';
+    exit;
 }
-
-$mysqli->close();
