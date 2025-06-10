@@ -1,17 +1,3 @@
-<?php
-session_start();
-include __DIR__ . '/../../connect.php';
-
-$danhMucArr = [];
-$result = $mysqli->query("SELECT MaKM, TenKM FROM khuyenmai");
-while ($row = $result->fetch_assoc()) {
-    $danhMucArr[$row['MaKM']] = $row['TenKM'];
-}
-$result->free();
-
-$result = $mysqli->query("SELECT * FROM khuyenmai");
-?>
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -85,39 +71,38 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
                     <th class="stt">STT</th>
                     <th class="id">Mã khuyến mãi</th>
                     <th>Tên khuyến mãi</th>
-                    <th>Ngày bắt đầu</th>
-                    <th>Ngày kết thúc</th>
+                    <th>Thời gian áp dụng</th>
+                    <th>Trạng thái</th>
                     <th class="actions">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
- 
-        <?php while ($row = $result->fetch_assoc()): ?>
-        <?php
-            $ngayBatDau = date('Y-m-d', strtotime($row['NgayBatDau']));
-            $ngayKetThuc = date('Y-m-d', strtotime($row['NgayKetThuc']));
-        ?>
-        <tr>
-          <td><?= htmlspecialchars($row['MaKM']) ?></td>
-          <td><?= htmlspecialchars($row['TenKM']) ?></td>
-          <td><?= htmlspecialchars(date('d/m/Y', strtotime($row['NgayBatDau']))) ?></td>
-          <td><?= htmlspecialchars(date('d/m/Y', strtotime($row['NgayKetThuc']))) ?></td>
-          <td><?= htmlspecialchars($row['DieuKienApDung']) ?></td>
-          <td class="action-buttons">
-            <button class="view-btn" onclick="viewDeal(
-              '<?= $row['MaKM'] ?>',
-              '<?= $row['TenKM'] ?>',
-              '<?= $ngayBatDau ?>',
-              '<?= $ngayKetThuc ?>',
-              '<?= $row['DieuKienApDung'] ?>'
-            )">Xem</button>
-            <button class="delete-btn" onclick="deleteDeal('<?= $row['MaKM'] ?>')">Xóa</button>
-          </td>
-        </tr>
-        <?php endwhile; ?>
-      </tbody>
-    </table>
+                <tr>
+                    <td class="stt"></td>
+                    <td>KM001</td>
+                    <td>Giảm 10% toàn bộ sách</td>
+                    <td>01/06/2025 - 15/06/2025</td>
+                    <td>Đang áp dụng</td>
+                    <td class="action-buttons">
+                        <button class="view-btn" onclick="viewDeal('KM001')">Xem</button>
+                        <button class="delete-btn" onclick="deleteDeal(this)">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="stt"></td>
+                    <td>KM002</td>
+                    <td>Mua 2 tặng 1</td>
+                    <td>01/05/2025 - 10/05/2025</td>
+                    <td>Hết hạn</td>
+                    <td class="action-buttons">
+                        <button class="view-btn" onclick="viewDeal('KM002')">Xem</button>
+                        <button class="delete-btn" onclick="deleteDeal(this)">Xóa</button>
+                    </td>
+                </tr>
+                <!-- Các dòng khác -->
+            </tbody>
+        </table>
+    </div>
     <div class="toast" id="toast"></div>
-  </div>
 </body>
 </html>
