@@ -101,6 +101,7 @@ body, input, button, select, textarea {
     margin-right: 8px;
     vertical-align: middle;
 }
+
 .add-button {
     align-self: flex-start;
     display: inline-flex;

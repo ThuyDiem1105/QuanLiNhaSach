@@ -31,8 +31,42 @@ $result = $mysqli->query("SELECT * FROM khachhang ORDER BY MaKH");
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản lý khách hàng</title>
     <link rel="stylesheet" href="../../assets/general-style.css" />
-    <link rel="stylesheet" href="../../assets/customers-style.css" />
     <script src="customers-script.js" defer></script>
+    <style>
+        .sort-dropdown-menu {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 110%;
+            min-width: 150px;
+            background: #fff;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        #sortPriceBtn {
+            min-width: 150px;   /* hoặc lớn hơn nếu bạn muốn */
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* label trái, arrow phải */
+            padding-right: 16px;
+            padding-left: 16px;
+        }
+
+        #sortPriceBtn .label {
+            flex: 1;
+            text-align: left;
+        }
+
+        #sortPriceBtn .arrow {
+            margin-left: 8px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="main-content">
