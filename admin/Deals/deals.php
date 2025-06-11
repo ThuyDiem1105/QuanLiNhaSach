@@ -8,7 +8,6 @@ while ($row = $result->fetch_assoc()) {
     $danhMucArr[$row['MaKM']] = $row['TenKM'];
 }
 $result->free();
-
 $result = $mysqli->query("SELECT * FROM khuyenmai");
 ?>
 
@@ -19,56 +18,8 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản lý khuyến mãi</title>
     <link rel="stylesheet" href="../../assets/general-style.css" />
+    <link rel="stylesheet" href="../../assets/deals-style.css" />
     <script src="deals-script.js" defer></script>
-    <style>
-        .sort-dropdown-menu {
-            display: none;
-            position: absolute;
-            left: 0;
-            top: 110%;
-            min-width: 200px;
-            background: #fff;
-            border: 1px solid #d0d0d0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            z-index: 10;
-            overflow: hidden;
-        }
-
-        #sortTimeBtn {
-            min-width: 200px;   /* hoặc lớn hơn nếu bạn muốn */
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* label trái, arrow phải */
-            padding-right: 16px;
-            padding-left: 16px;
-        }
-
-        #sortTimeBtn .label {
-            flex: 1;
-            text-align: left;
-        }
-
-        #sortTimeBtn .arrow {
-            margin-left: 8px;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .date-range-group {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: 12px;
-        }
-
-        .date-range-group input[type="date"] {
-            padding: 4px 8px;
-            border: 1px solid #bdbdbd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-    </style>
 </head>
 <body>
     <div class="main-content">
@@ -133,37 +84,29 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
                     <th class="stt">STT</th>
                     <th class="id">Mã khuyến mãi</th>
                     <th>Tên khuyến mãi</th>
-                    <th>Ngày bắt đầu</th>
-                    <th>Ngày kết thúc</th>
+                    <th>Ngày diễn ra</th>
                     <th class="actions">Thao tác</th>
                 </tr>
             </thead>
+            
             <tbody>
- 
-        <?php while ($row = $result->fetch_assoc()): ?>
-        <?php
-            $ngayBatDau = date('Y-m-d', strtotime($row['NgayBatDau']));
-            $ngayKetThuc = date('Y-m-d', strtotime($row['NgayKetThuc']));
-        ?>
-        <tr>
-          <td><?= htmlspecialchars($row['MaKM']) ?></td>
-          <td><?= htmlspecialchars($row['TenKM']) ?></td>
-          <td><?= htmlspecialchars(date('d/m/Y', strtotime($row['NgayBatDau']))) ?></td>
-          <td><?= htmlspecialchars(date('d/m/Y', strtotime($row['NgayKetThuc']))) ?></td>
-          <td><?= htmlspecialchars($row['DieuKienApDung']) ?></td>
-          <td class="action-buttons">
-            <button class="view-btn" onclick="viewDeal(
-              '<?= $row['MaKM'] ?>',
-              '<?= $row['TenKM'] ?>',
-              '<?= $ngayBatDau ?>',
-              '<?= $ngayKetThuc ?>',
-              '<?= $row['DieuKienApDung'] ?>'
-            )">Xem</button>
-            <button class="delete-btn" onclick="deleteDeal('<?= $row['MaKM'] ?>')">Xóa</button>
-          </td>
-        </tr>
-        <?php endwhile; ?>
-      </tbody>
+            <?php while ($row = $result->fetch_assoc()): ?>
+            <?php
+                $ngayBatDau = date('d/m/Y', strtotime($row['NgayBatDau']));
+                $ngayKetThuc = date('d/m/Y', strtotime($row['NgayKetThuc']));
+            ?>
+            <tr data-condition="<?= htmlspecialchars($row['DieuKienApDung']) ?>">
+            <td class="stt"></td>
+            <td><?= htmlspecialchars($row['MaKM']) ?></td>
+            <td><?= htmlspecialchars($row['TenKM']) ?></td>
+            <td><?= $ngayBatDau ?> - <?= $ngayKetThuc ?></td>
+            <td class="action-buttons">
+                <button class="view-btn" onclick="viewDeal('<?= $row['MaKM'] ?>')">Xem</button>
+                <button class="delete-btn" onclick="deleteDeal('<?= $row['MaKM'] ?>')">Xóa</button>
+            </td>
+            </tr>
+            <?php endwhile; ?>
+            </tbody>
     </table>
     <div class="toast" id="toast"></div>
   </div>
