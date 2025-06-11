@@ -1,0 +1,247 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: fontweb;
+    src: url("../assets/RobotoSlab-Medium.ttf");
+}
+
+body, input, button{
+    color: #000000;
+    font-family: fontweb;
+    font-size: 16px;
+}
+body {
+    background-color: #ffffff;
+}
+.settings-section {
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 12px;
+    margin: 32px auto;
+    max-width: 1100px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+.settings-title {
+    font-size: 28px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+    color: #0d3c6b;
+    border-bottom: 2px solid #a4b8d0;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.rule-icon {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+}
+
+.settings-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 24px;
+    align-items: center;
+    padding: 0 80px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+.form-group label {
+    display: flex;
+    align-items: flex-end;  
+    padding-bottom: 6px; 
+    margin-top: auto;
+    height: 35px;
+    text-align: left;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    margin-bottom: 10px;
+}
+
+.settings-form input[type="number"],
+.settings-form input[type="text"] {
+    width: 100%;
+    max-width: 500px;
+    padding: 12px 16px;
+    margin-bottom: 5px;
+    border-radius: 12px;
+    border: 1.5px solid #a3c9f9;
+    background: #fafdff;
+    color: #185abd;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 12px rgba(163,201,249,0.10);
+}
+
+.settings-form input[readonly] {
+    cursor: default;
+    background-color: #f9f9f9;   /* nền xám nhạt */
+    color: #777;                 /* chữ xám nhẹ */
+    border: 1px solid #ccc;
+    cursor: not-allowed;
+    opacity: 1;                 /* QUAN TRỌNG: bỏ độ mờ mặc định */
+    -webkit-appearance: none;  /* loại bỏ style hệ thống (Chrome/Safari) */
+    appearance: none; 
+}
+
+.settings-form input[readonly]:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Chỉ hover khi KHÔNG readonly */
+.settings-form input[type="number"]:not([readonly]):hover,
+.settings-form input[type="text"]:not([readonly]):hover {
+    border-color: #185abd;
+    background: #f0f6ff;
+}
+
+#edit-btn {
+    grid-column: 2 / 3;         /* Chiếm cả 2 cột */
+    justify-self: end;                /* Đẩy sang phải */
+    min-width: 120px;
+    max-width: 180px;
+    width: auto;
+    background-color: #b3e5fc;
+    color: #01579b;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background 0.2s color 0.2s;
+    box-shadow: 0 1px 4px rgba(163,201,249,0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#edit-btn:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+.form-actions {
+    grid-column: 2 / 3;           /* Chỉ chiếm cột phải */
+    display: flex;
+    justify-content: flex-end;    /* Đẩy nút sang phải */
+    gap: 12px;
+    margin-top: 18px;
+}
+.form-actions button {
+    min-width: 100px;
+    max-width: 160px;
+    width: auto;
+    padding: 6px 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#save-btn {
+    background-color: #192d9e;
+    color: #ffffff;
+}
+
+#cancel-btn {
+    background-color: #ffcdd2;
+    color: #c62828;
+}
+
+#reset-btn {
+    background: #beffe1;
+    color: #0d3c6b;
+    min-width: 120px;
+    max-width: 180px;
+    width: auto;
+}
+
+.form-actions button:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+@media (max-width: 1120px) {
+    .settings-section {
+        max-width: 1050px;
+        padding: 24px 10px;    /* Cách trên dưới 24px, trái phải 10px */
+        margin: 16px 20px;      /* Cách lề ngoài một chút */
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 700px) {
+    .settings-section {
+        max-width: 100vw;
+        padding: 16px; 
+        margin: 16px 8px;  
+    }
+
+    .settings-form {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        padding: 0;
+    }
+
+    .form-group,
+    #edit-btn,
+    .form-actions {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+}
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #dff9fb;
+    color: #2f3542;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    z-index: 9999;
+    pointer-events: none;
+    font-weight: 500;
+    font-size: 14px;;
+}
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}

@@ -1,9 +1,59 @@
-<section>
-    <h2>Quy định Nhà sách</h2>
-    <ul>
-      <li>Không hoàn trả sau 7 ngày.</li>
-      <li>Sản phẩm còn nguyên tem, bao bì khi đổi/trả.</li>
-      <li>Thời gian xử lý đơn hàng: 24h kể từ khi đặt.</li>
-    </ul>
-  </section>
-  
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Cài đặt Quy định</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/rules-style.css">
+    <script src="./rules-script.js" defer></script>
+</head>
+<body>
+    <section class="settings-section">
+        <h2 class="settings-title">
+            <img src="../assets/settings-2.png" class="rule-icon" alt="Rule Icon" />
+            Cài đặt Quy định
+        </h2>
+        <form class="settings-form" id="settings-form" autocomplete="off">
+            <div class="form-group">
+                <label for="min-import">Số lượng nhập tối thiểu</label>
+                <input type="number" id="min-import" min="1" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="max-stock">Số lượng tồn kho tối đa</label>
+                <input type="number" id="max-stock" min="1" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="min-stock-after-sale">Số lượng tồn tối thiểu sau bán</label>
+                <input type="number" id="min-stock-after-sale" min="0" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="max-stock-to-import">Số lượng tồn tối đa để được nhập thêm</label>
+                <input type="number" id="max-stock-to-import" min="1" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="min-shifts">Số ca đăng ký tối thiểu (ca/tuần)</label>
+                <input type="number" id="min-shifts" min="1" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="price-rate">Tỉ lệ tính đơn giá bán (%)</label>
+                <input type="text" id="price-rate" pattern="^\d+(\.\d+)?%?$" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="max-debt-normal">Số tiền nợ tối đa (Khách thường, VND)</label>
+                <input type="number" id="max-debt-normal" min="0" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="max-debt-vip">Số tiền nợ tối đa (Khách VIP, VND)</label>
+                <input type="number" id="max-debt-vip" min="0" required readonly>
+            </div>
+            <button type="button" id="edit-btn">Thay đổi</button>
+            <div class="form-actions">
+                <button type="submit" id="save-btn">Lưu</button>
+                <button type="button" id="cancel-btn">Hủy</button>
+                <button type="button" id="reset-btn">Mặc định</button>
+            </div>
+        </form>
+    </section>
+    <div class="toast" id="toast"></div>
+</body>
+</html>
