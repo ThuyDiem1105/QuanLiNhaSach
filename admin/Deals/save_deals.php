@@ -7,11 +7,10 @@ $TenKM      = $_POST['ten_km']      ?? '';
 $NgayBatDau = $_POST['ngay_bat_dau'] ?? '';
 $NgayKetThuc = $_POST['ngay_ket_thuc'] ?? '';
 $DieuKienApDung = $_POST['dieu_kien_ap_dung'] ?? '';
-$TrangThai  = $_POST['trang_thai'] ?? '';
 
 if (
     $formMode === '' || $maKM === '' || $TenKM === '' ||
-    $NgayBatDau === '' || $NgayKetThuc === '' || $DieuKienApDung === '' || $TrangThai === ''
+    $NgayBatDau === '' || $NgayKetThuc === '' || $DieuKienApDung === ''
 ) {
     echo "Nhập đầy đủ thông tin khuyến mãi.";
     $mysqli->close();
@@ -35,7 +34,7 @@ if ($formMode === "new") {
     $stmt->close();
 
     // Thêm khuyến mãi mới
-    $stmt = $mysqli->prepare("INSERT INTO khuyenmai (MaKM, TenKM, NgayBatDau, NgayKetThuc, DieuKienApDung, TrangThai) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt = $mysqli->prepare("INSERT INTO khuyenmai (MaKM, TenKM, NgayBatDau, NgayKetThuc, DieuKienApDung) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param('ssssss', $maKM, $TenKM, $NgayBatDau, $NgayKetThuc, $DieuKienApDung, $TrangThai);
     if ($stmt->execute()) {
         echo "OK"; // Thêm thành công
@@ -44,8 +43,8 @@ if ($formMode === "new") {
     }
     $stmt->close();
 } else if($formMode === "edit"){
-    $stmt = $mysqli->prepare("UPDATE khuyenmai SET TenKM = ?, NgayBatDau = ?, NgayKetThuc = ?, DieuKienApDung = ?, TrangThai = ? WHERE MaKM = ?");
-    $stmt->bind_param('ssssss', $TenKM, $NgayBatDau, $NgayKetThuc, $DieuKienApDung, $TrangThai, $maKM);
+    $stmt = $mysqli->prepare("UPDATE khuyenmai SET TenKM = ?, NgayBatDau = ?, NgayKetThuc = ?, DieuKienApDung = ? WHERE MaKM = ?");
+    $stmt->bind_param('sssss', $TenKM, $NgayBatDau, $NgayKetThuc, $DieuKienApDung, $maKM);
     if ($stmt->execute()) {
         echo "OK";
     } else {

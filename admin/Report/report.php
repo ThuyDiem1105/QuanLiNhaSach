@@ -82,15 +82,15 @@ if ($selectedMonthCongNo) {
     </h2>
 
     <!-- Tabs -->
+
     <div class="report-tabs">
-        <button class="report-tab active" data-type="ton">Báo cáo kho</button>
-        <button class="report-tab" data-type="congno">Báo cáo công nợ</button>
+        <button class="report-tab <?php echo (!isset($_GET['active_tab']) || $_GET['active_tab'] === 'ton') ? 'active' : ''; ?>" data-type="ton">Báo cáo kho</button>
+        <button class="report-tab <?php echo (isset($_GET['active_tab']) && $_GET['active_tab'] === 'congno') ? 'active' : ''; ?>" data-type="congno">Báo cáo công nợ</button>
     </div>
 
     <!-- Form -->
     <form method="get">
         <div class="report-filter">
-            <!-- Bộ lọc kho -->
             <div class="filter-group filter-ton">
                 <label for="report-month-ton">Chọn tháng:</label>
                 <input type="month" id="report-month-ton" name="month_ton"
@@ -98,8 +98,11 @@ if ($selectedMonthCongNo) {
                 <button class="filter-btn" type="submit">Xem báo cáo</button>
                 <button class="export-btn" type="button">⭳ Xuất Excel</button>
             </div>
+        </div>
+    </form>
 
-            <!-- Bộ lọc công nợ -->
+    <form method="get">
+        <div class="report-filter">
             <div class="filter-group filter-congno" style="display:none;">
                 <label for="report-month-congno">Chọn tháng:</label>
                 <input type="month" id="report-month-congno" name="month_congno"
@@ -112,7 +115,16 @@ if ($selectedMonthCongNo) {
 
     <!-- Báo cáo kho -->
     <div class="report-content report-ton <?php echo $selectedMonthTon ? '' : 'hidden'; ?>">
-        <h3>Báo cáo kho</h3>
+
+    <h3>Báo cáo kho tháng 
+        <?php
+            if ($selectedMonthTon) {
+                $m = (int)substr($selectedMonthTon, 5, 2);
+                $y = (int)substr($selectedMonthTon, 0, 4);
+                echo $m . '/' . $y;
+            }
+        ?>
+    </h3>
         <table class="report-table">
             <thead>
                 <tr>
@@ -153,7 +165,15 @@ if ($selectedMonthCongNo) {
 
     <!-- Báo cáo công nợ -->
     <div class="report-content report-congno <?php echo $selectedMonthCongNo ? '' : 'hidden'; ?>">
-        <h3>Báo cáo công nợ</h3>
+    <h3>Báo cáo công nợ tháng 
+        <?php
+            if ($selectedMonthCongNo) {
+                $m = (int)substr($selectedMonthCongNo, 5, 2);
+                $y = (int)substr($selectedMonthCongNo, 0, 4);
+                echo $m . '/' . $y;
+            }
+        ?>
+    </h3>
         <table class="report-table">
             <thead>
                 <tr>

@@ -39,32 +39,6 @@ function formatMonth(ym) {
     return `${month}/${year}`;
 }
 
-// Xem báo cáo cho từng tab
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const type = this.dataset.type;
-        const monthInput = document.getElementById('report-month-' + type);
-        if (!monthInput.value) {
-            document.querySelector('.report-' + type).classList.add('hidden');
-            alert('Vui lòng chọn tháng!');
-            return;
-        }
-        document.querySelector('.report-' + type).classList.remove('hidden');
-        // Đánh dấu đã xem báo cáo
-        if (type === 'ton') tonViewed = true;
-        if (type === 'congno') congnoViewed = true;
-        // Cập nhật tiêu đề động
-        const title = document.getElementById('report-' + type + '-title');
-        if (title) {
-            if (type === 'ton') {
-                title.textContent = `Báo cáo kho tháng ${formatMonth(monthInput.value)}`;
-            } else {
-                title.textContent = `Báo cáo công nợ tháng ${formatMonth(monthInput.value)}`;
-            }
-        }
-    });
-});
-
 ['report-month-ton', 'report-month-congno'].forEach(id => {
     const input = document.getElementById(id);
     if (input) {
@@ -81,4 +55,29 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 // Xuất Excel (demo)
 document.querySelector('.export-btn').addEventListener('click', function() {
     alert('Chức năng xuất Excel sẽ được bổ sung!');
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        var tab = this.closest('.filter-group').classList.contains('filter-congno') ? 'congno' : 'ton';
+        document.getElementById('active_tab').value = tab;
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll('.report-tab');
+    const activeTabInput = document.getElementById('active_tab');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault(); // Ngăn reload
+            const type = button.getAttribute('data-type');
+
+            // Cập nhật hidden input
+            if (activeTabInput) activeTabInput.value = type;
+
+            // Gửi lại form để giữ trạng thái
+            button.closest('form').submit();
+        });
+    });
 });

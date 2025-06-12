@@ -17,55 +17,158 @@ function fixTableBorders() {
 }
 
 function viewDeal(dealId) {
-    // Tìm dòng tương ứng trong bảng (cột 1 là mã KM, cột 0 là STT)
     const row = [...document.querySelectorAll(".table tbody tr")]
         .find(tr => tr.children[1] && tr.children[1].textContent.trim() === dealId.trim());
-    if (!row) {
-        alert("Không tìm thấy khuyến mãi với mã: " + dealId);
-        return;
-    }
+    if (!row) return;
 
     const id = row.children[1].textContent;
     const name = row.children[2].textContent;
-    const startDate = row.children[3].textContent;
-    const endDate = row.children[4].textContent;
-    const condition = row.getAttribute("data-dieukien") || "";
+    const timeRange = row.children[3].textContent.trim();
+    const [startDate, endDate] = timeRange.split('-').map(s => s.trim());
+    const condition = row.getAttribute("data-condition") || "";
 
-    // Hiển thị popup chi tiết (chỉ xem, không sửa)
     const overlay = document.createElement("div");
     overlay.className = "detail-overlay";
     overlay.innerHTML = `
         <div class="detail-form">
             <h2>Thông tin khuyến mãi</h2>
             <div class="form-group">
-                <label>Mã khuyến mãi</label>
-                <input type="text" value="${id}" disabled>
+                <label for="deal-id">Mã khuyến mãi</label>
+                <input type="text" id="deal-id" value="${id}" disabled>
             </div>
             <div class="form-group">
-                <label>Tên khuyến mãi</label>
-                <input type="text" value="${name}" disabled>
+                <label for="deal-name">Tên khuyến mãi</label>
+                <input type="text" id="deal-name" value="${name}" disabled>
             </div>
             <div class="form-group">
-                <label>Điều kiện áp dụng</label>
-                <textarea disabled>${condition}</textarea>
+                <label for="deal-condition">Điều kiện áp dụng</label>
+                <textarea id="deal-condition" disabled>${condition}</textarea>
             </div>
             <div class="form-group">
-                <label>Ngày bắt đầu</label>
-                <input type="text" value="${startDate}" disabled>
+                <label for="deal-start">Ngày bắt đầu</label>
+                <input type="date" id="deal-start" value="${formatDateForInput(startDate)}" disabled>
             </div>
             <div class="form-group">
-                <label>Ngày kết thúc</label>
-                <input type="text" value="${endDate}" disabled>
+                <label for="deal-end">Ngày kết thúc</label>
+                <input type="date" id="deal-end" value="${formatDateForInput(endDate)}" disabled>
             </div>
             <div class="form-actions">
+                <button class="edit-btn">Sửa</button>
                 <button class="cancel-btn">Đóng</button>
             </div>
         </div>
     `;
     document.body.appendChild(overlay);
+
+    const nameInput = overlay.querySelector("#deal-name");
+    const conditionInput = overlay.querySelector("#deal-condition");
+    const startInput = overlay.querySelector("#deal-start");
+    const endInput = overlay.querySelector("#deal-end");
+    const editBtn = overlay.querySelector(".edit-btn");
+
+    let isEditing = false;
+    let originalData = {
+        name: nameInput.value,
+        condition: conditionInput.value,
+        start: startInput.value,
+        end: endInput.value
+    };
+
+    editBtn.addEventListener("click", () => {
+        const isDisabled = nameInput.disabled;
+        nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = !isDisabled;
+        if (isDisabled) {
+            editBtn.textContent = "Lưu";
+            editBtn.classList.add("save-mode");
+            isEditing = true;
+        } else {
+            // Validate
+            if (!nameInput.value || !conditionInput.value || !startInput.value || !endInput.value) {
+                alert("Vui lòng điền đầy đủ thông tin.");
+                nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = false;
+                editBtn.textContent = "Lưu";
+                editBtn.classList.add("save-mode");
+                isEditing = true;
+                return;
+            }
+            // Gửi AJAX cập nhật DB
+            fetch('save_deals.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    form_mode: 'edit',
+                    ma_km: id,
+                    ten_km: nameInput.value,
+                    dieu_kien_ap_dung: conditionInput.value,
+                    ngay_bat_dau: startInput.value,
+                    ngay_ket_thuc: endInput.value
+                })
+            })
+            .then(res => res.text())
+            .then(response => {
+                if (response.trim() === 'OK') {
+                    showToast('Cập nhật khuyến mãi thành công!');
+                    // Cập nhật lại bảng
+                    row.children[2].textContent = nameInput.value;
+                    row.children[3].textContent = [formatDateForDisplay(startInput.value), formatDateForDisplay(endInput.value)].join(' - ');
+                    row.setAttribute('data-condition', conditionInput.value);
+                    nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = true;
+                    editBtn.textContent = "Sửa";
+                    editBtn.classList.remove("save-mode");
+                    isEditing = false;
+                    originalData = {
+                        name: nameInput.value,
+                        condition: conditionInput.value,
+                        start: startInput.value,
+                        end: endInput.value
+                    };
+                    renderTable();
+                    overlay.remove();
+                } else {
+                    alert('Lỗi khi cập nhật khuyến mãi: ' + response);
+                    nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = false;
+                    editBtn.textContent = "Lưu";
+                    editBtn.classList.add("save-mode");
+                    isEditing = true;
+                }
+            })
+            .catch(() => {
+                alert('Lỗi kết nối máy chủ!');
+                nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = false;
+                editBtn.textContent = "Lưu";
+                editBtn.classList.add("save-mode");
+                isEditing = true;
+            });
+        }
+    });
+
     overlay.querySelector(".cancel-btn").addEventListener("click", () => {
+        const currentData = {
+            name: nameInput.value,
+            condition: conditionInput.value,
+            start: startInput.value,
+            end: endInput.value
+        };
+        const dataChanged = JSON.stringify(currentData) !== JSON.stringify(originalData);
+        if (isEditing && dataChanged) {
+            const confirmExit = confirm("Bạn có muốn thoát khi chưa lưu không?");
+            if (!confirmExit) return;
+        }
         document.body.removeChild(overlay);
     });
+}
+
+// Helper: chuyển dd/mm/yyyy thành yyyy-mm-dd cho input type=date
+function formatDateForInput(dateStr) {
+    if (!dateStr) return "";
+    const [d, m, y] = dateStr.split("/");
+    return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+}
+// Helper: chuyển yyyy-mm-dd thành dd/mm/yyyy
+function formatDateForDisplay(dateStr) {
+    if (!dateStr) return "";
+    const [y, m, d] = dateStr.split("-");
+    return `${d}/${m}/${y}`;
 }
 
 
