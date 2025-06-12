@@ -133,6 +133,7 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
                     <th class="id">Mã khuyến mãi</th>
                     <th>Tên khuyến mãi</th>
                     <th>Ngày diễn ra</th>
+                    <th>Trạng thái</th>
                     <th class="actions">Thao tác</th>
                 </tr>
             </thead>
