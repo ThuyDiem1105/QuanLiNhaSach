@@ -1,3 +1,9 @@
+#bookTable th:nth-child(5),
+#bookTable td:nth-child(5) {
+    width: auto;
+    max-width: 250px;
+}
+
 .sort-dropdown-menu {
     display: none;
     position: absolute;
