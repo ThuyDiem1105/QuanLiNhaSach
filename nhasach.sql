@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 29, 2025 at 07:06 AM
+-- Generation Time: Jun 12, 2025 at 12:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,11 +30,22 @@ SET time_zone = "+00:00";
 CREATE TABLE `baocaocongno` (
   `Thang` int(11) NOT NULL,
   `Nam` int(11) NOT NULL,
-  `MaKhachHang` varchar(50) NOT NULL,
+  `MaKH` varchar(50) NOT NULL,
   `NoDau` float DEFAULT NULL,
   `PhatSinh` float DEFAULT NULL,
   `NoCuoi` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `baocaocongno`
+--
+
+INSERT INTO `baocaocongno` (`Thang`, `Nam`, `MaKH`, `NoDau`, `PhatSinh`, `NoCuoi`) VALUES
+(1, 2024, 'KH001', 500000, 100000, 600000),
+(1, 2024, 'KH002', 300000, -50000, 250000),
+(2, 2024, 'KH001', 600000, -100000, 500000),
+(2, 2024, 'KH003', 0, 200000, 200000),
+(3, 2024, 'KH004', 150000, -150000, 0);
 
 -- --------------------------------------------------------
 
@@ -50,6 +61,15 @@ CREATE TABLE `baocaokho` (
   `PhatSinh` int(11) DEFAULT NULL,
   `TonCuoi` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `baocaokho`
+--
+
+INSERT INTO `baocaokho` (`Thang`, `Nam`, `MaSach`, `TonDau`, `PhatSinh`, `TonCuoi`) VALUES
+(1, 2024, 'SACH001', 100, 50, 150),
+(1, 2024, 'SACH002', 80, -20, 60),
+(2, 2024, 'SACH001', 150, 30, 180);
 
 -- --------------------------------------------------------
 
@@ -153,6 +173,8 @@ CREATE TABLE `khachhang` (
   `MaKH` varchar(10) NOT NULL,
   `HoTen` varchar(100) NOT NULL,
   `SDT` varchar(15) NOT NULL,
+  `DiaChi` varchar(50) NOT NULL,
+  `Email` varchar(50) NOT NULL,
   `Loai` enum('Thường','VIP') NOT NULL DEFAULT 'Thường',
   `SoTienNo` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -161,8 +183,11 @@ CREATE TABLE `khachhang` (
 -- Dumping data for table `khachhang`
 --
 
-INSERT INTO `khachhang` (`MaKH`, `HoTen`, `SDT`, `Loai`, `SoTienNo`) VALUES
-('KH002', 'Trần Thị B', '0912345678', 'VIP', 0);
+INSERT INTO `khachhang` (`MaKH`, `HoTen`, `SDT`, `DiaChi`, `Email`, `Loai`, `SoTienNo`) VALUES
+('KH001', 'Nguyễn Minh A', '0901234567', 'TP.HCM', 'nguyenminha@gmail.com', 'Thường', 0),
+('KH002', 'Nguyễn Bảo Châu', '0886038804', 'Phú Yên', 'bchoune@gmail.com', 'VIP', 100000),
+('KH003', 'Đậu Thị Diệu Anh', '0816810784', 'Quảng Bình', 'dieuanhxinh@gmail.com', 'VIP', 0),
+('KH004', 'Hồ Thanh Tùng', '0906538235', 'Quảng Nam', 'hothanhtung235@gmail.com', 'VIP', 500000);
 
 -- --------------------------------------------------------
 
@@ -175,9 +200,16 @@ CREATE TABLE `khuyenmai` (
   `TenKM` varchar(100) DEFAULT NULL,
   `NgayBatDau` date DEFAULT NULL,
   `NgayKetThuc` date DEFAULT NULL,
-  `DieuKienApDung` text DEFAULT NULL,
-  `TrangThai` varchar(20) DEFAULT NULL
+  `DieuKienApDung` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `khuyenmai`
+--
+
+INSERT INTO `khuyenmai` (`MaKM`, `TenKM`, `NgayBatDau`, `NgayKetThuc`, `DieuKienApDung`) VALUES
+('KM001', 'Giảm giá 10% sách mới', '2025-06-01', '2025-06-17', 'Áp dụng cho sách mới xuất bản'),
+('KM002', 'Mua 2 tặng 1 sách giáo khoa', '2025-07-01', '2025-07-10', 'Áp dụng cho sách giáo khoa');
 
 -- --------------------------------------------------------
 
@@ -247,6 +279,30 @@ CREATE TABLE `phieunhap` (
   `NgayNhap` date NOT NULL,
   `TongTien` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rule`
+--
+
+CREATE TABLE `rule` (
+  `SoLuongNhapToiThieu` int(11) DEFAULT NULL,
+  `SoLuongTonToiDa` int(11) DEFAULT NULL,
+  `SoLuongTonToiThieuSauBan` int(11) DEFAULT NULL,
+  `SoLuongTonToiDaDeDuocNhapThem` int(11) DEFAULT NULL,
+  `SoCaDangKyToiThieu` int(11) DEFAULT NULL,
+  `TiLeTinhDonGiaBan` decimal(5,2) DEFAULT NULL,
+  `SoTienNoToiDaThuong` bigint(20) DEFAULT NULL,
+  `SoTienNoToiDaVIP` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `rule`
+--
+
+INSERT INTO `rule` (`SoLuongNhapToiThieu`, `SoLuongTonToiDa`, `SoLuongTonToiThieuSauBan`, `SoLuongTonToiDaDeDuocNhapThem`, `SoCaDangKyToiThieu`, `TiLeTinhDonGiaBan`, `SoTienNoToiDaThuong`, `SoTienNoToiDaVIP`) VALUES
+(200, 500, 20, 300, 15, 105.00, 1000000, 3000000);
 
 -- --------------------------------------------------------
 
@@ -369,7 +425,7 @@ INSERT INTO `theloai` (`MaTL`, `TenTheLoai`) VALUES
 -- Indexes for table `baocaocongno`
 --
 ALTER TABLE `baocaocongno`
-  ADD PRIMARY KEY (`Thang`,`Nam`,`MaKhachHang`);
+  ADD PRIMARY KEY (`Thang`,`Nam`,`MaKH`);
 
 --
 -- Indexes for table `baocaokho`
