@@ -17,8 +17,7 @@ $giaBan     = $_POST['gia_ban']     ?? '';
 if (
     $formMode === '' || $maSach === '' || $tenSach === '' ||
     $danhMuc === '' || $theLoaiStr === '' || $tacGia === '' ||
-    $nhaxb === '' || $ngayxb === '' || $ngonNgu === '' ||
-    $soluongTon === '' || $giaBan === ''
+    $nhaxb === '' || $ngayxb === '' || $ngonNgu === '' || $giaBan === ''
 ) {
     echo "Nhập đầy đủ thông tin sách.";
     $mysqli->close();

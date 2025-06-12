@@ -153,7 +153,7 @@ $result = $mysqli->query("SELECT * FROM sach");
                 <?php endwhile; ?>
             </tbody>
         </table>
-        <div id="toast"></div>
+        <div class="toast" id="toast"></div>
     </div>
     <div id="bookFormOverlay" class="overlay">
         <div class="form-popup">
@@ -342,12 +342,6 @@ $result = $mysqli->query("SELECT * FROM sach");
                 document.getElementById("error_theloai").textContent = "Vui lòng chọn ít nhất một thể loại cho sách!";
                 isValid = false;
             }
-            // Số lượng tồn
-            // if (!soluongTon) {
-            //   document.getElementById("error_slton").textContent = "Vui lòng thêm số lượng tồn của sách!";
-            //   isValid = false;
-            // }
-            // Gía bán
             if (!giaBan) {
                 document.getElementById("error_giaban").textContent = "Vui lòng thêm giá bán cho sách!";
                 isValid = false;
@@ -389,7 +383,7 @@ $result = $mysqli->query("SELECT * FROM sach");
             .then(response => {
                 console.log("Raw response:", response);
                 if(response.trim() === "OK") {
-                showToast("Lưu thông tin thành công!");
+                showToast("Đã lưu thành công!");
                 setTimeout(() => {
                     location.reload();
                 }, 1000);
@@ -430,14 +424,6 @@ $result = $mysqli->query("SELECT * FROM sach");
             document.getElementById("bookFormOverlay").classList.add("show");
         }
 
-        //Hiển thị tin nhắn thông báo
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            toast.textContent = message;
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 3000);
-        }
-
         document.addEventListener("keydown", e => {
             if (e.key === "Escape") closeForm();
         });
@@ -459,7 +445,7 @@ $result = $mysqli->query("SELECT * FROM sach");
                 .then(res => res.text())
                 .then(response => {
                 if(response.trim() === "OK") {
-                    showToast("Xóa sách thành công!");
+                    showToast("Xóa thành công!");
                     setTimeout(() => {
                     location.reload();
                     }, 1000);
@@ -712,7 +698,15 @@ $result = $mysqli->query("SELECT * FROM sach");
         document.getElementById("bookFormOverlay").addEventListener("click", e => {
         if (e.target === e.currentTarget) closeForm("bookFormOverlay");
         });
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
     </script>
 </body>
 </html>
-
