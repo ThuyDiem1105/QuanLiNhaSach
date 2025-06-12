@@ -1,0 +1,206 @@
+.sort-dropdown-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 110%;
+    min-width: 150px;
+    background: #fff;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 10;
+    overflow: hidden;
+}
+
+#sortPriceBtn, #sortStockBtn {
+    min-width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 16px;
+    padding-left: 16px;
+}
+
+#sortPriceBtn .label,
+#sortStockBtn .label {
+    flex: 1;
+    text-align: left;
+}
+
+#sortPriceBtn .arrow,
+#sortStockBtn .arrow {
+    margin-left: 8px;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* Overlay và Form */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.form-popup {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1001;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.overlay.show .form-popup {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.form-popup::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 6px;
+    width: 100%;
+    background-color: #baf4d4;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.form-popup h2 {
+    margin-bottom: 28px;
+    text-align: center;
+    color: #0d3c6b;
+}
+
+.form-popup label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #494949;
+}
+
+.form-popup input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.form-popup input[readonly]{
+    background-color: #f9f9f9;   /* nền xám nhạt */
+    color: #777;                 /* chữ xám nhẹ */
+    border: 1px solid #ccc;
+    cursor: not-allowed;
+    opacity: 1;                 /* QUAN TRỌNG: bỏ độ mờ mặc định */
+    -webkit-appearance: none;  /* loại bỏ style hệ thống (Chrome/Safari) */
+    appearance: none;    
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+    gap: 12px;
+}
+
+.btn-save,
+.btn-cancel,
+.btn-edit {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.btn-save { 
+    background-color: #fff9c2; 
+    color: #a69800;
+}
+.btn-cancel {
+    background-color: #ff6070;
+    color: #ffffff;
+}
+.btn-edit {
+    background-color: #b2ffda;
+    color: #0a512f;
+}
+
+.btn-save:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+.btn-cancel:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+.btn-edit:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+.choices__item--choice.is-highlighted {
+    background-color: #84ffc6 !important; 
+    color: #0d3c6b !important;
+}
+
+.choices__inner {
+    min-height: 36px !important;
+    font-size: 14px;
+    padding: 4px 8px !important;
+    background-color: #ffffff !important;
+}
+
+.choices__list--dropdown .choices__item {
+    font-size: 14px;
+    padding: 6px 10px;
+}
+
+/* Style cho tag đã chọn trong Choices.js */
+.choices__list--multiple .choices__item {
+    background: #002d5b !important;      /* Màu nền xanh dương đậm */
+    color: #fff !important;              /* Màu chữ trắng */
+    border-radius: 18px !important;      /* Bo tròn */
+    padding: 4px 14px !important;        /* Padding cho tag */
+    margin: 3px 6px 3px 0 !important;    /* Khoảng cách giữa các tag */
+    font-weight: 500;
+    font-size: 14px;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(25, 118, 210, 0.08);
+    transition: background 0.2s;
+}
+
+.choices.is-disabled .choices__list--multiple .choices__item {
+    background: #e0e0e0 !important;   /* Màu xám nhạt */
+    color: #888 !important;           /* Chữ xám */
+    border-radius: 18px !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+
+.error {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+
