@@ -77,12 +77,7 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
                     <div class="search-box">
                         <input type="text" placeholder="Tìm kiếm khuyến mãi..." class="search-input" />
                         <button class="search-button">🔍</button>
-                    </div>
-                    <select class="filter-select">
-                        <option value="all">Tất cả</option>
-                        <option value="active">Đang áp dụng</option>
-                        <option value="expired">Hết hạn</option>
-                    </select>
+                    </div>      
                     <div class="date-range-group">
                         <input type="date" id="date-from" class="date-from" placeholder="Từ ngày">
                         <span style="margin: 0 4px;">-</span>
@@ -133,7 +128,6 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
                     <th class="id">Mã khuyến mãi</th>
                     <th>Tên khuyến mãi</th>
                     <th>Ngày diễn ra</th>
-                    <th>Trạng thái</th>
                     <th class="actions">Thao tác</th>
                 </tr>
             </thead>

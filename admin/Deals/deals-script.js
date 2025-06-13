@@ -218,14 +218,6 @@ function createNewDeal() {
                     <input type="date" id="new-end">
                 </div>
             </div>
-            <div class="form-group">
-                <label>Trạng thái</label>
-                <select id="new-status">
-                    <option value="">Chọn</option>
-                    <option value="active">Đang áp dụng</option>
-                    <option value="expired">Hết hạn</option>
-                </select>
-            </div>
             <div class="form-actions">
                 <button class="save-btn">Lưu</button>
                 <button class="cancel-btn">Hủy</button>
@@ -239,8 +231,7 @@ function createNewDeal() {
         name: "",
         condition: "",
         start: "",
-        end: "",
-        status: ""
+        end: ""
     };
 
     form.querySelector(".cancel-btn").addEventListener("click", () => {
@@ -249,8 +240,7 @@ function createNewDeal() {
             name: form.querySelector("#new-name").value.trim(),
             condition: form.querySelector("#new-condition").value.trim(),
             start: form.querySelector("#new-start").value,
-            end: form.querySelector("#new-end").value,
-            status: form.querySelector("#new-status").value
+            end: form.querySelector("#new-end").value
         };
         // Kiểm tra nếu có thay đổi so với mặc định
         const dataChanged = JSON.stringify(currentData) !== JSON.stringify(defaultData);
@@ -266,9 +256,8 @@ function createNewDeal() {
         let condition = form.querySelector("#new-condition").value.trim();
         let start = form.querySelector("#new-start").value;
         let end = form.querySelector("#new-end").value;
-        let status = form.querySelector("#new-status").value;
-
-        if (!name || !condition || !start || !end || !status) {
+        
+        if (!name || !condition || !start || !end) {
             alert("Vui lòng điền đầy đủ thông tin.");
             return;
         }
@@ -280,18 +269,11 @@ function createNewDeal() {
         // Lưu địa chỉ và email vào thuộc tính data- của tr
         newRow.setAttribute("data-condition", condition);
 
-        const statusMap = {
-            "active": "Đang áp dụng",
-            "expired": "Hết hạn"
-        };
-        const statusText = statusMap[status] || "";
-
         newRow.innerHTML = `
             <td></td> <!-- STT sẽ được JS cập nhật -->
             <td>${newId}</td>
             <td>${name}</td>
             <td>${[start, end].map(date => date.split('-').reverse().join('/')).join(' - ')}</td>
-            <td>${statusText}</td>
             <td>
                 <button class="view-btn" onclick="viewDeal('${newId}')">Xem</button>
                 <button class="delete-btn" onclick="deleteDeal(this)">Xóa</button>
@@ -325,8 +307,6 @@ function generateDealId() {
 
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector(".search-input");
-    const filterSelect = document.querySelector(".filter-select");
-    const tableBody = document.querySelector(".table tbody");
 
     function filterDeals() {
         currentPage = 1; // Reset về trang đầu khi lọc
@@ -334,7 +314,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     searchInput.addEventListener("input", filterDeals);
-    filterSelect.addEventListener("change", filterDeals);
     document.querySelector("#date-from").addEventListener("change", filterDeals);
     document.querySelector("#date-to").addEventListener("change", filterDeals);
 
@@ -362,9 +341,7 @@ function getAllRows() {
 function renderTable() {
     // Lấy dữ liệu lọc
     const searchInput = document.querySelector(".search-input");
-    const filterSelect = document.querySelector(".filter-select");
     const keyword = searchInput ? searchInput.value.toLowerCase() : "";
-    const typeFilter = filterSelect ? filterSelect.value : "all";
 
     const dateFromInput = document.querySelector("#date-from");
     const dateToInput = document.querySelector("#date-to");
@@ -378,18 +355,10 @@ function renderTable() {
     rows = rows.filter(row => {
         const id = row.children[1]?.textContent.toLowerCase() || "";
         const name = row.children[2]?.textContent.toLowerCase() || "";
-        const status = row.children[4]?.textContent.toLowerCase() || "";
         const timeRange = row.children[3]?.textContent.trim();
 
         // Lọc theo keyword
         const matchesKeyword = id.includes(keyword) || name.includes(keyword);
-
-        // Lọc theo trạng thái (filterSelect): chỉ lọc cột trạng thái
-        const statusMap = {
-            "active": "đang áp dụng",
-            "expired": "hết hạn"
-        };
-        const matchesType = (typeFilter === "all" || status === (statusMap[typeFilter] || typeFilter).toLowerCase());
 
         // Lọc theo thời gian nếu có nhập ngày
         let matchesDate = true;
@@ -408,7 +377,7 @@ function renderTable() {
             }
         }
 
-        return matchesKeyword && matchesType && matchesDate;;
+        return matchesKeyword && matchesDate;
     });
 
     // Sắp xếp
