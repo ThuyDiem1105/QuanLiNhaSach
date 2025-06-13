@@ -133,13 +133,16 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
             </thead>
             
             <tbody>
-            <?php while ($row = $result->fetch_assoc()): ?>
+            <?php 
+            $stt = 1; // Thêm biến đếm
+            while ($row = $result->fetch_assoc()): 
+            ?>
             <?php
                 $ngayBatDau = date('d/m/Y', strtotime($row['NgayBatDau']));
                 $ngayKetThuc = date('d/m/Y', strtotime($row['NgayKetThuc']));
             ?>
             <tr data-condition="<?= htmlspecialchars($row['DieuKienApDung']) ?>">
-            <td class="stt"></td>
+            <td class="stt"><?= $stt++ ?></td>
             <td><?= htmlspecialchars($row['MaKM']) ?></td>
             <td><?= htmlspecialchars($row['TenKM']) ?></td>
             <td><?= $ngayBatDau ?> - <?= $ngayKetThuc ?></td>
