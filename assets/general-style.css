@@ -131,23 +131,6 @@ body, input, button, select, textarea {
     border: 1.5px solid #0d3c6b;
 }
 
-.stt, 
-.table th.stt, 
-.table td.stt,
-.table th:first-child,
-.table td:first-child {
-    width: 50px;
-    text-align: center;
-}
-
-.id{
-    max-width: 90px;
-}
-
-.actions{
-    width: 150px;
-}
-
 .table th, .table td {
     padding: 12px;
     text-align: left;
@@ -184,6 +167,15 @@ body, input, button, select, textarea {
     background-color: #9cffd1;
     color: #0d3c6b;
     font-weight: bold;
+}
+
+.stt, 
+.table th.stt, 
+.table td.stt,
+.table th:first-child,
+.table td:first-child {
+    width: 50px;
+    text-align: center;
 }
 
 .view-btn, .delete-btn {
