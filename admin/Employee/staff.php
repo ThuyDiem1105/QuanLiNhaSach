@@ -1,8 +1,14 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
+
+$result = $mysqli->query("SELECT * FROM quydinh ORDER BY NgayTao DESC LIMIT 1");
+$latestRule = $result->fetch_assoc();
+$result->free();
+
 $result = $mysqli->query("SELECT * FROM nhanvien");
 $results = $mysqli->query("SELECT * FROM taikhoan");
+
 ?>
 
 <!DOCTYPE html>
@@ -12,8 +18,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
   <title>Quản lý nhân viên</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
   <link rel="stylesheet" href="../../assets/style.css" type="text/css">
-  <!-- #region STYLE -->
-   <style>
+  <style>
   * {
       box-sizing: border-box;
       margin: 0;
@@ -328,8 +333,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
     display: block;
   } 
   </style>
-  <!-- #endregion -->
 </head>
+
 <body>
   <div class="main-content">
     <div class="header">
@@ -536,6 +541,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
     let editingIndex = -1;
     let editingAccountIndex = -1;
     let chucVuChoices, luongChoices, quyenChoices;
+    const latestRule = <?= json_encode($latestRule) ?>;
 
     window.addEventListener("DOMContentLoaded", () => {
       //không sort mà để theo thứ tự đã initilize, ít nên ẩn tìm kiếm
@@ -714,8 +720,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
         isValid = false;
       }
       // Ca làm
-      if (caLamCheckedCount < 4) { // Kiểm tra số lượng ca làm đã chọn
-        document.getElementById("error_ca_lam").textContent = "Vui lòng chọn ít nhất 4 ca làm trong một tuần!";
+      if (caLamCheckedCount < latestRule.SoCaMin) { // Kiểm tra số lượng ca làm đã chọn
+        document.getElementById("error_ca_lam").textContent = `Vui lòng chọn ít nhất ${latestRule.SoCaMin} ca làm trong một tuần!`;
         isValid = false;
       }
       // Lương
@@ -806,7 +812,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
       }
     }
 
-    //Tìm kiếm 
+    //region Tìm kiếm 
     document.getElementById("searchName").addEventListener("input", filterTable);
     document.getElementById("searchPosition").addEventListener("input", filterTable);
 

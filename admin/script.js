@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         receiptsBtn: 'Receipt/receipts.php',
         dealsBtn: 'Deals/deals.php',
         reportsBtn: 'Report/report.php',
-        rulesBtn: 'rules.html',
+        rulesBtn: 'Rules/rules.php',
     };
 
     links.forEach(link => {

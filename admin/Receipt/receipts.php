@@ -1,16 +1,22 @@
 <?php
 /* session_start(); if (isset($_POST['account_loggedin'])){     header('Location: ../loginFunction/mainPage.php'); } */
+session_start();
 include __DIR__ . '/../../connect.php';
 
-$result = $mysqli->query("SELECT MaSach, TenSach FROM sach WHERE SoLuongTon < 300");
-$bookIds = [];
+$result = $mysqli->query("SELECT * FROM quydinh ORDER BY NgayTao DESC LIMIT 1");
+$latestRule = $result->fetch_assoc();
+$slTonRule = $latestRule['TonMaxDeNhap'];
+
+$result->free();
+$result = $mysqli->query("SELECT MaSach, TenSach, SoLuongTon FROM sach WHERE SoLuongTon <= $slTonRule");
+$bookList = [];
 while ($book = $result->fetch_assoc()) {
-  $bookIds[$book['MaSach']] = $book['TenSach'];
+  //$bookList[$book['MaSach']] = $book['TenSach'];
+  $bookList[] = $book;
 }
 $result->free();
 
 $result = $mysqli->query("SELECT * FROM phieunhap");
-
 
 ?>
 
@@ -61,32 +67,7 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
       border-color: #81c784;
       background-color: #f0fff4;
       box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
-    }/*
-
-    .search-filter input:hover {
-  border-color: #81c784;
-  background-color: #f0fff4;
-  box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
-  transition: all 0.25s ease;
-}
-    body {
-      background: linear-gradient(135deg, #f4ffef, #e8fffd, #d2daca);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-    } */ /*
-    .add-button {
-      background-color: #81c784;
-      color: white;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s ease;
     }
-
-    .add-button:hover {
-      background-color: #66bb6a;
-    }*/
     .add-button {
       background-color: #c8ffe5;
       font-family: fontweb;
@@ -335,245 +316,6 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
       margin-top: 4px;
       display: block;
     }
-
-    /*.action-buttons button {
-      margin-right: 5px;
-      padding: 6px 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .view-btn {
-      background-color: #64b5f6;
-      color: white;
-    }
-
-    .edit-btn {
-      background-color: #ffb74d;
-      color: white;
-    }
-
-    .delete-btn {
-      background-color: #e57373;
-      color: white;
-    }
-    .overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-      backdrop-filter: blur(6px);
-    }
-
-    .overlay.show {
-      opacity: 1;
-      pointer-events: all;
-    }
-    .form-popup {
-      transform: translateY(-20px) scale(0.98);
-      opacity: 0;
-      transition: all 0.4s ease;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-      border: none;
-    }
-    .overlay.show .form-popup {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-    }
-
-    .form-popup {
-      background: #fff;
-      padding: 32px 24px;
-      width: 100%;
-      max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-      position: relative;
-      border: 1px solid #81c784;
-    }
-
-    .form-popup::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 6px;
-      width: 100%;
-      background-color: #81c784;
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
-    }
-
-    .form-popup h3 {
-      margin-top: 0;
-      margin-bottom: 24px;
-      color: #2c3e50;
-      text-align: center;
-      font-size: 22px;
-    }
-
-    .form-popup label {
-      display: block;
-      margin-top: 16px;
-      font-weight: 600;
-      color: #444;
-      font-size: 14px;
-    }
-
-    .form-popup input {
-      width: 100%;
-      padding: 10px 12px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    .form-popup input:focus {
-      border-color: #81c784;
-      outline: none;
-      box-shadow: 0 0 6px rgba(129, 199, 132, 0.3);
-    }
-
-    .form-popup input[readonly] {
-      background-color: #f4f4f4;
-      border-color: #ddd;
-      color: #666;
-      cursor: not-allowed;
-    }
-
-    .form-buttons {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 28px;
-      gap: 12px;
-    }
-
-    .btn-save, .btn-cancel, .btn-edit {
-      padding: 10px 20px;
-      font-size: 14px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .btn-save {
-      background-color: #81c784;
-      color: white;
-    }
-
-    .btn-cancel {
-      background-color: #e57373;
-      color: white;
-    }
-
-    .btn-edit {
-      background-color: #ffb74d;
-      color: white;
-    }
-
-    .btn-save:hover {
-      background-color: #66bb6a;
-    }
-
-    .btn-cancel:hover {
-      background-color: #ef5350;
-    }
-
-    .btn-edit:hover {
-      background-color: #ffa726;
-    }
-    tbody tr:hover {
-      background-color: #f1f8e9;
-      transition: background-color 0.25s ease;
-      cursor: pointer;
-    }
-
-    @keyframes fadeSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-30px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    .overlay.show .form-popup {
-      animation: fadeSlideIn 0.5s ease forwards;
-    }
-    @keyframes highlightNewRow {
-      from { background-color: #dcedc8; }
-      to { background-color: transparent; }
-    }
-
-    tr.new-row {
-      animation: highlightNewRow 1.5s ease;
-    }
-
-    .action-buttons button,
-    .add-button,
-    .btn-save,
-    .btn-cancel,
-    .btn-edit {
-      transition: all 0.2s ease;
-      transform: scale(1);
-    }
-
-    .action-buttons button:hover,
-    .add-button:hover,
-    .btn-save:hover,
-    .btn-cancel:hover,
-    .btn-edit:hover {
-      transform: scale(1.05);
-      filter: brightness(1.1);
-    }
-    
-    @keyframes popupIn {
-      0% { transform: scale(0.95); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .overlay.show .form-popup {
-      animation: popupIn 0.4s ease forwards;
-    }
-    
-    
-
-
-    #toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #4caf50;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  opacity: 0;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  transform: translateY(20px);
-  z-index: 10000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  font-size: 14px;
-}
-
-#toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-    */
   </style>
 </head>
 <body>
@@ -637,7 +379,7 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
         <table id="booksReceiptTable" style="border-collapse: collapse; width: 100%; text-align: center;">
           <thead>
             <tr>
-              <th>Mã sách nhập</td>
+              <th>Mã sách nhập</th>
               <th>Số lượng nhập</th>
               <th>Đơn giá nhập</th>
               <th>Thành tiền</th>
@@ -663,6 +405,7 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
 
   <script>
     let editingIndex = -1;
+    const latestRule = <?= json_encode($latestRule) ?>;
 
     // Mở form thể hiện chi tiết thông tin phiếu nhập
     function openReceiptForm(maPN){
@@ -730,23 +473,30 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
         isValid = false;
       }
       rows.forEach((row, index) => {
-        const maSach = row.querySelector('[name="ma_sach[]"]').value;
+        const maSachSelect = row.querySelector('[name="ma_sach[]"]');
+        const selectedOption = maSachSelect.options[maSachSelect.selectedIndex];
+        const tonKho = Number(selectedOption.dataset.ton)
+
         const soLuong = row.querySelector('[name="so_luong[]"]').value;
         const donGia = row.querySelector('[name="don_gia[]"]').value;
         const thanhTien = row.querySelector('[name="thanh_tien[]"]').value;
 
-        if (!maSach) {
+        if (!maSachSelect) {
           document.getElementById("error_sach").textContent = `Vui lòng chọn mã sách cho dòng ${index + 1}`;
           isValid = false;
         }
-        if (!soLuong) {
+        if (!soLuong || soLuong == 0) {
           document.getElementById("error_sach").textContent = `Vui lòng nhập số lượng cho dòng ${index + 1}`;
           isValid = false;
-        } else if (soLuong < 200) {
-          document.getElementById("error_sach").textContent = `Số lượng nhập tối thiểu cho dòng ${index + 1} phải là 150.`;
+        } else if (soLuong < latestRule.SLNhapMin) {
+          document.getElementById("error_sach").textContent = `Số lượng nhập tối thiểu cho dòng ${index + 1} phải là ${latestRule.SLNhapMin}.`;
+          isValid = false;
+        } else if(soLuong > (latestRule.TonKhoMax - tonKho)){
+          document.getElementById("error_sach").textContent = `Số lượng nhập tối đa cho dòng ${index + 1} phải là ${latestRule.TonKhoMax - tonKho}.`;
           isValid = false;
         }
-        if (!donGia) {
+
+        if (!donGia || donGia == 0) {
           document.getElementById("error_sach").textContent = `Vui lòng nhập giá nhập hợp lệ cho dòng ${index + 1}`;
           isValid = false;
         }
@@ -766,10 +516,12 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
 
       row.innerHTML = `
         <td>
-          <select name="ma_sach[]" required>
+          <select name="ma_sach[]" id="book-select" required>
             <option value="">- Chọn mã sách-</option>
-            <?php foreach ($bookIds as $bookId => $bookName): ?>
-              <option value="<?= $bookId ?>"><?= $bookId ?></option>
+            <?php foreach ($bookList as $book): ?>
+              <option value="<?= $book['MaSach'] ?>" 
+                data-ton="<?= $book['SoLuongTon'] ?>"><?= $book['MaSach'] ?>
+              </option>
             <?php endforeach; ?>
           </select>
           <span class="error" id="error_masach"></span>
@@ -861,7 +613,7 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
 
       console.log("Sending payload to server:", payload);
 
-      fetch('save_receipt.php', {
+      fetch(`save_receipt.php?tile_ban=${latestRule.TiLeBan}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -888,32 +640,19 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
         alert("Có lỗi xảy ra khi gửi dữ liệu.");
       });
       closeForm();
-      // if (editingIndex !== -1) {
-      //   const row = table.rows[editingIndex];
-      //   row.cells[0].innerText = maPhieu;
-      //   row.cells[1].innerText = ngayNhap;
-      //   row.cells[2].innerText = thanhTien;
-      //   row.cells[3].innerHTML = `
-      //     <button class="view-btn" onclick="openForm('${maPhieu}', '${form.ma_sach.value}', ${soLuong}, ${donGia}, ${editingIndex})">Xem</button>
-      //     <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
-      //   `;
-      // } else {
-      //   const row = table.insertRow();
-      //   row.classList.add("new-row");
-      //   const index = row.rowIndex - 1; 
-      //   row.innerHTML = `
-      //     <td>${maPhieu}</td>
-      //     <td>${ngayNhap}</td>
-      //     <td>${thanhTien}</td>
-      //     <td class="action-buttons">
-      //       <button class="view-btn" onclick="openForm('${maPhieu}', '${form.ma_sach.value}', ${soLuong}, ${donGia}, ${index})">Xem</button>
-      //       <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
-      //     </td>
-      //   `;
-      // }
     }
 
-    //Tìm kiếm 
+    // Xóa phiếu trong bảng
+    function deleteRow(button) {
+      if (confirm("Bạn có chắc muốn xóa phiếu nhập này không?")) {
+        const row = button.closest("tr");
+        row.style.transition = "opacity 0.4s ease";
+        row.style.opacity = 0;
+        setTimeout(() => row.remove(), 400);
+      }
+    }
+
+    //region Tìm kiếm 
     document.getElementById("timMaPN").addEventListener("input", filterTable);
     document.getElementById("timNgayNhap").addEventListener("input", filterTable);
 
@@ -936,16 +675,7 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
         }
       });
     }    
-
-
-    function deleteRow(button) {
-      if (confirm("Bạn có chắc muốn xóa phiếu nhập này không?")) {
-        const row = button.closest("tr");
-        row.style.transition = "opacity 0.4s ease";
-        row.style.opacity = 0;
-        setTimeout(() => row.remove(), 400);
-      }
-    }
+    //endregion
 
     //region UI
 

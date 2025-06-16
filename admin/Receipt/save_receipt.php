@@ -3,6 +3,7 @@ include __DIR__ . '/../../connect.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 
+$tile_ban = $_GET['tile_ban'];
 $maPN = $data['ma_pn'];
 $ngayLap = $data['ngay_lap'];
 $ngayNhap = $data['ngay_nhap'];
@@ -44,9 +45,10 @@ try {
         $stmtUpdate->execute();
         $stmtUpdate->close();
 
-        // Update giá bản của sách được chọn nhập, giá bán = 105% giá nhập
-        $stmtUpdate = $mysqli->prepare("UPDATE sach SET GiaBan = GiaBan * (1 + ?) WHERE MaSach = ?");
-        $stmtUpdate->bind_param("is", $book['don_gia'], $book['ma_sach']);
+        $giaban = $book['don_gia'] * (1 + $tile_ban);
+        // Update giá bán của sách được chọn nhập, giá bán = 105% giá nhập
+        $stmtUpdate = $mysqli->prepare("UPDATE sach SET GiaBan = ? WHERE MaSach = ?");
+        $stmtUpdate->bind_param("is", $giaban, $book['ma_sach']);
         $stmtUpdate->execute();
         $stmtUpdate->close();
     }
