@@ -454,8 +454,8 @@ $result = $mysqli->query("SELECT * FROM sach");
                 }
                 })
                 .catch(error => {
-                console.error("Lỗi: ", error);
-                alert("Lỗi khi xóa sách.");
+                    console.error("Lỗi: ", error);
+                    alert("Lỗi khi xóa sách.");
                 });
             }
         }
@@ -696,17 +696,27 @@ $result = $mysqli->query("SELECT * FROM sach");
         }
 
         document.getElementById("bookFormOverlay").addEventListener("click", e => {
-        if (e.target === e.currentTarget) closeForm("bookFormOverlay");
+            if (e.target === e.currentTarget) closeForm("bookFormOverlay");
         });
-        function showToast(message) {
+        function showToast(message, isError = false) {
             const toast = document.getElementById("toast");
             toast.textContent = message;
-            toast.classList.add("show");
 
+            toast.classList.remove('show', 'error-toast');
+
+            if (isError) {
+                toast.classList.add('error-toast');
+            } else {
+                toast.classList.remove('error-toast');
+            }
+
+            toast.classList.add("show");
             setTimeout(() => {
                 toast.classList.remove("show");
+                toast.classList.remove('error-toast');
             }, 3000);
         }
     </script>
 </body>
 </html>
+

@@ -143,7 +143,7 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
             ?>
             <tr data-condition="<?= htmlspecialchars($row['DieuKienApDung']) ?>">
             <td class="stt"><?= $stt++ ?></td>
-            <td><?= htmlspecialchars($row['MaKM']) ?></td>
+            <td class="id"><?= htmlspecialchars($row['MaKM']) ?></td>
             <td><?= htmlspecialchars($row['TenKM']) ?></td>
             <td><?= $ngayBatDau ?> - <?= $ngayKetThuc ?></td>
             <td class="action-buttons">
