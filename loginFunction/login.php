@@ -1,37 +1,59 @@
 <?php
 session_start();
-include __DIR__ . '/connect.php';
 
+include __DIR__ . '/../connect.php';
 $error_message = "";
 
 if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
-    if (!empty($_POST['username']) && !empty($_POST['password'])) {
-        $username = trim($_POST['username']);
-        $password = trim($_POST['password']);
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
-        $stmt = $mysqli->prepare("SELECT * FROM taikhoan WHERE TenDN = ?");
+    if (empty($username) || empty($password)) {
+        $error_message = "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!";
+    }
+
+    if (!empty($username) && !empty($password) && empty($error_message)) {
+        $stmt = $mysqli->prepare('SELECT MaNV, MatKhau, Quyen FROM taikhoan WHERE TenDN = ?');
         $stmt->bind_param("s", $username);
         $stmt->execute();
-        $result = $stmt->get_result();
 
-        if ($result && $result->num_rows === 1) {
-            $user = $result->fetch_assoc();
+        //lưu để kiểm tra nếu tài khoản có tồn tại
+        $stmt->store_result();
 
-            // Không dùng hash → so sánh trực tiếp
-            if ($password === $user['MatKhauGoc']) {
+        //kiểm tra nếu tài khoản tồn tại có username đã nhập
+        if ($stmt->num_rows > 0) {
+            //tài khoản tồn tại
+            $stmt->bind_result($id, $hashed_password, $role);
+            $stmt->fetch();
+            if (password_verify($_POST['password'], $hashed_password)) {
+                //đúng mật khẩu
+                session_regenerate_id();
+
+                //biến này dùng để kiểm tra xem user đã đăng nhập chưa
+                $_SESSION['loggedin'] = TRUE;
                 $_SESSION['username'] = $username;
-                $_SESSION['loggedin'] = true;
-                header("Location: admin/home.html");
-                exit;
-            }
-        }
+                $_SESSION['id'] = $id;
+                $_SESSION['role'] = $role;
 
-        // Nếu sai tài khoản hoặc mật khẩu
-        $_SESSION['login_error'] = "Tên đăng nhập hoặc mật khẩu không đúng.";
-        $error_message = "Tên đăng nhập hoặc mật khẩu không đúng.";
-    } else{ $error_message = "Vui lòng nhập tên đăng nhập và mật khẩu.";}
+                // Phân quyền giữa admin với hệ thống
+                if ($_SESSION['role'] === 'Admin') {
+                    header("Location: ../admin/home.html");
+                    exit;
+                } else {
+                    header('Location: ../employee/home.html');
+                    exit;
+                }
+            } else {
+                $error_message = 'Sai mật khẩu. Vui lòng nhập lại!';
+            }
+        } else {
+            $error_message = 'Tên người dùng không tồn tại. Vui lòng nhập lại!';
+        }
+        $stmt->close();
+    }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -244,25 +266,30 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") 
         <div class="login-card">
             <div class="login-header">
                 <div class="login-logo">
-                    <img src="assets/logo.png" alt="Booktopia Logo">
+                    <img src="../assets/logo.png" alt="Booktopia Logo">
                 </div>
                 <h2>Booktopia</h2>
                 </div>
-            <form action="login.php" method="post" class="login-form">
+            <form action="" method="post" class="login-form" autocomplete="off">
                 <div class="form-group">
                     <label for="username">Tên đăng nhập</label>
-                    <input type="text" id="username" name="username" placeholder="Nhập tên đăng nhập của bạn" required>
+                    <input type="text" id="username" name="username" placeholder="Nhập tên đăng nhập của bạn" value="<?= htmlspecialchars($username ?? '') ?>" autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu của bạn" required>
+                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu của bạn" value="<?= htmlspecialchars($password ?? '') ?>" required>
                 </div>
+
                 <?php if (!empty($error_message)) { ?>
                     <div class="error-message"><?php echo $error_message; ?></div>
                 <?php } ?>
+
                 <button type="submit" class="btn btn-login">Đăng nhập</button>
+                <div class="forgot-password">
+                    <a href="fpasswordPage.php">Quên mật khẩu?</a>
+                </div>
             </form>
-            </div>
+        </div>
     </div>
 </body>
 </html>

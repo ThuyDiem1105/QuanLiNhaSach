@@ -45,8 +45,8 @@ try {
         $stmtUpdate->execute();
         $stmtUpdate->close();
 
-        $giaban = $book['don_gia'] * (1 + $tile_ban);
-        // Update giá bán của sách được chọn nhập, giá bán = 105% giá nhập
+        $giaban = $book['don_gia'] * $tile_ban;
+        // Update giá bán của sách được chọn nhập
         $stmtUpdate = $mysqli->prepare("UPDATE sach SET GiaBan = ? WHERE MaSach = ?");
         $stmtUpdate->bind_param("is", $giaban, $book['ma_sach']);
         $stmtUpdate->execute();

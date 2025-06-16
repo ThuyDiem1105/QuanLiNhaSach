@@ -1,8 +1,15 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
+if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
+    header('Location: ../../loginFunction/login.php'); 
+}
 
-$result = $mysqli->query("SELECT MaSach, TenSach, GiaBan FROM sach");
+$result = $mysqli->query("SELECT * FROM quydinh ORDER BY NgayTao DESC LIMIT 1");
+$latestRule = $result->fetch_assoc();
+
+$result->free();
+$result = $mysqli->query("SELECT MaSach, TenSach, GiaBan, SoLuongTon FROM sach");
 $books = [];
 while ($book = $result->fetch_assoc()) {
   $books[] = $book;
@@ -411,6 +418,7 @@ $result = $mysqli->query("SELECT * FROM hoadon");
 
   <script>
     let editingIndex = -1;
+    const latestRule = <?= json_encode($latestRule) ?>;
 
     // Mở form show thông tin chi tiết của hóa đơn
     function openOrderForm(maHD, maKH) {
@@ -476,18 +484,25 @@ $result = $mysqli->query("SELECT * FROM hoadon");
         isValid = false;
       }
       rows.forEach((row, index) => {
-        const maSach = row.querySelector('[name="ma_sach[]"]').value;
+        const maSachSelect = row.querySelector('[name="ma_sach[]"]');
+        const selectedOption = maSachSelect.options[maSachSelect.selectedIndex];
+        const tonKho = Number(selectedOption.dataset.ton)
+
         const tenSach = row.querySelector('[name="ten_sach[]"]').value;
         const soLuong = row.querySelector('[name="so_luong[]"]').value;
         const giaBan = row.querySelector('[name="gia_ban[]"]').value;
         const thanhTien = row.querySelector('[name="thanh_tien[]"]').value;
 
-        if (!maSach) {
+        if (!maSachSelect) {
           document.getElementById("error_sach").textContent = `Vui lòng chọn mã sách cho dòng ${index + 1}`;
           isValid = false;
         }
-        if (!soLuong) {
+        if (!soLuong || soLuong <= 0) {
           document.getElementById("error_sach").textContent = `Vui lòng chọn số lượng mua cho dòng ${index + 1}`;
+          isValid = false;
+        } else if ((tonKho - soLuong) < latestRule.TonMinSauBan){
+          document.getElementById("error_sach").textContent = `Lượng tồn kho của sách dòng ${index + 1} là ${tonKho}. 
+            Vui lòng điều chỉnh lại số lượng mua để tối thiểu còn trong kho ${latestRule.TonMinSauBan} sau khi mua!`;
           isValid = false;
         }
       });
@@ -505,10 +520,6 @@ $result = $mysqli->query("SELECT * FROM hoadon");
         document.getElementById("error_tientra").textContent = `Vui lòng nhập số tiền đã thanh toán!`;
         isValid = false;
       }
-      // if(!tienNo){
-      //   document.getElementById("error_tienno").textContent = `Vui lòng nhập số tiền nợ cho dòng ${index + 1}`;
-      //   isValid = false;
-      // }
       return isValid;
     }
     
@@ -544,6 +555,7 @@ $result = $mysqli->query("SELECT * FROM hoadon");
             <?php foreach ($books as $book): ?>
               <option value="<?= $book['MaSach'] ?>"
                       data-name="<?= htmlspecialchars($book['TenSach']) ?>"
+                      data-ton="<?= $book['SoLuongTon'] ?>"
                       data-price="<?= $book['GiaBan'] ?>">
                 <?= $book['MaSach'] ?>
               </option>

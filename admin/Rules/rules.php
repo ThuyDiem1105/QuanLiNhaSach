@@ -1,6 +1,10 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
+if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
+    header('Location: ../../loginFunction/login.php'); 
+}
+
 $result = $mysqli->query("SELECT COUNT(*) as total FROM quydinh");
 $row = $result->fetch_assoc();
 $totalRules = $row['total'];

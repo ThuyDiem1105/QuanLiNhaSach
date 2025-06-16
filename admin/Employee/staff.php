@@ -1,6 +1,9 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
+if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
+    header('Location: ../../loginFunction/login.php'); 
+}
 
 $result = $mysqli->query("SELECT * FROM quydinh ORDER BY NgayTao DESC LIMIT 1");
 $latestRule = $result->fetch_assoc();
@@ -266,9 +269,9 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
                 <label for="quyen">Quyền:</label>
                 <select name="quyen" id="quyen">
                     <option value="">-Chọn quyền hợp lệ-</option>
-                    <option value="Quản trị viên">Quản trị viên</option>
-                    <option value="Quản lý">Quản lý</option>
-                    <option value="Nhân viên">Nhân viên</option>
+                    <option value="Admin">Quản trị viên</option>
+                    <option value="Manager">Quản lý</option>
+                    <option value="Employee">Nhân viên</option>
                 </select>
                 <span class="error" id="error_quyen"></span>
 

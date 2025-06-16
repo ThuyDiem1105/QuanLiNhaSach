@@ -1,7 +1,9 @@
 <?php
-/* session_start(); if (isset($_POST['account_loggedin'])){     header('Location: ../loginFunction/mainPage.php'); } */
 session_start();
 include __DIR__ . '/../../connect.php';
+if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
+    header('Location: ../../loginFunction/login.php'); 
+}
 
 $result = $mysqli->query("SELECT * FROM quydinh ORDER BY NgayTao DESC LIMIT 1");
 $latestRule = $result->fetch_assoc();

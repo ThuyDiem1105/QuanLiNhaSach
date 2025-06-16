@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
+    header('Location: ../../loginFunction/login.php'); 
+}
+
 include __DIR__ . '/../../connect.php';
 // Đọc danh mục sách
 $danhMucArr = [];
