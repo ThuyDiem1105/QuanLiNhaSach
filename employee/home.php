@@ -1,8 +1,8 @@
 <?php
 session_start();
 //kiểm tra xem đã đăng nhập chưa, nếu chưa thì quay về trang đăng nhập
-if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
-    header('Location: ../../login.php'); 
+if (!isset($_SESSION['loggedin']) || $_SESSION['role'] === 'Admin'){     
+    header('Location: ../../loginFunction/login.php'); 
 }
 ?>
 
@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Page</title>
+    <title>Employee Page</title>
     <link rel="stylesheet" href="../assets/style.css" />
     <script src="script.js" defer></script>
 </head>
@@ -23,13 +23,13 @@ if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){
                 Booktopia
             </div>
             <nav class="menu">
-                <a href="#" id="reportsBtn" class="sidebar-link">
+                <a href="schedule.php" id="scheduleBtn" class="sidebar-link">
                     <img src="../assets/report.png" id="report-icon" class="icon" alt="Report Icon" />
-                    Báo cáo
+                    Lịch làm việc
                 </a>
-                <a href="#" id="rulesBtn" class="sidebar-link">
+                <a href="profile.php" id="profileBtn" class="sidebar-link">
                     <img src="../assets/rule.png" id="rule-icon" class="icon" alt="Rule Icon" />
-                    Quy định
+                    Profile
                 </a>
                 <a href="../loginFunction/logout.php" onclick="return confirm('Bạn có chắc muốn đăng xuất?')" id="logoutBtn" class="sidebar-link"> <img src="../assets/logout.png" id="logout-icon" class="icon" alt="Logout Icon" />
                     Đăng xuất
@@ -38,7 +38,7 @@ if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){
         </aside>
 
         <main class="main-content">
-            <iframe id="contentFrame" src="dashboard.html" frameborder="0" style="width:100%; height:100vh;"></iframe>
+            <iframe id="contentFrame" src="profile.php" frameborder="0" style="width:100%; height:100vh;"></iframe>
         </main>
     </div>
 </body>

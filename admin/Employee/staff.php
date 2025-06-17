@@ -13,6 +13,13 @@ $result->free();
 $result = $mysqli->query("SELECT * FROM nhanvien");
 $results = $mysqli->query("SELECT * FROM taikhoan");
 
+$accountEmployeeIds = [];
+while ($row = $results->fetch_assoc()) {
+    $accountEmployeeIds[] = $row['MaNV'];
+}
+
+$results = $mysqli->query("SELECT * FROM taikhoan");
+
 ?>
 
 <!DOCTYPE html>
@@ -101,7 +108,11 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
                             '<?= $row['Luong'] ?>'
                             )">Xem</button>
                             <button class="delete-btn" onclick="deleteEmployee('<?= $row['MaNV'] ?>')">Xóa</button>
-                            <button class="create-account-btn" onclick="createNewAccount('<?= $row['MaNV'] ?>')">Tạo tài khoản</button>
+                            <button class="create-account-btn" 
+                                onclick="createNewAccount('<?= $row['MaNV'] ?>')" 
+                                <?= in_array($row['MaNV'], $accountEmployeeIds) ? 'disabled style="opacity:0.6; cursor:not-allowed;" 
+                                    title=\'Nhân viên đã có tài khoản\''  : '' ?>>Tạo tài khoản
+                            </button>                        
                         </td>
                     </tr>
                     <?php endwhile; ?>
@@ -269,7 +280,6 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
                 <label for="quyen">Quyền:</label>
                 <select name="quyen" id="quyen">
                     <option value="">-Chọn quyền hợp lệ-</option>
-                    <option value="Admin">Quản trị viên</option>
                     <option value="Manager">Quản lý</option>
                     <option value="Employee">Nhân viên</option>
                 </select>
@@ -442,49 +452,49 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
 
             const luong = parseInt(form.luong.value);
 
-      // Họ tên
-      if (!hoTen) {
-        document.getElementById("error_ho_ten").textContent = "Họ tên không được để trống!";
-        isValid = false;
-      }
-      // Ngày sinh (must be in the past)
-      if (!ngaySinh) {
-        document.getElementById("error_ngay_sinh").textContent = "Vui lòng chọn ngày sinh hợp lệ!";
-        isValid = false;
-      } else if (new Date(ngaySinh) >= new Date()) {
-        document.getElementById("error_ngay_sinh").textContent = "Ngày sinh phải trước ngày hiện tại!";
-        isValid = false;
-      }
-      // SĐT (10 digits only)
-      if (!sdt) {
-        document.getElementById("error_sdt").textContent = "SĐT không được để trống!";
-        isValid = false;
-      } else if (!/^(?:09|05|03|07|08)[0-9]{8}$/.test(sdt)) {
-        document.getElementById("error_sdt").textContent = "Số điện thoại phải bắt đầu với 09/03/05/07/08 và gồm 8 chữ số theo sau!";
-        isValid = false;
-      }
-      // Nơi ở
-      if (!noiO) {
-        document.getElementById("error_noi_o").textContent = "Nơi ở không được để trống!";
-        isValid = false;
-      }
-      // Chức vụ
-      if (!chucVu) {
-        document.getElementById("error_chuc_vu").textContent = "Chức vụ không được để trống!";
-        isValid = false;
-      }
-      // Ca làm
-      if (caLamCheckedCount < latestRule.SoCaMin) { // Kiểm tra số lượng ca làm đã chọn
-        document.getElementById("error_ca_lam").textContent = `Vui lòng chọn ít nhất ${latestRule.SoCaMin} ca làm trong một tuần!`;
-        isValid = false;
-      }
-      // Lương
-      if (isNaN(luong) || luong <= 0) { // Kiểm tra nếu luong không hợp lệ
-        document.getElementById("error_luong").textContent = "Vui lòng chọn mức lương phù hợp!";
-        isValid = false;
-      }
-      return isValid;
-    }
+            // Họ tên
+            if (!hoTen) {
+                document.getElementById("error_ho_ten").textContent = "Họ tên không được để trống!";
+                isValid = false;
+            }
+            // Ngày sinh (must be in the past)
+            if (!ngaySinh) {
+                document.getElementById("error_ngay_sinh").textContent = "Vui lòng chọn ngày sinh hợp lệ!";
+                isValid = false;
+            } else if (new Date(ngaySinh) >= new Date()) {
+                document.getElementById("error_ngay_sinh").textContent = "Ngày sinh phải trước ngày hiện tại!";
+                isValid = false;
+            }
+            // SĐT (10 digits only)
+            if (!sdt) {
+                document.getElementById("error_sdt").textContent = "SĐT không được để trống!";
+                isValid = false;
+            } else if (!/^(?:09|05|03|07|08)[0-9]{8}$/.test(sdt)) {
+                document.getElementById("error_sdt").textContent = "Số điện thoại phải bắt đầu với 09/03/05/07/08 và gồm 8 chữ số theo sau!";
+                isValid = false;
+            }
+            // Nơi ở
+            if (!noiO) {
+                document.getElementById("error_noi_o").textContent = "Nơi ở không được để trống!";
+                isValid = false;
+            }
+            // Chức vụ
+            if (!chucVu) {
+                document.getElementById("error_chuc_vu").textContent = "Chức vụ không được để trống!";
+                isValid = false;
+            }
+            // Ca làm
+            if (caLamCheckedCount < latestRule.SoCaMin) { // Kiểm tra số lượng ca làm đã chọn
+                document.getElementById("error_ca_lam").textContent = `Vui lòng chọn ít nhất ${latestRule.SoCaMin} ca làm trong một tuần!`;
+                isValid = false;
+            }
+            // Lương
+            if (isNaN(luong) || luong <= 0) { // Kiểm tra nếu luong không hợp lệ
+                document.getElementById("error_luong").textContent = "Vui lòng chọn mức lương phù hợp!";
+                isValid = false;
+            }
+            return isValid;
+        }
 
         //Button Lưu nhân viên
         function saveEmployee() {
