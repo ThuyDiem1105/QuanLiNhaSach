@@ -30,8 +30,8 @@ if ($stmt->num_rows > 0) {
 $stmt->close();
 
 //kiển tra xem tài khoản đã tồn tại chưa
-$stmt = $mysqli->prepare("SELECT MaNV FROM taikhoan WHERE MaNV = ? AND TenDN = ?");
-$stmt->bind_param("ss", $maNV, $tenDN);
+$stmt = $mysqli->prepare("SELECT MaNV FROM taikhoan WHERE MaNV = ?");
+$stmt->bind_param("s", $maNV);
 $stmt->execute();
 $stmt->store_result();
 
@@ -42,10 +42,9 @@ if ($stmt->num_rows > 0) {
 
 } else { 
   //chưa tồn tại tài khoản
-    $matKhauGoc = $matkhau;
     $matKhau = password_hash($matkhau, PASSWORD_DEFAULT);
-    $stmt = $mysqli->prepare("INSERT INTO taikhoan (MaNV, TenDN, Email, MatKhau, MatKhauGoc, Quyen) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss", $maNV, $tenDN, $email, $matKhau, $matKhauGoc, $quyen);
+    $stmt = $mysqli->prepare("INSERT INTO taikhoan (MaNV, TenDN, Email, MatKhau, Quyen) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $maNV, $tenDN, $email, $matKhau, $quyen);
 }
 
 if ($stmt->execute()) {

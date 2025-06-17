@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
+if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'Admin'){     
     header('Location: ../../loginFunction/login.php'); 
 }
 

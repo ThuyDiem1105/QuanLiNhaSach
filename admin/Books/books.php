@@ -3,8 +3,8 @@ session_start();
 include __DIR__ . '/../../connect.php';
 
 //kiểm tra xem đã đăng nhập chưa, nếu chưa thì quay về trang đăng nhập
-if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
-    header('Location: ../../login.php'); 
+if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'Admin'){     
+    header('Location: ../../loginFunction/login.php'); 
 }
 
 // Đọc danh mục sách

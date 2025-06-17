@@ -26,7 +26,5 @@ $stmt->close();
 $result = $mysqli->query("SELECT * FROM quydinh ORDER BY NgayTao DESC LIMIT 1");
 $latestRule = $result->fetch_assoc();
 $_SESSION['latest_rule'] = $latestRule;
-echo json_encode($latestRule);
-
 $mysqli->close();
 ?>

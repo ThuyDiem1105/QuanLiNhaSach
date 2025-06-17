@@ -1,7 +1,8 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
-if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'Admin'){     
     header('Location: ../../loginFunction/login.php'); 
 }
 
@@ -156,8 +157,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
                             '<?= $row['TenDN'] ?>',
                             '<?= $row['Email'] ?>',
                             '<?= $row['Quyen'] ?>',
-                            '<?= $row['MatKhau'] ?>',
-                            '<?= $row['MatKhauGoc'] ?>'
+                            '<?= $row['MatKhau'] ?>'
                             )">Xem</button>
                             <button class="delete-btn" onclick="deleteAccount('<?= $row['MaNV'] ?>')">Xóa</button>
                         </td>
@@ -290,6 +290,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
         let editingIndex = -1;
         let editingAccountIndex = -1;
         let chucVuChoices, luongChoices, quyenChoices;
+        let isEditing = false;
         const latestRule = <?= json_encode($latestRule) ?>;
 
         window.addEventListener("DOMContentLoaded", () => {
@@ -731,7 +732,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
         //endregion
 
         //region TÀI KHOẢN
-        function openAccountForm(maNV, tenDN, email, quyen, matkhauhash, matkhaugoc) {
+        function openAccountForm(maNV, tenDN, email, quyen, matkhauhash) {
             // Reset scroll position to top
             document.querySelector(".form-popup").scrollTop = 0;
             document.querySelectorAll(".error").forEach(el => el.textContent = ""); // Xóa lỗi cũ
@@ -742,8 +743,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
             form.email.value = email;
             form.quyen.value = quyen;
             quyenChoices.setChoiceByValue(quyen);
-            form.matkhau.value = matkhaugoc;
-            form.xacnhan_mk.value = matkhaugoc;
+            form.matkhau.value = matkhauhash;
+            form.xacnhan_mk.value = matkhauhash;
 
             //lấy vị trí dòng (nhân viên) được chọn để xem
             editingAccountIndex = Array.from(document.querySelector('#accountTable tbody').rows)
@@ -767,6 +768,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
                 if (input.name !== "tk_ma_nv" && input.name !== "matkhau" && input.name !== "xacnhan_mk") input.readOnly = false;
             }
             quyenChoices.enable();
+            isEditing = true;
 
             form.querySelector(".btn-save").style.display = "inline-block";
             form.querySelector(".btn-edit").style.display = "none";
@@ -820,20 +822,24 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
                 document.getElementById("error_email").textContent = "Vui lòng nhập địa chỉ email hợp lệ!";
                 isValid = false;
             }
+            
             const regexx = /^(?=.{8,20}$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).*$/;
             // Mật khẩu
-            if(!matKhau){
+            if(!isEditing){
+                if(!matKhau){
                 document.getElementById("error_matkhau").textContent = "Vui lòng nhập mật khẩu!";
                 isValid = false;
-            } else if (!regexx.test(matKhau)) {
-                document.getElementById("error_matkhau").textContent = "Mật khẩu phải chứa ít nhất một kí tự thường, một kí tự hoa, một số và một kí tự đặc biệt. Có độ dài từ 8-20 kí tự.";
-                isValid = false;
+                } else if (!regexx.test(matKhau)) {
+                    document.getElementById("error_matkhau").textContent = "Mật khẩu phải chứa ít nhất một kí tự thường, một kí tự hoa, một số và một kí tự đặc biệt. Có độ dài từ 8-20 kí tự.";
+                    isValid = false;
+                }
+                // Xác nhận mật khẩu
+                if(!xacnhanMK || xacnhanMK !== matKhau){
+                    document.getElementById("error_xacnhanmk").textContent = "Mật khẩu phải khớp với mật khẩu đã nhập ở trên!";
+                    isValid = false;
+                }
             }
-            // Xác nhận mật khẩu
-            if(!xacnhanMK || xacnhanMK !== matKhau){
-                document.getElementById("error_xacnhanmk").textContent = "Mật khẩu phải khớp với mật khẩu đã nhập ở trên!";
-                isValid = false;
-            }
+
             // Quyền
             if (!quyen) {
                 document.getElementById("error_quyen").textContent = "Vui lòng phân quyền!";

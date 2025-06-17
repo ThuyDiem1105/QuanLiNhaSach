@@ -1,24 +1,24 @@
-<?php
-session_start();
-//nếu chưa login thì quay lại trang đăng nhập
-if (!isset($_SESSION['account_loggedin'])) {
-    header('Location: mainPage.php');
-    exit;
-}
+<!-- <?php
+// session_start();
+// //nếu chưa login thì quay lại trang đăng nhập
+// if (!isset($_SESSION['account_loggedin'])) {
+//     header('Location: mainPage.php');
+//     exit;
+// }
 
-$connection = mysqli_connect('localhost', 'root', '', 'phplogin');
-if (mysqli_connect_errno()) {
-    $message = '<br />Lỗi kết nối thất bại đến MySql: ' . mysqli_connect_error();
-}
+// $connection = mysqli_connect('localhost', 'root', '', 'phplogin');
+// if (mysqli_connect_errno()) {
+//     $message = '<br />Lỗi kết nối thất bại đến MySql: ' . mysqli_connect_error();
+// }
 
-$id = $_SESSION['account_id'];
-$stmt = $connection->prepare('SELECT Email, TenDN, Quyen FROM taikhoan WHERE MaNV = ?');
-$stmt->bind_param('i', $id);
-$stmt->execute();
-$stmt->bind_result($email, $username, $role);
-$stmt->fetch();
-$stmt->close();
-?>
+// $id = $_SESSION['account_id'];
+// $stmt = $connection->prepare('SELECT Email, TenDN, Quyen FROM taikhoan WHERE MaNV = ?');
+// $stmt->bind_param('i', $id);
+// $stmt->execute();
+// $stmt->bind_result($email, $username, $role);
+// $stmt->fetch();
+// $stmt->close();
+// ?>
 
 
 <!DOCTYPE html>
@@ -64,4 +64,4 @@ $stmt->close();
             </div>
         </div>
     </body>
-</html>
+</html> -->

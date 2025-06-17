@@ -37,10 +37,10 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") 
 
                 // Phân quyền giữa admin với hệ thống
                 if ($_SESSION['role'] === 'Admin') {
-                    header("Location: ../admin/home.html");
+                    header("Location: ../admin/home.php");
                     exit;
                 } else {
-                    header('Location: ../employee/home.html');
+                    header('Location: ../employee/home.php');
                     exit;
                 }
             } else {
@@ -286,7 +286,7 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") 
 
                 <button type="submit" class="btn btn-login">Đăng nhập</button>
                 <div class="forgot-password">
-                    <a href="fpasswordPage.php">Quên mật khẩu?</a>
+                    <a href="forgotPassword.php">Quên mật khẩu?</a>
                 </div>
             </form>
         </div>

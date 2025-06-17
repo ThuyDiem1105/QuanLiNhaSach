@@ -1,7 +1,8 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
-if (!isset($_SESSION['loggedin']) && $_SESSION['role'] === 'Admin'){     
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'Admin'){     
     header('Location: ../../loginFunction/login.php'); 
 }
 
