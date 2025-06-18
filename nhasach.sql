@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 12, 2025 at 12:50 PM
+-- Generation Time: Jun 18, 2025 at 12:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -122,6 +122,34 @@ INSERT INTO `calam` (`MaCa`, `Thu`, `LoaiCa`, `BatDau`, `KetThuc`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `chitiet_hoadon`
+--
+
+CREATE TABLE `chitiet_hoadon` (
+  `MaCTHD` int(11) NOT NULL,
+  `MaHD` varchar(10) NOT NULL,
+  `MaSach` varchar(10) NOT NULL,
+  `SoLuong` int(11) NOT NULL,
+  `GiaBan` decimal(20,2) NOT NULL,
+  `ThanhTien` decimal(20,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `chitiet_hoadon`
+--
+
+INSERT INTO `chitiet_hoadon` (`MaCTHD`, `MaHD`, `MaSach`, `SoLuong`, `GiaBan`, `ThanhTien`) VALUES
+(1, 'HD001', 'SACH001', 1, 90000.00, 90000.00),
+(2, 'HD001', 'SACH002', 1, 180000.00, 180000.00),
+(3, 'HD002', 'SACH001', 1, 90000.00, 90000.00),
+(4, 'HD002', 'SACH002', 1, 180000.00, 180000.00),
+(5, 'HD003', 'SACH001', 1, 90000.00, 90000.00),
+(6, 'HD003', 'SACH002', 1, 180000.00, 180000.00),
+(7, 'HD004', 'SACH001', 50, 99000.00, 4950000.00);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `chitiet_phieunhap`
 --
 
@@ -133,6 +161,20 @@ CREATE TABLE `chitiet_phieunhap` (
   `DonGiaNhap` decimal(12,2) NOT NULL,
   `ThanhTien` decimal(12,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chitiet_phieunhap`
+--
+
+INSERT INTO `chitiet_phieunhap` (`MaCTPN`, `MaPN`, `MaSach`, `SoLuong`, `DonGiaNhap`, `ThanhTien`) VALUES
+(1, 'PN001', 'SACH001', 150, 50.00, 7500000.00),
+(2, 'PN001', 'SACH002', 200, 49000.00, 9800000.00),
+(6, 'PN002', 'SACH001', 150, 88000.00, 13200000.00),
+(7, 'PN002', 'SACH002', 150, 120000.00, 18000000.00),
+(8, 'PN003', 'SACH003', 200, 80000.00, 16000000.00),
+(9, 'PN004', 'SACH003', 200, 0.00, 0.00),
+(10, 'PN004', 'SACH004', 200, 50000.00, 10000000.00),
+(11, 'PN005', 'SACH001', 52, 80000.00, 4160000.00);
 
 -- --------------------------------------------------------
 
@@ -162,6 +204,31 @@ INSERT INTO `danhmucsach` (`MaDMS`, `TenDanhMuc`) VALUES
 ('DM010', 'Thiếu nhi'),
 ('DM011', 'Phát triển bản thân'),
 ('DM012', 'Công nghệ - Kỹ thuật');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hoadon`
+--
+
+CREATE TABLE `hoadon` (
+  `MaHD` varchar(10) NOT NULL,
+  `MaKH` varchar(10) NOT NULL,
+  `NgayLap` date NOT NULL DEFAULT curdate(),
+  `TongTien` decimal(20,2) NOT NULL,
+  `TienTra` decimal(20,2) NOT NULL,
+  `TienNo` decimal(20,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `hoadon`
+--
+
+INSERT INTO `hoadon` (`MaHD`, `MaKH`, `NgayLap`, `TongTien`, `TienTra`, `TienNo`) VALUES
+('HD001', 'KH001', '2025-05-26', 350000.00, 250000.00, 50000.00),
+('HD002', 'KH001', '2025-05-27', 270000.00, 200000.00, 70000.00),
+('HD003', 'KH001', '2025-05-29', 270000.00, 200000.00, 70000.00),
+('HD004', 'KH001', '2025-06-16', 4950000.00, 4950000.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -279,6 +346,38 @@ CREATE TABLE `phieunhap` (
   `NgayNhap` date NOT NULL,
   `TongTien` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quydinh`
+--
+
+CREATE TABLE `quydinh` (
+  `MaQD` varchar(10) NOT NULL,
+  `TonKhoMax` int(11) NOT NULL,
+  `TonMinSauBan` int(11) NOT NULL,
+  `SLNhapMin` int(11) NOT NULL,
+  `TonMaxDeNhap` int(11) NOT NULL,
+  `SoCaMin` int(11) NOT NULL,
+  `TiLeBan` float NOT NULL,
+  `NoThuongMax` decimal(20,2) NOT NULL,
+  `NoVipMax` decimal(20,2) NOT NULL,
+  `NgayTao` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `quydinh`
+--
+
+INSERT INTO `quydinh` (`MaQD`, `TonKhoMax`, `TonMinSauBan`, `SLNhapMin`, `TonMaxDeNhap`, `SoCaMin`, `TiLeBan`, `NoThuongMax`, `NoVipMax`, `NgayTao`) VALUES
+('QD001', 500, 20, 200, 300, 15, 1.05, 1000000.00, 3000000.00, '2025-06-15 00:00:00'),
+('QD002', 500, 20, 100, 300, 15, 1.05, 1000000.00, 3000000.00, '2025-06-16 09:49:33'),
+('QD003', 500, 20, 100, 300, 15, 1, 1000000.00, 3000000.00, '2025-06-16 09:49:51'),
+('QD004', 600, 50, 100, 300, 12, 1, 1000000.00, 3000000.00, '2025-06-16 09:54:22'),
+('QD005', 500, 20, 200, 300, 15, 1.05, 1000000.00, 3000000.00, '2025-06-16 09:58:09'),
+('QD006', 500, 20, 100, 300, 15, 1.05, 1000000.00, 3000000.00, '2025-06-16 09:58:16'),
+('QD007', 500, 50, 200, 250, 15, 1.5, 800000.00, 2500000.00, '2025-06-16 10:02:48');
 
 -- --------------------------------------------------------
 
@@ -440,6 +539,14 @@ ALTER TABLE `calam`
   ADD PRIMARY KEY (`MaCa`);
 
 --
+-- Indexes for table `chitiet_hoadon`
+--
+ALTER TABLE `chitiet_hoadon`
+  ADD PRIMARY KEY (`MaCTHD`),
+  ADD KEY `MaHD` (`MaHD`),
+  ADD KEY `MaSach` (`MaSach`);
+
+--
 -- Indexes for table `chitiet_phieunhap`
 --
 ALTER TABLE `chitiet_phieunhap`
@@ -452,10 +559,18 @@ ALTER TABLE `danhmucsach`
   ADD PRIMARY KEY (`MaDMS`);
 
 --
+-- Indexes for table `hoadon`
+--
+ALTER TABLE `hoadon`
+  ADD PRIMARY KEY (`MaHD`);
+
+--
 -- Indexes for table `khachhang`
 --
 ALTER TABLE `khachhang`
-  ADD PRIMARY KEY (`MaKH`);
+  ADD PRIMARY KEY (`MaKH`),
+  ADD UNIQUE KEY `SDT` (`SDT`),
+  ADD UNIQUE KEY `Email` (`Email`);
 
 --
 -- Indexes for table `khuyenmai`
@@ -482,6 +597,12 @@ ALTER TABLE `nhanvien`
 --
 ALTER TABLE `phieunhap`
   ADD PRIMARY KEY (`MaPN`);
+
+--
+-- Indexes for table `quydinh`
+--
+ALTER TABLE `quydinh`
+  ADD PRIMARY KEY (`MaQD`);
 
 --
 -- Indexes for table `sach`
@@ -512,8 +633,31 @@ ALTER TABLE `theloai`
   ADD PRIMARY KEY (`MaTL`);
 
 --
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `chitiet_hoadon`
+--
+ALTER TABLE `chitiet_hoadon`
+  MODIFY `MaCTHD` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `chitiet_phieunhap`
+--
+ALTER TABLE `chitiet_phieunhap`
+  MODIFY `MaCTPN` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `chitiet_hoadon`
+--
+ALTER TABLE `chitiet_hoadon`
+  ADD CONSTRAINT `chitiet_hoadon_ibfk_1` FOREIGN KEY (`MaHD`) REFERENCES `hoadon` (`MaHD`),
+  ADD CONSTRAINT `chitiet_hoadon_ibfk_2` FOREIGN KEY (`MaSach`) REFERENCES `sach` (`MaSach`);
 
 --
 -- Constraints for table `lichlamviec`
