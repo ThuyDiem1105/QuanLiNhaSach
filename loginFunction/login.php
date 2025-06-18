@@ -35,14 +35,7 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") 
                 $_SESSION['id'] = $id;
                 $_SESSION['role'] = $role;
 
-                // Phân quyền giữa admin với hệ thống
-                if ($_SESSION['role'] === 'Admin') {
-                    header("Location: ../admin/home.php");
-                    exit;
-                } else {
-                    header('Location: ../employee/home.php');
-                    exit;
-                }
+                header("Location: ../admin/home.php");
             } else {
                 $error_message = 'Sai mật khẩu. Vui lòng nhập lại!';
             }

@@ -1,3 +1,7 @@
+//phân quyền
+const role = document.body.dataset.role;
+console.log("ROLE: ", role);
+
 // Hàm xử lý border-bottom cho dòng cuối cùng đang hiển thị
 function fixTableBorders() {
     const rows = Array.from(document.querySelectorAll('.table tbody tr'))
@@ -74,73 +78,79 @@ function viewDeal(dealId) {
         end: endInput.value
     };
 
-    editBtn.addEventListener("click", () => {
-        const isDisabled = nameInput.disabled;
-        nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = !isDisabled;
-        if (isDisabled) {
-            editBtn.textContent = "Lưu";
-            editBtn.classList.add("save-mode");
-            isEditing = true;
-        } else {
-            // Validate
-            if (!nameInput.value || !conditionInput.value || !startInput.value || !endInput.value) {
-                alert("Vui lòng điền đầy đủ thông tin.");
-                nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = false;
+    if (role !== 'Admin') {
+        editBtn.style.display = 'none';
+    }
+
+    if(editBtn){
+        editBtn.addEventListener("click", () => {
+            const isDisabled = nameInput.disabled;
+            nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = !isDisabled;
+            if (isDisabled) {
                 editBtn.textContent = "Lưu";
                 editBtn.classList.add("save-mode");
                 isEditing = true;
-                return;
-            }
-            // Gửi AJAX cập nhật DB
-            fetch('save_deals.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    form_mode: 'edit',
-                    ma_km: id,
-                    ten_km: nameInput.value,
-                    dieu_kien_ap_dung: conditionInput.value,
-                    ngay_bat_dau: startInput.value,
-                    ngay_ket_thuc: endInput.value
-                })
-            })
-            .then(res => res.text())
-            .then(response => {
-                if (response.trim() === 'OK') {
-                    showToast('Cập nhật khuyến mãi thành công!');
-                    // Cập nhật lại bảng
-                    row.children[2].textContent = nameInput.value;
-                    row.children[3].textContent = [formatDateForDisplay(startInput.value), formatDateForDisplay(endInput.value)].join(' - ');
-                    row.setAttribute('data-condition', conditionInput.value);
-                    nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = true;
-                    editBtn.textContent = "Sửa";
-                    editBtn.classList.remove("save-mode");
-                    isEditing = false;
-                    originalData = {
-                        name: nameInput.value,
-                        condition: conditionInput.value,
-                        start: startInput.value,
-                        end: endInput.value
-                    };
-                    renderTable();
-                    overlay.remove();
-                } else {
-                    alert('Lỗi khi cập nhật khuyến mãi: ' + response);
+            } else {
+                // Validate
+                if (!nameInput.value || !conditionInput.value || !startInput.value || !endInput.value) {
+                    alert("Vui lòng điền đầy đủ thông tin.");
                     nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = false;
                     editBtn.textContent = "Lưu";
                     editBtn.classList.add("save-mode");
                     isEditing = true;
+                    return;
                 }
-            })
-            .catch(() => {
-                alert('Lỗi kết nối máy chủ!');
-                nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = false;
-                editBtn.textContent = "Lưu";
-                editBtn.classList.add("save-mode");
-                isEditing = true;
-            });
-        }
-    });
+                // Gửi AJAX cập nhật DB
+                fetch('save_deals.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        form_mode: 'edit',
+                        ma_km: id,
+                        ten_km: nameInput.value,
+                        dieu_kien_ap_dung: conditionInput.value,
+                        ngay_bat_dau: startInput.value,
+                        ngay_ket_thuc: endInput.value
+                    })
+                })
+                .then(res => res.text())
+                .then(response => {
+                    if (response.trim() === 'OK') {
+                        showToast('Cập nhật khuyến mãi thành công!');
+                        // Cập nhật lại bảng
+                        row.children[2].textContent = nameInput.value;
+                        row.children[3].textContent = [formatDateForDisplay(startInput.value), formatDateForDisplay(endInput.value)].join(' - ');
+                        row.setAttribute('data-condition', conditionInput.value);
+                        nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = true;
+                        editBtn.textContent = "Sửa";
+                        editBtn.classList.remove("save-mode");
+                        isEditing = false;
+                        originalData = {
+                            name: nameInput.value,
+                            condition: conditionInput.value,
+                            start: startInput.value,
+                            end: endInput.value
+                        };
+                        renderTable();
+                        overlay.remove();
+                    } else {
+                        alert('Lỗi khi cập nhật khuyến mãi: ' + response);
+                        nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = false;
+                        editBtn.textContent = "Lưu";
+                        editBtn.classList.add("save-mode");
+                        isEditing = true;
+                    }
+                })
+                .catch(() => {
+                    alert('Lỗi kết nối máy chủ!');
+                    nameInput.disabled = conditionInput.disabled = startInput.disabled = endInput.disabled = false;
+                    editBtn.textContent = "Lưu";
+                    editBtn.classList.add("save-mode");
+                    isEditing = true;
+                });
+            }
+        });
+    }
 
     overlay.querySelector(".cancel-btn").addEventListener("click", () => {
         const currentData = {
@@ -171,7 +181,6 @@ function formatDateForDisplay(dateStr) {
     return `${d}/${m}/${y}`;
 }
 
-
 function deleteDeal(button) {
     const row = button.closest("tr");
     const id = row.children[1].textContent;
@@ -194,7 +203,6 @@ function deleteDeal(button) {
         .catch(() => alert('Lỗi kết nối máy chủ!'));
     }
 }
-
 
 function createNewDeal() {
     const form = document.createElement("div");

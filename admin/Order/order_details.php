@@ -3,7 +3,7 @@ include __DIR__ . '/../../connect.php';
 $maHD = $_GET['ma_hd'];
 
 //lấy thông tin phiếu nhập có mã phiếu được chọn
-$stmt = $mysqli->prepare("SELECT hd.MaHD, hd.MaKH, hd.NgayLap, hd.TienTra, hd.TienNo, hd.TongTien, kh.TenKH FROM hoadon hd JOIN khachhang kh ON hd.MaKH = kh.MaKH WHERE hd.MaHD = ?");
+$stmt = $mysqli->prepare("SELECT hd.MaHD, hd.MaKH, hd.NgayLap, hd.TienTra, hd.TienNo, hd.TongTien, kh.HoTen FROM hoadon hd JOIN khachhang kh ON hd.MaKH = kh.MaKH WHERE hd.MaHD = ?");
 $stmt->bind_param("s", $maHD);
 $stmt->execute();
 $order = $stmt->get_result()->fetch_assoc();

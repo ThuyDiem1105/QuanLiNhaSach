@@ -301,6 +301,7 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
         let editingAccountIndex = -1;
         let chucVuChoices, luongChoices, quyenChoices;
         let isEditing = false;
+        let hasSaved = false;
         const latestRule = <?= json_encode($latestRule) ?>;
 
         window.addEventListener("DOMContentLoaded", () => {
@@ -363,6 +364,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
 
         // Button Sửa nhân viên
         function enableEditingEmployee() {
+            isEditing = true;
+
             const form = document.forms['employeeForm'];
             for (let input of form.querySelectorAll("input")) {
                 if (input.name !== "ma_nv") input.readOnly = false;
@@ -498,6 +501,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
 
         //Button Lưu nhân viên
         function saveEmployee() {
+            hasSaved = true;
+
             const form = document.forms['employeeForm'];
             const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
 
@@ -713,7 +718,11 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
         }
 
         function closeForm(formID) {
+            if(isEditing && !hasSaved){
+                if (!confirm("Bạn có muốn thoát khi chưa lưu không?")) return;
+            }
             document.getElementById(formID).classList.remove("show");
+            isEditing = hasSaved = false;
         }
 
         document.getElementById("employeeFormOverlay").addEventListener("click", e => {
@@ -773,6 +782,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
 
         // Button Sửa tài khoản
         function enableEditingAccount() {
+            isEditing = true;
+
             const form = document.forms['accountForm'];
             for (let input of form.querySelectorAll("input")) {
                 if (input.name !== "tk_ma_nv" && input.name !== "matkhau" && input.name !== "xacnhan_mk") input.readOnly = false;
@@ -860,6 +871,8 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
 
         //Button Lưu tài khoản
         function saveAccount() {
+            hasSaved = true;
+
             const form = document.forms['accountForm'];
             const table = document.getElementById("accountTable").getElementsByTagName("tbody")[0];
 

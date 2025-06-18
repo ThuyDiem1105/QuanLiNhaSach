@@ -2,9 +2,13 @@
 session_start();
 include __DIR__ . '/../../connect.php';
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'Admin'){     
+//nếu chưa đăng nhập thì cho quay về trang login
+if (!isset($_SESSION['loggedin'])){     
     header('Location: ../../loginFunction/login.php'); 
 }
+
+//gắn quyền xem thử đây là admin hay employee
+$role = $_SESSION['role'];
 
 $result = $mysqli->query("SELECT * FROM quydinh ORDER BY NgayTao DESC LIMIT 1");
 $latestRule = $result->fetch_assoc();
@@ -328,7 +332,10 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
         <input type="text" id="timMaPN" name="mapn" placeholder="Tìm mã phiếu...">
         <input type="date" id="timNgayNhap" name="ngaynhap" placeholder="Ngày nhập...">
       </div>
+      <!-- chỉ có Admin mới được thêm phiếu nhập -->
+      <?php if($role === 'Admin'): ?>
       <button class="add-button" onclick="createNewReceipt()">+ Thêm phiếu nhập</button>
+      <?php endif; ?>
     </div>
     <table id="receiptTable">
       <thead>

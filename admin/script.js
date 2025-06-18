@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
         dealsBtn: 'Deals/deals.php',
         reportsBtn: 'Report/report.php',
         rulesBtn: 'Rules/rules.php',
+        scheduleBtn: '../employee/schedule.php',
+        profileBtn: '../employee/profile.php'
     };
 
     links.forEach(link => {
