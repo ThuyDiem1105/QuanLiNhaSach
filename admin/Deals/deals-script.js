@@ -270,30 +270,49 @@ function createNewDeal() {
             return;
         }
 
-        const table = document.querySelector(".table tbody");
+        // Gửi AJAX lưu vào database
         const newId = generateDealId();
-        const newRow = document.createElement("tr");
-
-        // Lưu địa chỉ và email vào thuộc tính data- của tr
-        newRow.setAttribute("data-condition", condition);
-
-        newRow.innerHTML = `
-            <td></td> <!-- STT sẽ được JS cập nhật -->
-            <td>${newId}</td>
-            <td>${name}</td>
-            <td>${[start, end].map(date => date.split('-').reverse().join('/')).join(' - ')}</td>
-            <td>
-                <button class="view-btn" onclick="viewDeal('${newId}')">Xem</button>
-                <button class="delete-btn" onclick="deleteDeal(this)">Xóa</button>
-            </td>
-        `;
-
-        table.appendChild(newRow);
-        renderTable();
-        form.remove();
-
-        // Hiển thị thông báo đã lưu
-        showToast("Đã thêm thành công!");
+        fetch('save_deals.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                form_mode: 'new',
+                ma_km: newId,
+                ten_km: name,
+                dieu_kien_ap_dung: condition,
+                ngay_bat_dau: start,
+                ngay_ket_thuc: end,
+                trang_thai: 'Đang áp dụng'
+            })
+        })
+        .then(res => res.text())
+        .then(response => {
+            if (response.trim() === 'OK') {
+                // Thêm vào bảng UI
+                const table = document.querySelector(".table tbody");
+                const newRow = document.createElement("tr");
+                newRow.setAttribute("data-condition", condition);
+                newRow.innerHTML = `
+                    <td></td>
+                    <td>${newId}</td>
+                    <td>${name}</td>
+                    <td>${[start, end].map(date => date.split('-').reverse().join('/')).join(' - ')}</td>
+                    <td>
+                        <button class="view-btn" onclick="viewDeal('${newId}')">Xem</button>
+                        <button class="delete-btn" onclick="deleteDeal(this)">Xóa</button>
+                    </td>
+                `;
+                table.appendChild(newRow);
+                renderTable();
+                form.remove();
+                showToast("Đã thêm thành công!");
+            } else if (response.trim() === 'deal_exists') {
+                alert('Mã khuyến mãi đã tồn tại!');
+            } else {
+                alert('Lỗi khi thêm khuyến mãi: ' + response);
+            }
+        })
+        .catch(() => alert('Lỗi kết nối máy chủ!'));
     });
 }
 

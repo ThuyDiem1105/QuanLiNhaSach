@@ -35,7 +35,7 @@ if ($formMode === "new") {
 
     // Thêm khuyến mãi mới
     $stmt = $mysqli->prepare("INSERT INTO khuyenmai (MaKM, TenKM, NgayBatDau, NgayKetThuc, DieuKienApDung) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param('ssssss', $maKM, $TenKM, $NgayBatDau, $NgayKetThuc, $DieuKienApDung, $TrangThai);
+    $stmt->bind_param('sssss', $maKM, $TenKM, $NgayBatDau, $NgayKetThuc, $DieuKienApDung);
     if ($stmt->execute()) {
         echo "OK"; // Thêm thành công
     } else {
