@@ -1,9 +1,11 @@
 <?php
 session_start();
 include __DIR__ . '/../../connect.php';
-if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'Admin'){     
+if (!isset($_SESSION['loggedin'])){     
     header('Location: ../../loginFunction/login.php'); 
 }
+//phân quyền
+$role = $_SESSION['role'];
 
 $danhMucArr = [];
 $result = $mysqli->query("SELECT MaKM, TenKM FROM khuyenmai");
@@ -70,9 +72,12 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
             font-size: 14px;
         }
     </style>
+    <!-- <script>
+        window.PHP_DATA = { message: "<?php echo $role; ?>" };
+    </script> -->
     <script src="deals-script.js" defer></script>
 </head>
-<body>
+<body data-role="<?php echo htmlspecialchars($role); ?>">
     <div class="main-content">
         <div class="toolbar">
             <div class="toolbar-row">
@@ -87,10 +92,12 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
                         <input type="date" id="date-to" class="date-to" placeholder="Đến ngày">
                     </div>
                 </div>
+                <?php if($role === 'Admin'): ?>
                 <button class="add-button" onclick="createNewDeal()">
                     <img src="../../assets/plus.png" class="icon-add" alt="Add Icon" /> 
                     Thêm khuyến mãi
                 </button>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -151,7 +158,9 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
             <td><?= $ngayBatDau ?> - <?= $ngayKetThuc ?></td>
             <td class="action-buttons">
                 <button class="view-btn" onclick="viewDeal('<?= $row['MaKM'] ?>')">Xem</button>
-                <button class="delete-btn" onclick="deleteDeal('<?= $row['MaKM'] ?>')">Xóa</button>
+                <?php if($role === 'Admin'): ?>
+                <button class="delete-btn" onclick="deleteDeal(this)">Xóa</button>
+                <?php endif; ?>
             </td>
             </tr>
             <?php endwhile; ?>

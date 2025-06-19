@@ -3,9 +3,11 @@ session_start();
 include __DIR__ . '/../../connect.php';
 
 //kiểm tra xem đã đăng nhập chưa, nếu chưa thì quay về trang đăng nhập
-if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'Admin'){     
+if (!isset($_SESSION['loggedin'])){     
     header('Location: ../../loginFunction/login.php'); 
 }
+//phân quyền admin hay employee
+$role = $_SESSION['role'];
 
 // Đọc danh mục sách
 $danhMucArr = [];
@@ -57,10 +59,12 @@ $result = $mysqli->query("SELECT * FROM sach");
                         <?php endforeach; ?>
                     </select>
                 </div>
+                <?php if($role === 'Admin'): ?>
                 <button class="add-button" onclick="createNewBook()">
                     <img src="../../assets/plus.png" class="icon-add" alt="Add Icon" /> 
                     Thêm sách mới
                 </button>
+                <?php endif; ?>
             </div>
         </div>
         <div class="sort-pagination-bar">
@@ -153,7 +157,9 @@ $result = $mysqli->query("SELECT * FROM sach");
                         '<?= $row['SoLuongTon'] ?>',
                         '<?= $row['GiaBan'] ?>'
                         )">Xem</button>
+                        <?php if($role === 'Admin'): ?>
                         <button class="delete-btn" onclick="deleteBook('<?= $row['MaSach'] ?>')">Xóa</button>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endwhile; ?>
@@ -211,8 +217,10 @@ $result = $mysqli->query("SELECT * FROM sach");
                 <span class="error" id="error_giaban"></span>
                 
                 <div class="form-buttons">
+                <?php if($role === 'Admin'): ?>
                 <button type="submit" class="btn-save" onclick="saveBook()" style="display: none;">Lưu</button>
                 <button type="button" class="btn-edit" onclick="enableEditing()">Sửa</button>
+                <?php endif; ?>
                 <button type="button" class="btn-cancel" onclick="closeForm()">Đóng</button>
                 </div>
             </form>
@@ -223,6 +231,8 @@ $result = $mysqli->query("SELECT * FROM sach");
     <script>
         let editingIndex = -1;
         let danhmucChoices, theloaiChoices;
+        let isEditing = false;
+        let hasSaved = false;
 
         // Khởi tạo danh sách các danh mục và thể loại
         window.addEventListener("DOMContentLoaded", () => {
@@ -277,6 +287,8 @@ $result = $mysqli->query("SELECT * FROM sach");
 
         // Button Sửa
         function enableEditing() {
+            isEditing = true;
+
             const form = document.forms['bookForm'];
             document.getElementById("form_mode").value = "edit";
 
@@ -357,6 +369,8 @@ $result = $mysqli->query("SELECT * FROM sach");
 
         //Button Lưu sách
         function saveBook() {
+            hasSaved = true;
+
             const form = document.forms['bookForm'];
             const table = document.getElementById("bookTable").getElementsByTagName("tbody")[0];
             if(!checkValidFormValues(form)) return;
@@ -698,7 +712,11 @@ $result = $mysqli->query("SELECT * FROM sach");
             renderBookTable();
         }
         function closeForm() {
+            if(isEditing && !hasSaved){
+                if (!confirm("Bạn có muốn thoát khi chưa lưu không?")) return;
+            }
             document.getElementById("bookFormOverlay").classList.remove("show");
+            isEditing = hasSaved = false;
         }
 
         document.getElementById("bookFormOverlay").addEventListener("click", e => {

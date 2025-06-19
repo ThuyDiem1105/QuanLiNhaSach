@@ -2,9 +2,11 @@
 session_start();
 include __DIR__ . '/../../connect.php';
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'Admin'){     
+if (!isset($_SESSION['loggedin'])){     
     header('Location: ../../loginFunction/login.php'); 
 }
+//phân quyền
+$role = $_SESSION['role'];
 
 $selectedMonthTon = isset($_GET['month_ton']) && preg_match('/^\d{4}-\d{2}$/', $_GET['month_ton']) ? $_GET['month_ton'] : null;
 $selectedMonthCongNo = isset($_GET['month_congno']) && preg_match('/^\d{4}-\d{2}$/', $_GET['month_congno']) ? $_GET['month_congno'] : null;
