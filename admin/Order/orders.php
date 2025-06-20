@@ -429,10 +429,10 @@ $result = $mysqli->query("SELECT * FROM hoadon");
                 tien_tra: tienTra,
                 tien_no: tienNo,
                 books: maSach.map((maSach, i) => ({
-                ma_sach: maSach,
-                so_luong: soLuong[i],
-                gia_ban: giaBan[i],
-                thanh_tien: thanhTien[i]
+                    ma_sach: maSach,
+                    so_luong: soLuong[i],
+                    gia_ban: giaBan[i],
+                    thanh_tien: thanhTien[i]
                 }))
             };
 
@@ -450,14 +450,14 @@ $result = $mysqli->query("SELECT * FROM hoadon");
                 console.log("Server response:", response);
 
                 if (response.trim() === "OK") {
-                showToast("Lưu thành công!");
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
+                    showToast("Lưu thành công!");
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
                 } else if(response.trim() === "order_exists") {
-                alert("Đã tồn tại hóa đơn. Vui lòng kiểm tra lại!");
+                    alert("Đã tồn tại hóa đơn. Vui lòng kiểm tra lại!");
                 } else {
-                alert("Lỗi: " + response);
+                    alert("Lỗi: " + response);
                 }
             })
             .catch(err => {
@@ -489,23 +489,6 @@ $result = $mysqli->query("SELECT * FROM hoadon");
             //     </td>
             //   `;
             // }
-        }
-
-        function fixTableBorders() {
-            const rows = Array.from(document.querySelectorAll('.table tbody tr'))
-                .filter(row => row.style.display !== "none");
-            // Đặt lại border-bottom cho tất cả các dòng hiển thị
-            rows.forEach(row => row.querySelectorAll('td').forEach(td => td.style.borderBottom = "1px solid #0d3c6b"));
-            // Bỏ border-bottom cho dòng cuối cùng hiển thị
-            if (rows.length > 0) {
-                rows[rows.length - 1].querySelectorAll('td').forEach(td => td.style.borderBottom = "none");
-                // Hiện border-bottom cho th
-                document.querySelectorAll('.table th').forEach(th => th.style.borderBottom = "1px solid #0d3c6b");
-            }
-            else {
-                // Không có dòng nào hiển thị, ẩn border-bottom của th
-                document.querySelectorAll('.table th').forEach(th => th.style.borderBottom = "none");
-            }
         }
 
         function fixTableBorders() {
