@@ -296,7 +296,7 @@ function createNewDeal() {
                     <td></td>
                     <td>${newId}</td>
                     <td>${name}</td>
-                    <td>${[start, end].map(date => date.split('-').reverse().join('/')).join(' - ')}</td>
+                    <td>${[start, end].map(date => date.slit('-').reverse().join('/')).join(' - ')}</td>
                     <td>
                         <button class="view-btn" onclick="viewDeal('${newId}')">Xem</button>
                         <button class="delete-btn" onclick="deleteDeal(this)">Xóa</button>

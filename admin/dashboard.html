@@ -15,41 +15,38 @@
                 <div><img src="../assets/chart-line.png" class="icon-dashboard"/></div>
                 <div class="text">
                     <p>Đơn hàng hôm nay</p>
-                    <strong>1234</strong>
+                    <strong id="orders-today">1234</strong>
                 </div>  
             </div>
             <div class="card">
                 <div><img src="../assets/chart-column.png" class="icon-dashboard"/></div>
                 <div class="text">
                     <p>Số sách bán ra</p>
-                    <strong>1234</strong>
+                    <strong id="books-sold-today">1234</strong>
                 </div>
             </div>
             <div class="card">
                 <div><img src="../assets/circle-dollar-sign.png" class="icon-dashboard"/></div>
                 <div class="text">
                     <p>Doanh thu hôm nay</p>
-                    <strong>10.920.222 đ</strong>
+                    <strong id="revenue-today">10.920.222 đ</strong>
                 </div>
             </div>
             <div class="card">
                 <div><img src="../assets/users-round.png" class="icon-dashboard"/></div>
                 <div class="text">
                     <p>Tổng số khách hàng</p>
-                    <strong>1234</strong>
+                    <strong id="total-customers">1234</strong>
                 </div>
             </div>
         </div>
 
         <div class="charts-wrapper">
-            <!-- Biểu đồ 1 -->
             <div class="chart-container">
-                <canvas id="salesChart"></canvas>
+                <canvas id="chart1"></canvas>
             </div>
-
-            <!-- Biểu đồ 2 -->
             <div class="chart-container">
-                <canvas id="financeChart"></canvas>
+                <canvas id="chart2"></canvas>
             </div>
         </div>
 
@@ -60,7 +57,7 @@
                     Đơn hàng gần đây
                 </p>
             </div>
-            <table>
+            <table id="recent-orders-table">
                 <thead>
                     <tr>
                         <th>Thời gian</th>
@@ -70,27 +67,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>12:05:23 18/05/2025</td>
-                        <td>INV-0123</td>
-                        <td>Nguyễn Văn A</td>
-                        <td>130.000 đ </td>
-                    </tr>
-                    <tr>
-                        <td>11:55:49 18/05/2025</td>
-                        <td>INV-0124</td>
-                        <td>Nguyễn Thị Yến Nhi</td>
-                        <td>250.000 đ </td>
-                    </tr>
-                    <tr>
-                        <td>10:23:30 18/05/2025</td>
-                        <td>INV-0125</td>
-                        <td>Huỳnh Việt Dũng</td>
-                        <td>150.000 đ </td>
-                    </tr>
+                    <!-- Dữ liệu sẽ được JS render từ database -->
                 </tbody>
             </table>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Cập nhật số liệu thống kê
+            fetch('dashboard-stats.php')
+                .then(res => res.json())
+                .then(stats => {
+                    document.getElementById('orders-today').textContent = stats.orders_today.toLocaleString('vi-VN');
+                    document.getElementById('books-sold-today').textContent = stats.books_sold_today.toLocaleString('vi-VN');
+                    document.getElementById('revenue-today').textContent = stats.revenue_today.toLocaleString('vi-VN') + ' đ';
+                    document.getElementById('total-customers').textContent = stats.total_customers.toLocaleString('vi-VN');
+                });
+            fetch('dashboard-orders.php')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector("#recent-orders-table tbody");
+                    tbody.innerHTML = "";
+                    data.forEach(order => {
+                        // Định dạng ngày giờ
+                        let dateStr = order.NgayLap;
+                        if (dateStr && dateStr.length >= 10) {
+                            const d = new Date(dateStr);
+                            if (!isNaN(d)) {
+                                dateStr = d.toLocaleTimeString('vi-VN', {hour12: false}) + ' ' + d.toLocaleDateString('vi-VN');
+                            }
+                        }
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${dateStr}</td>
+                                <td>${order.MaHD}</td>
+                                <td>${order.HoTen || ''}</td>
+                                <td>${Number(order.TongTien).toLocaleString('vi-VN')} đ</td>
+                            </tr>
+                        `;
+                    });
+                });
+        });
+        </script>
 </body>
-</html>  
+</html>
