@@ -33,9 +33,39 @@ $result = $mysqli->query("SELECT * FROM sach");
 <head>
     <meta charset="UTF-8">
     <title>Quản lý sách</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
     <link rel="stylesheet" href="../../assets/general-style.css" type="text/css">
     <link rel="stylesheet" href="../../assets/books-style.css" type="text/css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    <style>
+        .id, 
+        .table th.id, 
+        .table td.id,
+        .table th:nth-child(2),
+        .table td:nth-child(2) {
+            width: 100px;
+        }
+
+        .action-buttons, 
+        .table th.action-buttons, 
+        .table td.action-buttons,
+        .table th:last-child,
+        .table td:last-child {
+            min-width: 140px;
+        }
+
+        .stock, 
+        .table th.stock, 
+        .table td.stock {
+            max-width: 140px;
+        }
+
+        .price, 
+        .table th.price, 
+        .table td.price {
+            max-width: 120px;
+        }
+
+    </style>
 </head>
 <body>
     <div class="main-content">
@@ -116,9 +146,9 @@ $result = $mysqli->query("SELECT * FROM sach");
                     <th>Danh mục</th>
                     <th>Thể loại</th>
                     <th>Tác giả</th>
-                    <th>Số lượng tồn</th>
-                    <th>Giá bán</th>
-                    <th class="actions">Thao tác</th>
+                    <th class="stock">Số lượng tồn</th>
+                    <th class="price">Giá bán</th>
+                    <th class="action-buttons">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -133,7 +163,7 @@ $result = $mysqli->query("SELECT * FROM sach");
                 ?>
                 <tr>
                     <td><?= $stt++ ?></td>
-                    <td><?= htmlspecialchars($row['MaSach']) ?></td>
+                    <td class="id"><?= htmlspecialchars($row['MaSach']) ?></td>
                     <td><?= htmlspecialchars($row['TenSach']) ?></td>
                     <td data-madm="<?= htmlspecialchars($row['MaDMS']) ?>">
                         <?= htmlspecialchars($danhMucArr[$row['MaDMS']]) ?>
@@ -142,8 +172,8 @@ $result = $mysqli->query("SELECT * FROM sach");
                         <?= htmlspecialchars(implode(', ', $tenTheloaiArr)) ?>
                     </td>
                     <td><?= htmlspecialchars($row['TacGia']) ?></td>
-                    <td><?= htmlspecialchars($row['SoLuongTon']) ?></td>
-                    <td><?= htmlspecialchars($row['GiaBan']) ?></td>
+                    <td class="stock"><?= htmlspecialchars($row['SoLuongTon']) ?></td>
+                    <td class="price"><?= htmlspecialchars($row['GiaBan']) ?></td>
                     <td class="action-buttons">
                         <button class="view-btn" onclick="openForm(
                         '<?= $row['MaSach'] ?>',
@@ -217,11 +247,11 @@ $result = $mysqli->query("SELECT * FROM sach");
                 <span class="error" id="error_giaban"></span>
                 
                 <div class="form-buttons">
-                <?php if($role === 'Admin'): ?>
-                <button type="submit" class="btn-save" onclick="saveBook()" style="display: none;">Lưu</button>
-                <button type="button" class="btn-edit" onclick="enableEditing()">Sửa</button>
-                <?php endif; ?>
-                <button type="button" class="btn-cancel" onclick="closeForm()">Đóng</button>
+                    <?php if($role === 'Admin'): ?>
+                    <button type="submit" class="btn-save" onclick="saveBook()" style="display: none;">Lưu</button>
+                    <button type="button" class="btn-edit" onclick="enableEditing()">Sửa</button>
+                    <?php endif; ?>
+                    <button type="button" class="btn-cancel" onclick="closeForm()">Đóng</button>
                 </div>
             </form>
         </div>
@@ -272,7 +302,7 @@ $result = $mysqli->query("SELECT * FROM sach");
 
             //lấy vị trí dòng (sách) được chọn để xem
             editingIndex = Array.from(document.querySelector('#bookTable tbody').rows)
-                .findIndex(row => row.cells[0].textContent === maSach);
+                .findIndex(row => row.cells[1].textContent === maSach);
             
             // hiện tại chỉ được phép xem, không được chỉnh sửa thông tin  
             for (let input of form.querySelectorAll("input")) input.readOnly = true;
