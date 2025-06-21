@@ -31,6 +31,61 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
     <link rel="stylesheet" href="../../assets/staff-style.css" type="text/css">
     <link rel="stylesheet" href="../../assets/general-style.css" type="text/css">
+    <style>
+        .id, 
+        .table th.id, 
+        .table td.id,
+        .table th:nth-child(2),
+        .table td:nth-child(2) {
+            width: 100px;
+        }
+
+        .action-buttons, 
+        .table th.action-buttons, 
+        .table td.action-buttons,
+        .table th:last-child,
+        .table td:last-child {
+            min-width: 140px;
+        }
+
+        .position, 
+        .table th.position, 
+        .table td.position,
+        .table th:nth-child(4),
+        .table td:nth-child(4) {
+            max-width: 100px;
+        }
+
+        .email, 
+        .table th.email, 
+        .table td.email,
+        .table th:nth-child(5),
+        .table td:nth-child(5) {
+            min-width: 300px;
+        }
+
+        .table td.truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            .toolbar-row, .search-filter-group {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -79,46 +134,48 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
                 </span>
             </div>
             <!-- Bảng nhân viên -->
-            <table id="employeeTable" class="table">
-                <thead>
-                    <tr>
-                        <th class="stt">STT</th>
-                        <th class="id">Mã NV</th>
-                        <th>Họ tên</th>
-                        <th>Chức vụ</th>
-                        <th class="action-buttons">Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $stt = 1; ?>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?= $stt++ ?></td>
-                        <td class="id"><?= htmlspecialchars($row['MaNV']) ?></td>
-                        <td><?= htmlspecialchars($row['HoTen']) ?></td>
-                        <td><?= htmlspecialchars($row['ChucVu']) ?></td>
-                        <td class="action-buttons">
-                            <button class="view-btn" onclick="openEmployeeForm(
-                            '<?= $row['MaNV'] ?>',
-                            '<?= $row['HoTen'] ?>',
-                            '<?= $row['NgaySinh'] ?>',
-                            '<?= $row['SDT'] ?>',
-                            '<?= $row['NoiO'] ?>',
-                            '<?= $row['ChucVu'] ?>',
-                            '<?= $row['CaLam'] ?>',
-                            '<?= $row['Luong'] ?>'
-                            )">Xem</button>
-                            <button class="delete-btn" onclick="deleteEmployee('<?= $row['MaNV'] ?>')">Xóa</button>
-                            <button class="create-account-btn" 
-                                onclick="createNewAccount('<?= $row['MaNV'] ?>')" 
-                                <?= in_array($row['MaNV'], $accountEmployeeIds) ? 'disabled style="opacity:0.6; cursor:not-allowed;" 
-                                    title=\'Nhân viên đã có tài khoản\''  : '' ?>>Tạo tài khoản
-                            </button>                        
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table id="employeeTable" class="table">
+                    <thead>
+                        <tr>
+                            <th class="stt">STT</th>
+                            <th class="id">Mã NV</th>
+                            <th>Họ tên</th>
+                            <th>Chức vụ</th>
+                            <th class="action-buttons">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $stt = 1; ?>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= $stt++ ?></td>
+                            <td class="id"><?= htmlspecialchars($row['MaNV']) ?></td>
+                            <td class="truncate" title="<?= htmlspecialchars($row['HoTen']) ?>"><?= htmlspecialchars($row['HoTen']) ?></td>
+                            <td class="position truncate" title="<?= htmlspecialchars($row['ChucVu']) ?>"><?= htmlspecialchars($row['ChucVu']) ?></td>
+                            <td class="action-buttons">
+                                <button class="view-btn" onclick="openEmployeeForm(
+                                '<?= $row['MaNV'] ?>',
+                                '<?= $row['HoTen'] ?>',
+                                '<?= $row['NgaySinh'] ?>',
+                                '<?= $row['SDT'] ?>',
+                                '<?= $row['NoiO'] ?>',
+                                '<?= $row['ChucVu'] ?>',
+                                '<?= $row['CaLam'] ?>',
+                                '<?= $row['Luong'] ?>'
+                                )">Xem</button>
+                                <button class="delete-btn" onclick="deleteEmployee('<?= $row['MaNV'] ?>')">Xóa</button>
+                                <button class="create-account-btn" 
+                                    onclick="createNewAccount('<?= $row['MaNV'] ?>')" 
+                                    <?= in_array($row['MaNV'], $accountEmployeeIds) ? 'disabled style="opacity:0.6; cursor:not-allowed;" 
+                                        title=\'Nhân viên đã có tài khoản\''  : '' ?>>Tạo tài khoản
+                                </button>                        
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div id="accountTabContent" style="display:none;">
             <div class="toolbar">
@@ -143,40 +200,42 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
                 </span>
             </div>
             <!-- Bảng tài khoản -->
-            <table id="accountTable" class="table">
-                <thead>
-                    <tr>
-                        <th class="stt">STT</th>
-                        <th class="id">Mã NV</th>
-                        <th>Tên đăng nhập</th>
-                        <th>Email</th>
-                        <th>Quyền</th>
-                        <th class="action-buttons">Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $stt = 1; ?>
-                    <?php while ($row = $results->fetch_assoc()): ?>
-                    <tr>
-                        <td class="stt"><?= $stt++ ?></td>
-                        <td class="id"><?= htmlspecialchars($row['MaNV']) ?></td>
-                        <td><?= htmlspecialchars($row['TenDN']) ?></td>
-                        <td><?= htmlspecialchars($row['Email']) ?></td>
-                        <td><?= htmlspecialchars($row['Quyen']) ?></td>
-                        <td class="action-buttons">
-                            <button class="view-btn" onclick="openAccountForm(
-                            '<?= $row['MaNV'] ?>',
-                            '<?= $row['TenDN'] ?>',
-                            '<?= $row['Email'] ?>',
-                            '<?= $row['Quyen'] ?>',
-                            '<?= $row['MatKhau'] ?>'
-                            )">Xem</button>
-                            <button class="delete-btn" onclick="deleteAccount('<?= $row['MaNV'] ?>')">Xóa</button>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table id="accountTable" class="table">
+                    <thead>
+                        <tr>
+                            <th class="stt">STT</th>
+                            <th class="id">Mã NV</th>
+                            <th>Tên đăng nhập</th>
+                            <th class="email">Email</th>
+                            <th class="position">Quyền</th>
+                            <th class="action-buttons">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $stt = 1; ?>
+                        <?php while ($row = $results->fetch_assoc()): ?>
+                        <tr>
+                            <td class="stt"><?= $stt++ ?></td>
+                            <td class="id"><?= htmlspecialchars($row['MaNV']) ?></td>
+                            <td class="truncate" title="<?= htmlspecialchars($row['TenDN']) ?>"><?= htmlspecialchars($row['TenDN']) ?></td>
+                            <td class="email truncate" title="<?= htmlspecialchars($row['Email']) ?>"><?= htmlspecialchars($row['Email']) ?></td>
+                            <td class="position truncate" title="<?= htmlspecialchars($row['Quyen']) ?>"><?= htmlspecialchars($row['Quyen']) ?></td>
+                            <td class="action-buttons">
+                                <button class="view-btn" onclick="openAccountForm(
+                                '<?= $row['MaNV'] ?>',
+                                '<?= $row['TenDN'] ?>',
+                                '<?= $row['Email'] ?>',
+                                '<?= $row['Quyen'] ?>',
+                                '<?= $row['MatKhau'] ?>'
+                                )">Xem</button>
+                                <button class="delete-btn" onclick="deleteAccount('<?= $row['MaNV'] ?>')">Xóa</button>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="toast" id="toast"></div>
     </div>
