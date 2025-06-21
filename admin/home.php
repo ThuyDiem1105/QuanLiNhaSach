@@ -16,8 +16,11 @@ $role = $_SESSION['role'];
     <?php if($role === 'Admin'): ?>
     <title>Admin Page</title>
     <?php endif; ?>
-    <?php if($role !== 'Admin'): ?>
+    <?php if($role === 'Employee'): ?>
     <title>Employee Page</title>
+    <?php endif; ?>
+    <?php if($role === 'Manager'): ?>
+    <title>Manager Page</title>
     <?php endif; ?>
     <link rel="stylesheet" href="../assets/style.css" />
     <script src="script.js" defer></script>
@@ -55,16 +58,16 @@ $role = $_SESSION['role'];
                     <img src="../assets/deal.png" id="deal-icon" class="icon" alt="Deal Icon" />
                     Khuyến mãi
                 </a>
-                <a href="#" id="reportsBtn" class="sidebar-link">
-                    <img src="../assets/report.png" id="report-icon" class="icon" alt="Report Icon" />
-                    Báo cáo
-                </a>
 
             <!-- quyền admin -->
-            <?php if ($role === 'Admin'): ?>
+            <?php if ($role !== 'Employee'): ?>
                 <a href="#" id="staffBtn" class="sidebar-link">
                     <img src="../assets/staff.png" id="staff-icon" class="icon" alt="Staff Icon" />
                     Nhân viên
+                </a>
+                <a href="#" id="reportsBtn" class="sidebar-link">
+                    <img src="../assets/report.png" id="report-icon" class="icon" alt="Report Icon" />
+                    Báo cáo
                 </a>
                 <a href="#" id="rulesBtn" class="sidebar-link">
                     <img src="../assets/rule.png" id="rule-icon" class="icon" alt="Rule Icon" />
@@ -73,7 +76,7 @@ $role = $_SESSION['role'];
             <?php endif; ?>
 
             <!-- quyền employee -->
-            <?php if ($role !== 'Admin'): ?>
+            <?php if ($role === 'Employee'): ?>
                 <a href="#" id="scheduleBtn" class="sidebar-link">
                     <img src="../assets/staff.png" id="staff-icon" class="icon" alt="Staff Icon" />
                     Lịch làm việc
