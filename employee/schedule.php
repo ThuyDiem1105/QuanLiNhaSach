@@ -21,88 +21,122 @@ $stmt->close();
     <meta charset="UTF-8">
     <title>LỊCH LÀM VIỆC</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../assets/rules-style.css">
+    <link rel="stylesheet" href="../assets/style.css" type="text/css">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #f2f6fa;
+            font-family: fontweb;
+            background-color: #f7faff;
             margin: 0;
             padding: 30px;
-            color: #2c3e50;
+            color: #495057;
         }
 
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
+            display: block;
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
             background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            padding: 35px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e9ecef;
         }
 
         h2 {
             text-align: center;
-            color: #1e8449;
+            color: #0d3c6b;
             margin-bottom: 25px;
+            font-size: 26px;
+            font-weight: 700;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
         }
 
         .profile-detail {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #34495e;
+            font-size: 17px;
+            margin-bottom: 30px;
+            color: #2a617a;
+            background-color: #e6f7ff;
+            padding: 18px 25px;
+            border-radius: 12px;
+            border: 1px solid #cce9ff;
+        }
+        
+        .profile-detail strong {
+            color: #004a7c;
         }
 
         table#shiftTable {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: none;
+            border: 1px solid #e9ecef;
         }
 
         table#shiftTable th,
         table#shiftTable td {
-            padding: 14px 10px;
-            border: 1px solid #ddd;
+            padding: 16px;
+            border: none;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        table#shiftTable tr:last-child td {
+            border-bottom: none;
         }
 
         table#shiftTable th {
-            background-color: #27ae60;
-            color: white;
+            background-color: #e6fcf5;
+            color: #0d3c6b;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        table#shiftTable td {
             font-size: 15px;
         }
 
         table#shiftTable tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #ffffff;
         }
 
         table#shiftTable tbody tr:hover {
-            background-color: #eaf3fc;
+            background-color: #f1f9ff;
         }
 
         table#shiftTable input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #27ae60;
+            transform: scale(1.4);
+            accent-color: #1c5083;
             cursor: pointer;
         }
 
         input[type="checkbox"]:checked {
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.3);
+            box-shadow: none;
         }
 
         label {
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 18px;
+            font-weight: 600;
             display: block;
-            margin-top: 20px;
-            color: #2c3e50;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            color: #0d3c6b;
         }
 
         .error {
-            color: red;
-            font-size: 14px;
-            margin-top: 10px;
+            color: #e74c3c;
+            font-size: 15px;
+            margin-top: 15px;
             display: block;
+            text-align: center;
+            background-color: #fde_DE_e;
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
 
@@ -112,7 +146,7 @@ $stmt->close();
             <h2>LỊCH LÀM VIỆC</h2>
 
             <div class="profile-detail">
-                <strong>Mức lương hiện tại (VNĐ/ca):</strong> <?= htmlspecialchars($luong) ?>
+                <strong>Mức lương hiện tại (VNĐ/giờ):</strong> <?= htmlspecialchars($luong) ?>
             </div>
 
             <label><strong>Ca làm trong tuần của bạn:</strong></label>
