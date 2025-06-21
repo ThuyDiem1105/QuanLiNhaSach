@@ -1,6 +1,6 @@
 window.onload = function () {
-    renderSalesChart();
-    renderFinanceChart();
+    renderChartFromPHP('chart1', 'dashboard-sales-chart.php', 'Top 3 sách bán chạy 7 tháng gần nhất');
+    renderChartFromPHP('chart2', 'dashboard-finance-chart.php', 'Doanh thu, hoàn tiền, chi phí 7 ngày gần nhất');
 };
 
 function getLast7Months() {
@@ -17,91 +17,62 @@ function getLast7Months() {
     return months;
 }
 
-function renderSalesChart() {
-    const labels = getLast7Months();
-    const data1 = [12, 19, 7, 5, 8, 6, 14];
-    const data2 = [5, 12, 8, 6, 10, 7, 16];
-    const data3 = [4, 7, 5, 3, 6, 4, 9];
-
-    const data = {
-        labels: labels,
-        datasets: [
-            {
-                label: 'IELTS 15',
-                data: data1,
-                backgroundColor: '#0d3c6b'
-            },
-            {
-                label: 'Tư duy nhanh và chậm',
-                data: data2,
-                backgroundColor: '#48749f'
-            },
-            {
-                label: 'Sách giáo khoa toán 9',
-                data: data3,
-                backgroundColor: '#b0c2d4'
+function renderChartFromPHP(canvasId, phpEndpoint, chartTitle) {
+    fetch(phpEndpoint)
+        .then(res => res.json())
+        .then(json => {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            if (!json || !json.labels || !json.datasets) {
+                ctx.font = '16px fontweb';
+                ctx.fillText('Không có dữ liệu', 50, 100);
+                return;
             }
-        ]
-    };
-
-    const config = {
-        type: 'bar',
-        data: data,
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        color: "#000000",
-                        font: {
-                            size: 12,
-                            family: "fontweb"
-                        },
-                    }
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: json.labels,
+                    datasets: json.datasets.map((ds, idx) => ({
+                        ...ds,
+                        backgroundColor: ['#0d3c6b', '#48749f', '#b0c2d4', '#e0e0e0'][idx % 4]
+                    }))
                 },
-                title: {
-                    display: true,
-                    text: 'Top 3 sản phẩm bán chạy',
-                    color: "#000000",
-                    font: {
-                        size: 18,
-                        family: "fontweb",
-                        weight: 'bold'
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: "#000000",
+                                font: { size: 12, family: "fontweb" },
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: chartTitle,
+                            color: "#000000",
+                            font: { size: 18, family: "fontweb", weight: 'bold' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#0f172a', font: { size: 12, family: "fontweb" } },
+                            grid: { color: '#000000' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#0f172a', font: { size: 12, family: "fontweb" } },
+                            grid: { color: '#000000' }
+                        }
                     }
                 }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#0f172a', 
-                        font: {
-                            size: 12,
-                            family: "fontweb"
-                        },     
-                    },
-                    grid: {
-                        color: '#000000'             // màu lưới trục X
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: '#0f172a',
-                        font: {
-                            size: 12,
-                            family: "fontweb"
-                        },
-                    },
-                    grid: {
-                        color: '#000000'             // màu lưới trục Y
-                    }
-                }
-            }
-        }
-    };
-    
-    new Chart(document.getElementById('salesChart'), config);
+            });
+        })
+        .catch(() => {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            ctx.font = '16px fontweb';
+            ctx.fillText('Không có dữ liệu', 50, 100);
+        });
 }
 
 // Hàm tạo danh sách 7 ngày gần nhất

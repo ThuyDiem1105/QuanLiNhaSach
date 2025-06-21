@@ -1,9 +1,9 @@
 .sort-dropdown-menu {
+    min-width: 100px;
     display: none;
     position: absolute;
     left: 0;
     top: 110%;
-    min-width: 150px;
     background: #fff;
     border: 1px solid #d0d0d0;
     border-radius: 8px;
@@ -12,26 +12,30 @@
     overflow: hidden;
 }
 
-#sortPriceBtn, #sortStockBtn {
-    min-width: 150px;
+#sortDateBtn {
+    min-width: 100px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-right: 16px;
-    padding-left: 16px;
+    padding-right: 12px;
+    padding-left: 12px;
 }
 
-#sortPriceBtn .label,
-#sortStockBtn .label {
+#sortDateBtn .label {
     flex: 1;
     text-align: left;
 }
 
-#sortPriceBtn .arrow,
-#sortStockBtn .arrow {
+#sortDateBtn .arrow {
     margin-left: 8px;
     font-size: 14px;
     flex-shrink: 0;
+}
+
+.sort-dropdown-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 /* Overlay và Form */
@@ -67,6 +71,11 @@
 .overlay.show .form-popup {
     transform: translateY(0) scale(1);
     opacity: 1;
+}
+
+@keyframes popupIn {
+    0% { transform: scale(0.95); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 .form-popup::before {
@@ -120,8 +129,7 @@
 }
 
 .btn-save,
-.btn-cancel,
-.btn-edit {
+.btn-cancel{
     padding: 10px 20px;
     border-radius: 8px;
     border: none;
@@ -138,10 +146,6 @@
     background-color: #ff6070;
     color: #ffffff;
 }
-.btn-edit {
-    background-color: #b2ffda;
-    color: #0a512f;
-}
 
 .btn-save:hover {
     transform: scale(1.1);
@@ -151,56 +155,6 @@
     transform: scale(1.1);
     filter: brightness(1.1);
 }
-.btn-edit:hover {
-    transform: scale(1.1);
-    filter: brightness(1.1);
-}
-
-.choices__item--choice.is-highlighted {
-    background-color: #84ffc6 !important; 
-    color: #0d3c6b !important;
-}
-
-.choices__inner {
-    min-height: 36px !important;
-    font-size: 14px;
-    padding: 4px 8px !important;
-    background-color: #ffffff;
-}
-
-.choices__list--dropdown .choices__item {
-    font-size: 14px;
-    padding: 6px 10px;
-}
-
-/* Style cho tag đã chọn trong Choices.js */
-.choices__list--multiple .choices__item {
-    background: #002d5b !important;      /* Màu nền xanh dương đậm */
-    color: #fff !important;              /* Màu chữ trắng */
-    border-radius: 18px !important;      /* Bo tròn */
-    padding: 4px 14px !important;        /* Padding cho tag */
-    margin: 3px 6px 3px 0 !important;    /* Khoảng cách giữa các tag */
-    font-weight: 500;
-    font-size: 14px;
-    border: none !important;
-    box-shadow: 0 2px 6px rgba(25, 118, 210, 0.08);
-    transition: background 0.2s;
-}
-
-.choices.is-disabled .choices__list--multiple .choices__item {
-    background: #f7f7f7 !important;  
-    color: #888 !important;         
-    border-radius: 18px !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.choices.is-disabled .choices__inner {
-    background-color: #f4f4f4; /* Nền xám nhạt */
-    color: #888;
-    border: 1px solid #ddd;
-    cursor: not-allowed;
-}
 
 .error {
     color: #f44336;
@@ -209,7 +163,65 @@
     display: block;
 }
 
-#bookTable {
+#receiptTable {
     table-layout: fixed;
     width: 100%;
+}
+
+#booksReceiptTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    overflow: hidden;
+}
+
+#booksReceiptTable th, #booksReceiptTable td {
+    border: 1px solid #adadad;
+    padding: 12px;
+    text-align: left;
+}
+
+#booksReceiptTable th {
+    background-color: #c8ffe5;
+    color: #0d3c6b;
+}
+
+#btnAdd {
+    background: #e8f3ff;
+    border: 1px solid #002d5b;
+    border-radius: 5px;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+    transition: background 0.2s, transform 0.2s;
+    width: 25px;
+    height: 25px;
+}
+
+#btnAdd .icon-add {
+    display: flex;
+    vertical-align: middle;
+    margin: 0;
+    padding: 3px 0px 3px 3px;
+    width: 20px;
+    height: 20px;
+}
+
+#btnAdd:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 12px;
+}
+
+.date-range-group input[type="date"] {
+    padding: 4px 8px;
+    border: 1px solid #bdbdbd;
+    border-radius: 5px;
+    font-size: 14px;
 }
