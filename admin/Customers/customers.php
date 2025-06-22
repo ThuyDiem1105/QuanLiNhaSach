@@ -24,6 +24,27 @@ if ($result) {
 }
 $result->free();
 
+// Cập nhật số tiền nợ cho từng khách hàng dựa trên hóa đơn và phiếu thu tiền
+$updateStmt = $mysqli->prepare("UPDATE khachhang SET SoTienNo = ? WHERE MaKH = ?");
+foreach ($danhMucArr as $maKH => $info) {
+    // Tổng nợ từ hóa đơn: tổng (TongTien - TienTra) của khách hàng
+    $sqlTongNo = "SELECT IFNULL(SUM(TongTien - TienTra),0) AS TongNo FROM hoadon WHERE MaKH = '$maKH'";
+    $resultNo = $mysqli->query($sqlTongNo);
+    $tongNo = ($resultNo && $row = $resultNo->fetch_assoc()) ? (float)$row['TongNo'] : 0;
+    // Tổng đã thu từ phiếu thu tiền
+    $sqlTongThu = "SELECT IFNULL(SUM(SoTienThu),0) AS TongThu FROM phieuthutien WHERE MaKH = '$maKH'";
+    $resultThu = $mysqli->query($sqlTongThu);
+    $tongThu = ($resultThu && $row = $resultThu->fetch_assoc()) ? (float)$row['TongThu'] : 0;
+    $soTienNo = $tongNo - $tongThu;
+    // Cập nhật vào database nếu khác giá trị cũ
+    if ($soTienNo != (float)$info['SoTienNo']) {
+        $updateStmt->bind_param('ds', $soTienNo, $maKH);
+        $updateStmt->execute();
+        $danhMucArr[$maKH]['SoTienNo'] = $soTienNo;
+    }
+}
+$updateStmt->close();
+
 
 $result = $mysqli->query("SELECT * FROM khachhang ORDER BY MaKH");
 ?>

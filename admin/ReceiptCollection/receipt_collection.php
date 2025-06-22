@@ -37,7 +37,7 @@ if (!isset($_SESSION['loggedin'])) {
 $collections_result = $mysqli->query(
     "SELECT pt.MaPT, pt.MaKH, kh.HoTen, pt.NgayThu, pt.SoTienThu 
      FROM phieuthutien pt
-     JOIN khachhang kh ON pt.MaKH = kh.MaKH
+     JOIN khachhang kh ON pt.MaKH COLLATE utf8mb4_unicode_ci = kh.MaKH COLLATE utf8mb4_unicode_ci
      ORDER BY pt.NgayThu DESC, pt.MaPT DESC"
 );
 

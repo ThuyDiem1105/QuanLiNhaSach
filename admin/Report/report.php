@@ -17,45 +17,117 @@ $yearTon = $selectedMonthTon ? (int)substr($selectedMonthTon, 0, 4) : (int)date(
 $monthCongNo = $selectedMonthCongNo ? (int)substr($selectedMonthCongNo, 5, 2) : (int)date('m');
 $yearCongNo = $selectedMonthCongNo ? (int)substr($selectedMonthCongNo, 0, 4) : (int)date('Y');
 
-// --- Truy vấn báo cáo kho ---
+// --- Báo cáo kho động từ bảng giao dịch ---
 $baoCaoKho = [];
 $sumTonDau = $sumPhatSinh = $sumTonCuoi = 0;
 if ($selectedMonthTon) {
-    $sqlKho = "SELECT k.MaSach, s.TenSach, k.TonDau, k.PhatSinh, k.TonCuoi 
-               FROM baocaokho k 
-               LEFT JOIN sach s ON k.MaSach COLLATE utf8mb4_unicode_ci = s.MaSach COLLATE utf8mb4_unicode_ci 
-               WHERE k.Thang = $monthTon AND k.Nam = $yearTon 
-               ORDER BY k.MaSach";
-    $resultKho = $mysqli->query($sqlKho);
-    if ($resultKho) {
-        while ($row = $resultKho->fetch_assoc()) {
-            $baoCaoKho[] = $row;
-            $sumTonDau += $row['TonDau'];
-            $sumPhatSinh += $row['PhatSinh'];
-            $sumTonCuoi += $row['TonCuoi'];
+    // Lấy tất cả sách
+    $sqlBooks = "SELECT MaSach, TenSach FROM sach ORDER BY MaSach";
+    $resultBooks = $mysqli->query($sqlBooks);
+    if ($resultBooks) {
+        while ($book = $resultBooks->fetch_assoc()) {
+            $maSach = $mysqli->real_escape_string($book['MaSach']);
+            // Tồn đầu: tổng nhập - tổng bán trước tháng được chọn
+            $sqlTonDau = "SELECT 
+                (SELECT IFNULL(SUM(SoLuong),0) FROM chitiet_phieunhap pn 
+                    JOIN phieunhap p ON pn.MaPN = p.MaPN 
+                    WHERE pn.MaSach = '$maSach' 
+                    AND (YEAR(p.NgayNhap) < $yearTon OR (YEAR(p.NgayNhap) = $yearTon AND MONTH(p.NgayNhap) < $monthTon)))
+                -
+                (SELECT IFNULL(SUM(ct.SoLuong),0) FROM chitiet_hoadon ct 
+                    JOIN hoadon h ON ct.MaHD = h.MaHD 
+                    WHERE ct.MaSach = '$maSach' 
+                    AND (YEAR(h.NgayLap) < $yearTon OR (YEAR(h.NgayLap) = $yearTon AND MONTH(h.NgayLap) < $monthTon)))
+                AS TonDau";
+            $resultTonDau = $mysqli->query($sqlTonDau);
+            $tonDau = 0;
+            if ($resultTonDau && $row = $resultTonDau->fetch_assoc()) {
+                $tonDau = (int)$row['TonDau'];
+            }
+            // Phát sinh: nhập - bán trong tháng
+            $sqlNhap = "SELECT IFNULL(SUM(pn.SoLuong),0) AS Nhap 
+                FROM chitiet_phieunhap pn 
+                JOIN phieunhap p ON pn.MaPN = p.MaPN 
+                WHERE pn.MaSach = '$maSach' 
+                AND YEAR(p.NgayNhap) = $yearTon AND MONTH(p.NgayNhap) = $monthTon";
+            $resultNhap = $mysqli->query($sqlNhap);
+            $nhap = ($resultNhap && $row = $resultNhap->fetch_assoc()) ? (int)$row['Nhap'] : 0;
+            $sqlBan = "SELECT IFNULL(SUM(ct.SoLuong),0) AS Ban 
+                FROM chitiet_hoadon ct 
+                JOIN hoadon h ON ct.MaHD = h.MaHD 
+                WHERE ct.MaSach = '$maSach' 
+                AND YEAR(h.NgayLap) = $yearTon AND MONTH(h.NgayLap) = $monthTon";
+            $resultBan = $mysqli->query($sqlBan);
+            $ban = ($resultBan && $row = $resultBan->fetch_assoc()) ? (int)$row['Ban'] : 0;
+            $phatSinh = $nhap - $ban;
+            $tonCuoi = $tonDau + $phatSinh;
+            $baoCaoKho[] = [
+                'MaSach' => $book['MaSach'],
+                'TenSach' => $book['TenSach'],
+                'TonDau' => $tonDau,
+                'PhatSinh' => $phatSinh,
+                'TonCuoi' => $tonCuoi
+            ];
+            $sumTonDau += $tonDau;
+            $sumPhatSinh += $phatSinh;
+            $sumTonCuoi += $tonCuoi;
         }
-        $resultKho->free();
+        $resultBooks->free();
     }
 }
 
-// --- Truy vấn báo cáo công nợ ---
+// --- Báo cáo công nợ động từ bảng giao dịch ---
 $baoCaoCongNo = [];
 $sumNoDau = $sumNoPhatSinh = $sumNoCuoi = 0;
 if ($selectedMonthCongNo) {
-    $sqlCongNo = "SELECT c.MaKH, k.HoTen, c.NoDau, c.PhatSinh, c.NoCuoi 
-                  FROM baocaocongno c 
-                  LEFT JOIN khachhang k ON c.MaKH COLLATE utf8mb4_unicode_ci = k.MaKH COLLATE utf8mb4_unicode_ci 
-                  WHERE c.Thang = $monthCongNo AND c.Nam = $yearCongNo 
-                  ORDER BY c.MaKH";
-    $resultCongNo = $mysqli->query($sqlCongNo);
-    if ($resultCongNo) {
-        while ($row = $resultCongNo->fetch_assoc()) {
-            $baoCaoCongNo[] = $row;
-            $sumNoDau += $row['NoDau'];
-            $sumNoPhatSinh += $row['PhatSinh'];
-            $sumNoCuoi += $row['NoCuoi'];
+    // Lấy tất cả khách hàng
+    $sqlKH = "SELECT MaKH, HoTen FROM khachhang ORDER BY MaKH";
+    $resultKH = $mysqli->query($sqlKH);
+    if ($resultKH) {
+        while ($kh = $resultKH->fetch_assoc()) {
+            $maKH = $mysqli->real_escape_string($kh['MaKH']);
+            // Nợ đầu: tổng tiền hóa đơn - tổng thu trước tháng được chọn
+            $sqlNoDau = "SELECT 
+                (SELECT IFNULL(SUM(h.TongTien),0) FROM hoadon h 
+                    WHERE h.MaKH = '$maKH' 
+                    AND (YEAR(h.NgayLap) < $yearCongNo OR (YEAR(h.NgayLap) = $yearCongNo && MONTH(h.NgayLap) < $monthCongNo)))
+                -
+                (SELECT IFNULL(SUM(pt.SoTienThu),0) FROM phieuthutien pt 
+                    WHERE pt.MaKH = '$maKH' 
+                    AND (YEAR(pt.NgayThu) < $yearCongNo OR (YEAR(pt.NgayThu) = $yearCongNo && MONTH(pt.NgayThu) < $monthCongNo)))
+                AS NoDau";
+            $resultNoDau = $mysqli->query($sqlNoDau);
+            $noDau = 0;
+            if ($resultNoDau && $row = $resultNoDau->fetch_assoc()) {
+                $noDau = (int)$row['NoDau'];
+            }
+            // Phát sinh: hóa đơn - thu trong tháng
+            $sqlPhatSinhHD = "SELECT IFNULL(SUM(h.TongTien),0) AS HoaDon 
+                FROM hoadon h 
+                WHERE h.MaKH = '$maKH' 
+                AND YEAR(h.NgayLap) = $yearCongNo AND MONTH(h.NgayLap) = $monthCongNo";
+            $resultPhatSinhHD = $mysqli->query($sqlPhatSinhHD);
+            $phatSinhHD = ($resultPhatSinhHD && $row = $resultPhatSinhHD->fetch_assoc()) ? (int)$row['HoaDon'] : 0;
+            $sqlPhatSinhThu = "SELECT IFNULL(SUM(pt.SoTienThu),0) AS Thu 
+                FROM phieuthutien pt 
+                WHERE pt.MaKH = '$maKH' 
+                AND YEAR(pt.NgayThu) = $yearCongNo AND MONTH(pt.NgayThu) = $monthCongNo";
+            $resultPhatSinhThu = $mysqli->query($sqlPhatSinhThu);
+            $phatSinhThu = ($resultPhatSinhThu && $row = $resultPhatSinhThu->fetch_assoc()) ? (int)$row['Thu'] : 0;
+            $phatSinh = $phatSinhHD - $phatSinhThu;
+            $noCuoi = $noDau + $phatSinh;
+            $baoCaoCongNo[] = [
+                'MaKH' => $kh['MaKH'],
+                'HoTen' => $kh['HoTen'],
+                'NoDau' => $noDau,
+                'PhatSinh' => $phatSinh,
+                'NoCuoi' => $noCuoi
+            ];
+            $sumNoDau += $noDau;
+            $sumNoPhatSinh += $phatSinh;
+            $sumNoCuoi += $noCuoi;
         }
-        $resultCongNo->free();
+        $resultKH->free();
     }
 }
 ?>

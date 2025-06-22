@@ -393,16 +393,40 @@ $result = $mysqli->query("SELECT * FROM hoadon");
                 total += parseFloat(input.value) || 0;
             });
             document.forms["orderForm"].tong_tien.value = total.toFixed(2);
-            updateDebt();
+            updateDebtAndSave(document.forms["orderForm"].ma_hd.value);
         }
 
         // Hàm này tự động tính tiền nợ còn thiếu
         function updateDebt(){
-            let debt = 0;
-            const tongTien = document.forms["orderForm"].tong_tien.value;
-            const tienTra = document.forms["orderForm"].tien_tra.value;
-            debt = tongTien - tienTra;
-            document.forms["orderForm"].tien_no.value = debt.toFixed(2);
+            let tongTien = parseFloat(document.forms["orderForm"].tong_tien.value) || 0;
+            let tienTra = parseFloat(document.forms["orderForm"].tien_tra.value) || 0;
+            let tienNo = tongTien - tienTra;
+            document.forms["orderForm"].tien_no.value = tienNo.toFixed(2);
+            updateDebtAndSave(document.forms["orderForm"].ma_hd.value);
+        }
+
+        // Hàm này tự động tính tiền nợ còn thiếu và cập nhật vào database
+        function updateDebtAndSave(maHD) {
+            const form = document.forms["orderForm"];
+            let tongTien = parseFloat(form.tong_tien.value) || 0;
+            let tienTra = parseFloat(form.tien_tra.value) || 0;
+            let tienNo = tongTien - tienTra;
+            form.tien_no.value = tienNo.toFixed(2);
+            // Gọi API cập nhật vào database
+            if(maHD) {
+                fetch('save_order_debt.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ma_hd: maHD, tien_no: tienNo })
+                })
+                .then(res => res.text())
+                .then(response => {
+                    if(response.trim() !== 'OK') {
+                        showToast('Cập nhật tiền nợ thất bại!');
+                    }
+                })
+                .catch(() => showToast('Lỗi khi cập nhật tiền nợ!'));
+            }
         }
 
         // Button Lưu
