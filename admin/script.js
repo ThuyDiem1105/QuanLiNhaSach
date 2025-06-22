@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     const links = document.querySelectorAll('.sidebar-link');
     const frame = document.getElementById('contentFrame');
@@ -8,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ordersBtn: 'Order/orders.php',
         booksBtn: 'Books/books.php',
         customersBtn: 'Customers/customers.php',
+        receiptCollectionBtn: 'ReceiptCollection/receipt_collection.php',
         staffBtn: 'Employee/staff.php',
         receiptsBtn: 'Receipt/receipts.php',
         dealsBtn: 'Deals/deals.php',

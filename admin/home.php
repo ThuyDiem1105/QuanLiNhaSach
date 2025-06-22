@@ -38,11 +38,11 @@ $role = $_SESSION['role'];
                     <img src="../assets/dashboard.png" id="dashboard-icon" class="icon" alt="Dashboard Icon" />
                     Bảng điều khiển
                 </a>
-                <a href="orders.html" id="ordersBtn" class="sidebar-link">
+                <a href="Order/orders.php" id="ordersBtn" class="sidebar-link">
                     <img src="../assets/order.png" id="order-icon" class="icon" alt="Order Icon" />
                     Hóa đơn
                 </a>
-                <a href="Book/book.php" id="booksBtn" class="sidebar-link">
+                <a href="Books/books.php" id="booksBtn" class="sidebar-link">
                     <img src="../assets/book.png" id="book-icon" class="icon" alt="Book Icon" />
                     Sách
                 </a>
@@ -50,26 +50,30 @@ $role = $_SESSION['role'];
                     <img src="../assets/customer.png" id="customer-icon" class="icon" alt="Customer Icon" />
                     Khách hàng
                 </a>
-                <a href="Receipts/receipts.php" id="receiptsBtn" class="sidebar-link">
+                <a href="ReceiptCollection/receipt_collection.php" id="receiptCollectionBtn" class="sidebar-link">
+                    <img src="../assets/receipt_collection.png" id="receipt-collection-icon" class="icon" alt="Receipt Collection Icon" />
+                    Phiếu thu tiền
+                </a>
+                <a href="Receipt/receipts.php" id="receiptsBtn" class="sidebar-link">
                     <img src="../assets/receipt.png" id="receipt-icon" class="icon" alt="Receipt Icon" />
                     Phiếu nhập
                 </a>
-                <a href="#" id="dealsBtn" class="sidebar-link">
+                <a href="Deals/deals.php" id="dealsBtn" class="sidebar-link">
                     <img src="../assets/deal.png" id="deal-icon" class="icon" alt="Deal Icon" />
                     Khuyến mãi
                 </a>
 
             <!-- quyền admin -->
             <?php if ($role !== 'Employee'): ?>
-                <a href="#" id="staffBtn" class="sidebar-link">
+                <a href="Employee/staff.php" id="staffBtn" class="sidebar-link">
                     <img src="../assets/staff.png" id="staff-icon" class="icon" alt="Staff Icon" />
                     Nhân viên
                 </a>
-                <a href="#" id="reportsBtn" class="sidebar-link">
+                <a href="Report/report.php" id="reportsBtn" class="sidebar-link">
                     <img src="../assets/report.png" id="report-icon" class="icon" alt="Report Icon" />
                     Báo cáo
                 </a>
-                <a href="#" id="rulesBtn" class="sidebar-link">
+                <a href="Rules/rules.php" id="rulesBtn" class="sidebar-link">
                     <img src="../assets/rule.png" id="rule-icon" class="icon" alt="Rule Icon" />
                     Quy định
                 </a>
@@ -77,11 +81,11 @@ $role = $_SESSION['role'];
 
             <!-- quyền employee -->
             <?php if ($role === 'Employee'): ?>
-                <a href="#" id="scheduleBtn" class="sidebar-link">
+                <a href="../employee/schedule.php" id="scheduleBtn" class="sidebar-link">
                     <img src="../assets/staff.png" id="staff-icon" class="icon" alt="Staff Icon" />
                     Lịch làm việc
                 </a>
-                <a href="#" id="profileBtn" class="sidebar-link">
+                <a href="../employee/profile.php" id="profileBtn" class="sidebar-link">
                     <img src="../assets/rule.png" id="rule-icon" class="icon" alt="Rule Icon" />
                     Profile
                 </a>

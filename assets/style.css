@@ -84,8 +84,16 @@ aside {
     content: url('./customer1.png');
 }
 
-.sidebar-link.active #customner-icon{
+.sidebar-link.active #customer-icon{
     content: url("./customer2.png");
+}
+
+.sidebar-link:hover #receipt-collection-icon{
+    content: url('./receipt_collection1.png');
+}
+
+.sidebar-link.active #receipt-collection-icon{
+    content: url("./receipt_collection2.png");
 }
 
 .sidebar-link:hover #staff-icon{
