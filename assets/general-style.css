@@ -22,6 +22,26 @@ body, input, button, select, textarea {
     padding: 20px;
 }
 
+.title {  
+    font-size: 28px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+    color: #0d3c6b;
+    border-bottom: 2px solid #a4b8d0;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.title-icon {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+}
+
 .toolbar {
     margin-bottom: 20px;
 }
