@@ -83,7 +83,7 @@ if ($selectedMonthCongNo) {
 <body>
 <section class="report-section">
     <h2 class="title">
-        <img src="../../assets/sheet.png" class="title-icon" alt="Report Icon">
+        <img src="../../assets/sheet.png" class="title-icon">
         Báo cáo tổng hợp
     </h2>
 

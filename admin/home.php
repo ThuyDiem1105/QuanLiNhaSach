@@ -52,7 +52,7 @@ $role = $_SESSION['role'];
                 </a>
                 <a href="ReceiptCollection/receipt_collection.php" id="receiptCollectionBtn" class="sidebar-link">
                     <img src="../assets/receipt_collection.png" id="receipt-collection-icon" class="icon" alt="Receipt Collection Icon" />
-                    Phiếu thu tiền
+                    Phiếu thu
                 </a>
                 <a href="Receipt/receipts.php" id="receiptsBtn" class="sidebar-link">
                     <img src="../assets/receipt.png" id="receipt-icon" class="icon" alt="Receipt Icon" />
@@ -82,11 +82,11 @@ $role = $_SESSION['role'];
             <!-- quyền employee -->
             <?php if ($role === 'Employee'): ?>
                 <a href="../employee/schedule.php" id="scheduleBtn" class="sidebar-link">
-                    <img src="../assets/staff.png" id="staff-icon" class="icon" alt="Staff Icon" />
+                    <img src="../assets/schedule.png" id="schedule-icon" class="icon" alt="Schedule Icon" />
                     Lịch làm việc
                 </a>
                 <a href="../employee/profile.php" id="profileBtn" class="sidebar-link">
-                    <img src="../assets/rule.png" id="rule-icon" class="icon" alt="Rule Icon" />
+                    <img src="../assets/profile.png" id="profile-icon" class="icon" alt="Profile Icon" />
                     Profile
                 </a>
             <?php endif; ?>

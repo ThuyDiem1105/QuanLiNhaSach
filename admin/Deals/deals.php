@@ -79,6 +79,10 @@ $result = $mysqli->query("SELECT * FROM khuyenmai");
 </head>
 <body data-role="<?php echo htmlspecialchars($role); ?>">
     <div class="main-content">
+        <h2 class="title">
+            <img src="../../assets/sheet.png" class="title-icon">
+            Quản lý khuyến mãi
+        </h2>
         <div class="toolbar">
             <div class="toolbar-row">
                 <div class="search-filter-group">

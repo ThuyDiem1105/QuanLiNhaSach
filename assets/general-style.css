@@ -23,6 +23,7 @@ body, input, button, select, textarea {
 }
 
 .title {  
+    margin-top: 5px;
     font-size: 28px;
     font-weight: 700;
     display: flex;
@@ -43,7 +44,7 @@ body, input, button, select, textarea {
 }
 
 .toolbar {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .toolbar-row {

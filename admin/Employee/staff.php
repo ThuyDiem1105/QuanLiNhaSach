@@ -90,9 +90,13 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
 
 <body>
     <div class="main-content">
+        <h2 class="title">
+            <img src="../../assets/sheet.png" class="title-icon">
+            Quản lý nhân viên
+        </h2>
         <div class="tab-bar">
-            <button class="tab-btn active" id="tab-employee" onclick="showTab('employee')">Quản lý nhân viên</button>
-            <button class="tab-btn" id="tab-account" onclick="showTab('account')">Quản lý tài khoản</button>
+            <button class="tab-btn active" id="tab-employee" onclick="showTab('employee')">Thông tin nhân viên</button>
+            <button class="tab-btn" id="tab-account" onclick="showTab('account')">Thông tin tài khoản</button>
         </div>
         <div id="employeeTabContent">
             <div class="toolbar">

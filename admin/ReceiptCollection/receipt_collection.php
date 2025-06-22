@@ -65,11 +65,42 @@ $customerDebtsJson = json_encode(array_column($customers, 'SoTienNo', 'MaKH'));
     <title>Quản lý Phiếu Thu Tiền</title>
     <link rel="stylesheet" href="../../assets/general-style.css" type="text/css">
     <link rel="stylesheet" href="../../assets/receipt_collection-style.css" type="text/css">
+    <style>
+        .id, 
+        .table th.id, 
+        .table td.id {
+            max-width: 150px;
+        }
+
+        .action-buttons, 
+        .table th.action-buttons, 
+        .table td.action-buttons,
+        .table th:last-child,
+        .table td:last-child {
+            max-width: 100px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            .toolbar-row, .search-filter-group {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="main-content">
         <h2 class="title">
-            <img src="../../assets/sheet.png" class="title-icon" alt="Receipt Collection Icon">
+            <img src="../../assets/sheet.png" class="title-icon">
             Quản lý Phiếu thu tiền
         </h2>
         <div class="toolbar">

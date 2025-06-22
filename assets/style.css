@@ -144,6 +144,21 @@ aside {
     content: url("./logout2.png");
 }
 
+.sidebar-link:hover #schedule-icon{
+    content: url('./schedule1.png');
+}
+
+.sidebar-link.active #schedule-icon{
+    content: url("./schedule2.png");
+}
+
+.sidebar-link:hover #profile-icon{
+    content: url('./profile1.png');
+}
+.sidebar-link.active #profile-icon{
+    content: url("./profile2.png");
+}
+
 .logo {
     color: #104e8c;
     font-size: 24px;

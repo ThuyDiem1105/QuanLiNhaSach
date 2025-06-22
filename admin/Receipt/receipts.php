@@ -38,6 +38,10 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
 </head>
 <body>
     <div class="main-content">
+        <h2 class="title">
+            <img src="../../assets/sheet.png" class="title-icon">
+            Quản lý phiếu nhập
+        </h2>
         <div class="toolbar">
             <div class="toolbar-row">
                 <div class="search-filter-group">
