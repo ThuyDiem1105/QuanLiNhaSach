@@ -70,7 +70,7 @@ $customerDebtsJson = json_encode(array_column($customers, 'SoTienNo', 'MaKH'));
     <div class="main-content">
         <h2 class="title">
             <img src="../../assets/sheet.png" class="title-icon" alt="Receipt Collection Icon">
-            Quản lý Phiếu Thu Tiền
+            Quản lý Phiếu thu tiền
         </h2>
         <div class="toolbar">
             <div class="toolbar-row">
@@ -102,7 +102,7 @@ $customerDebtsJson = json_encode(array_column($customers, 'SoTienNo', 'MaKH'));
                 </div>
                 <div class="sort-tabs">
                     <button class="sort-btn active" data-sort="id_pt">Mã phiếu</button>
-                    <button class="sort-btn active" data-sort="id_kh">Mã KH</button>
+                    <button class="sort-btn" data-sort="id_kh">Mã KH</button>
                     <div class="sort-dropdown">
                         <button class="sort-btn sort-dropdown-toggle" id="sortDateBtn">
                             <span class="label">Ngày thu</span>
@@ -231,12 +231,8 @@ $customerDebtsJson = json_encode(array_column($customers, 'SoTienNo', 'MaKH'));
         }
 
         //region Tìm kiếm 
-        document.getElementById("search-input").addEventListener("input", renderCollectionTable);
-        document.getElementById("date-from").addEventListener("change", renderCollectionTable);
-        document.getElementById("date-to").addEventListener("change", renderCollectionTable);
-        
         function renderCollectionTable() {
-            const searchInput = document.getElementById("search-input");
+            const searchInput = document.getElementById("timMaPT");
             const dateFromInput = document.querySelector("#date-from");
             const dateToInput = document.querySelector("#date-to");
             const dateFrom = dateFromInput?.value;
@@ -331,6 +327,7 @@ $customerDebtsJson = json_encode(array_column($customers, 'SoTienNo', 'MaKH'));
         }
 
         document.addEventListener("DOMContentLoaded", () => {
+            // Thêm event listeners cho tìm kiếm
             document.getElementById("timMaPT").addEventListener("input", () => {
                 currentPage = 1;
                 renderCollectionTable();
@@ -408,6 +405,11 @@ $customerDebtsJson = json_encode(array_column($customers, 'SoTienNo', 'MaKH'));
             document.querySelector(".page-btn.next").addEventListener("click", () => {
                 currentPage++;
                 renderCollectionTable();
+            });
+
+            // Thêm event listener cho overlay form
+            document.getElementById("collectionFormOverlay").addEventListener("click", e => {
+                if (e.target === e.currentTarget) closeForm();
             });
 
             renderCollectionTable();
@@ -593,10 +595,6 @@ $customerDebtsJson = json_encode(array_column($customers, 'SoTienNo', 'MaKH'));
             }
             setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
         }
-
-        document.getElementById("collectionFormOverlay").addEventListener("click", e => {
-            if (e.target === e.currentTarget) closeForm();
-        });
     </script>
 </body>
 </html> 
