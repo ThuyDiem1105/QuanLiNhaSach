@@ -134,7 +134,7 @@ $stmt->close();
             margin-top: 15px;
             display: block;
             text-align: center;
-            background-color: #fde_DE_e;
+            background-color: #fdeDEe;
             padding: 10px;
             border-radius: 5px;
         }
