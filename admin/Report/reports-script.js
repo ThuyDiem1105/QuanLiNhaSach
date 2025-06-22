@@ -25,17 +25,11 @@ document.querySelectorAll('.report-tab').forEach(btn => {
             // Hiện báo cáo nếu đã chọn và nhấn "Xem báo cáo"
             if (congnoViewed) {
                 document.querySelector('.report-congno').classList.remove('hidden');
-
-
-
-        } else {
+            } else {
                 document.querySelector('.report-congno').classList.add('hidden');
-
-
-
-        }
+            }
             document.querySelector('.report-ton').classList.add('hidden');
-    }
+        }
     });
 });
 
@@ -51,46 +45,67 @@ function formatMonth(ym) {
         input.addEventListener('input', function() {
             if (this.value) {
                 this.classList.add('has-value');
-
-
             } else {
                 this.classList.remove('has-value');
-
-
             }
         });
     }
-    });
+});
 
 // Xuất Excel (demo)
 document.querySelector('.export-btn').addEventListener('click', function() {
     alert('Chức năng xuất Excel sẽ được bổ sung!');
-
-
-
-        });
-
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        var tab = this.closest('.filter-group').classList.contains('filter-congno') ? 'congno' : 'ton';
-        document.getElementById('active_tab').value = tab;
-    });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     const tabButtons = document.querySelectorAll('.report-tab');
-    const activeTabInput = document.getElementById('active_tab');
-
+    const activeTabInput = document.getElementById('active-tab-input');
+    const tonFilter = document.querySelector('.filter-ton');
+    const congNoFilter = document.querySelector('.filter-congno');
+    
     tabButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault(); // Ngăn reload
-            const type = button.getAttribute('data-type');
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Ngăn form tự động gửi khi chỉ bấm chuyển tab
+            const type = this.dataset.type;
 
-            // Cập nhật hidden input
-            if (activeTabInput) activeTabInput.value = type;
+            // Cập nhật class 'active' trên các nút tab
+            document.querySelectorAll('.report-tab').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
 
-            // Gửi lại form để giữ trạng thái
-            button.closest('form').submit();
+            // Cập nhật giá trị của trường input ẩn
+            if (activeTabInput) {
+                activeTabInput.value = type;
+            }
+
+            // Hiển thị bộ lọc tương ứng và ẩn bộ lọc còn lại
+            if (type === 'ton') {
+                tonFilter.classList.remove('hidden');
+                congNoFilter.classList.add('hidden');
+            } else {
+                tonFilter.classList.add('hidden');
+                congNoFilter.classList.remove('hidden');
+            }
+        });
+    });
+
+    // Phần code này để thêm style cho input tháng khi có giá trị (có thể giữ lại)
+    ['report-month-ton', 'report-month-congno'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', function() {
+                if (this.value) {
+                    this.classList.add('has-value');
+                } else {
+                    this.classList.remove('has-value');
+                }
+            });
+        }
+    });
+
+    // Gắn sự kiện cho cả hai nút xuất Excel
+    document.querySelectorAll('.export-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            alert('Chức năng xuất Excel sẽ được bổ sung!');
         });
     });
 });

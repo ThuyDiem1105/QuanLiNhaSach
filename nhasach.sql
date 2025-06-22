@@ -111,7 +111,7 @@ CREATE TABLE `chitiet_phieunhap` (
   `SoLuong` int(11) NOT NULL,
   `DonGiaNhap` decimal(12,2) NOT NULL,
   `ThanhTien` decimal(12,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `chitiet_phieunhap`
@@ -196,7 +196,7 @@ CREATE TABLE `khachhang` (
   `Email` varchar(50) NOT NULL,
   `Loai` enum('Thường','VIP') NOT NULL DEFAULT 'Thường',
   `SoTienNo` int(11) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `khachhang`
@@ -220,7 +220,7 @@ CREATE TABLE `khuyenmai` (
   `NgayBatDau` date DEFAULT NULL,
   `NgayKetThuc` date DEFAULT NULL,
   `DieuKienApDung` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `khuyenmai`
@@ -298,7 +298,7 @@ CREATE TABLE `phieunhap` (
   `NgayLapPhieu` date NOT NULL DEFAULT curdate(),
   `NgayNhap` date NOT NULL,
   `TongTien` float DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -330,7 +330,7 @@ CREATE TABLE `quydinh` (
   `NoThuongMax` decimal(20,2) NOT NULL,
   `NoVipMax` decimal(20,2) NOT NULL,
   `NgayTao` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `quydinh`
@@ -360,7 +360,7 @@ CREATE TABLE `rule` (
   `TiLeTinhDonGiaBan` decimal(5,2) DEFAULT NULL,
   `SoTienNoToiDaThuong` bigint(20) DEFAULT NULL,
   `SoTienNoToiDaVIP` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `rule`

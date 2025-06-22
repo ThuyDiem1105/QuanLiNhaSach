@@ -166,25 +166,23 @@ if ($selectedMonthCongNo) {
         <button class="report-tab <?php echo (isset($_GET['active_tab']) && $_GET['active_tab'] === 'congno') ? 'active' : ''; ?>" data-type="congno">Báo cáo công nợ</button>
     </div>
 
-    <!-- Form -->
-    <form method="get">
+    <!-- A single form for both filters -->
+    <form method="get" id="report-form">
+        <input type="hidden" name="active_tab" id="active-tab-input" value="<?php echo htmlspecialchars($_GET['active_tab'] ?? 'ton'); ?>">
+
         <div class="report-filter">
-            <div class="filter-group filter-ton">
+            <!-- Filter for Inventory Report -->
+            <div class="filter-group filter-ton <?php echo (!isset($_GET['active_tab']) || $_GET['active_tab'] === 'ton') ? '' : 'hidden'; ?>">
                 <label for="report-month-ton">Chọn tháng:</label>
-                <input type="month" id="report-month-ton" name="month_ton"
-                       value="<?php echo htmlspecialchars($selectedMonthTon); ?>">
+                <input type="month" id="report-month-ton" name="month_ton" value="<?php echo htmlspecialchars($selectedMonthTon); ?>">
                 <button class="filter-btn" type="submit">Xem báo cáo</button>
                 <button class="export-btn" type="button">⭳ Xuất Excel</button>
             </div>
-        </div>
-    </form>
 
-    <form method="get">
-        <div class="report-filter">
-            <div class="filter-group filter-congno" style="display:none;">
+            <!-- Filter for Debt Report -->
+            <div class="filter-group filter-congno <?php echo (isset($_GET['active_tab']) && $_GET['active_tab'] === 'congno') ? '' : 'hidden'; ?>">
                 <label for="report-month-congno">Chọn tháng:</label>
-                <input type="month" id="report-month-congno" name="month_congno"
-                       value="<?php echo htmlspecialchars($selectedMonthCongNo); ?>">
+                <input type="month" id="report-month-congno" name="month_congno" value="<?php echo htmlspecialchars($selectedMonthCongNo); ?>">
                 <button class="filter-btn" type="submit">Xem báo cáo</button>
                 <button class="export-btn" type="button">⭳ Xuất Excel</button>
             </div>
@@ -192,7 +190,12 @@ if ($selectedMonthCongNo) {
     </form>
 
     <!-- Báo cáo kho -->
-    <div class="report-content report-ton <?php echo $selectedMonthTon ? '' : 'hidden'; ?>">
+    <?php
+        $active_tab = $_GET['active_tab'] ?? 'ton';
+        $show_ton_report = ($active_tab === 'ton' && $selectedMonthTon);
+        $show_congno_report = ($active_tab === 'congno' && $selectedMonthCongNo);
+    ?>
+    <div class="report-content report-ton <?php echo $show_ton_report ? '' : 'hidden'; ?>">
 
     <h3>Báo cáo kho tháng 
         <?php
@@ -242,7 +245,7 @@ if ($selectedMonthCongNo) {
     </div>
 
     <!-- Báo cáo công nợ -->
-    <div class="report-content report-congno <?php echo $selectedMonthCongNo ? '' : 'hidden'; ?>">
+    <div class="report-content report-congno <?php echo $show_congno_report ? '' : 'hidden'; ?>">
     <h3>Báo cáo công nợ tháng 
         <?php
             if ($selectedMonthCongNo) {
