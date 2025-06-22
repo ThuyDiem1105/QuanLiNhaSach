@@ -368,6 +368,16 @@ INSERT INTO `phieunhap` (`MaPN`, `NgayLapPhieu`, `NgayNhap`, `TongTien`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `phieuthutien`
+--
+CREATE TABLE `phieuthutien` (
+  `MaPT` varchar(10) NOT NULL,
+  `MaKH` VARCHAR(10) NOT NULL,
+  `NgayThu` DATE NOT NULL DEFAULT curdate(),
+  `SoTienThu` DECIMAL(20,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
 -- Cấu trúc bảng cho bảng `quydinh`
 --
 
@@ -603,6 +613,12 @@ ALTER TABLE `phieunhap`
   ADD PRIMARY KEY (`MaPN`);
 
 --
+-- Chỉ mục cho bảng `phieuthutien`
+--
+ALTER TABLE `phieuthutien`
+  ADD PRIMARY KEY (`MaPT`);
+
+--
 -- Chỉ mục cho bảng `quydinh`
 --
 ALTER TABLE `quydinh`
@@ -676,6 +692,12 @@ ALTER TABLE `lichlamviec`
 --
 ALTER TABLE `sach`
   ADD CONSTRAINT `sach_danhmucsach` FOREIGN KEY (`MaDMS`) REFERENCES `danhmucsach` (`MaDMS`);
+
+--
+-- Các ràng buộc cho bảng `phieuthutien`
+--
+ALTER TABLE `phieuthutien`
+  ADD CONSTRAINT `phieuthutien_ibfk_1` FOREIGN KEY (`MaKH`) REFERENCES `khachhang` (`MaKH`);
 
 --
 -- Các ràng buộc cho bảng `sach_theloai`
