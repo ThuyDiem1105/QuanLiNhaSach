@@ -1,64 +1,87 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 include __DIR__ . '/../../connect.php';
 
-$data = json_decode(file_get_contents("php://input"), true);
+// Decode the JSON payload from the request
+$payload = json_decode(file_get_contents('php://input'), true);
 
-$tile_ban = $_GET['tile_ban'];
-$maPN = $data['ma_pn'];
-$ngayLap = $data['ngay_lap'];
-$ngayNhap = $data['ngay_nhap'];
-$tongTien = $data['tong_tien'];
-$sachNhap = $data['books'];
-$markup = 1.05;
+if (!$payload) {
+    http_response_code(400);
+    echo "Lỗi: Không nhận được dữ liệu.";
+    exit;
+}
 
-error_log(print_r($sachNhap, true));
+// Extract data from the payload
+$maPN = $payload['ma_pn'];
+$ngayLap = $payload['ngay_lap'];
+$ngayNhap = $payload['ngay_nhap'];
+$tongTien = $payload['tong_tien'];
+$books = $payload['books'];
+$tiLeBan = isset($_GET['tile_ban']) ? (float)$_GET['tile_ban'] : 1.1;
+
+// Start transaction for data consistency
 $mysqli->begin_transaction();
 
 try {
-    // Kiểm tra xem đã tồn tại phiếu nhập chưa
-    $stmt = $mysqli->prepare("SELECT MaPN FROM phieunhap WHERE MaPN = ?");
-    $stmt->bind_param('s', $maPN);
-    $stmt->execute();
-    $stmt->store_result();
-    if ($stmt->num_rows() > 0){
-        echo 'receipt_exists';
-        exit;
+    // Check if the receipt already exists
+    $stmt_check = $mysqli->prepare("SELECT MaPN FROM phieunhap WHERE MaPN = ?");
+    $stmt_check->bind_param("s", $maPN);
+    $stmt_check->execute();
+    $result_check = $stmt_check->get_result();
+    $exists = $result_check->num_rows > 0;
+    $stmt_check->close();
+
+    if ($exists) {
+        // If it exists, update the main receipt record
+        $stmt_update_pn = $mysqli->prepare("UPDATE phieunhap SET NgayLapPhieu = ?, NgayNhap = ?, TongTien = ? WHERE MaPN = ?");
+        $stmt_update_pn->bind_param("ssds", $ngayLap, $ngayNhap, $tongTien, $maPN);
+        $stmt_update_pn->execute();
+        $stmt_update_pn->close();
+
+        // And delete its old details to replace them
+        $stmt_delete_ctpn = $mysqli->prepare("DELETE FROM chitiet_phieunhap WHERE MaPN = ?");
+        $stmt_delete_ctpn->bind_param("s", $maPN);
+        $stmt_delete_ctpn->execute();
+        $stmt_delete_ctpn->close();
+    } else {
+        // If it's a new receipt, insert it
+        $stmt_insert_pn = $mysqli->prepare("INSERT INTO phieunhap (MaPN, NgayLapPhieu, NgayNhap, TongTien) VALUES (?, ?, ?, ?)");
+        $stmt_insert_pn->bind_param("sssd", $maPN, $ngayLap, $ngayNhap, $tongTien);
+        $stmt_insert_pn->execute();
+        $stmt_insert_pn->close();
     }
-    $stmt->free_result();
-    $stmt->close();
 
-    // Thêm phiếu nhập
-    $stmt = $mysqli->prepare("INSERT INTO phieunhap (MaPN, NgayLapPhieu, NgayNhap, TongTien) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("sssd", $maPN, $ngayLap, $ngayNhap, $tongTien);
-    $stmt->execute();
-    $stmt->close();
+    // Prepare statements for inserting details and updating book inventory/prices
+    $stmt_insert_ctpn = $mysqli->prepare("INSERT INTO chitiet_phieunhap (MaPN, MaSach, SoLuong, DonGiaNhap, ThanhTien) VALUES (?, ?, ?, ?, ?)");
+    $stmt_update_sach = $mysqli->prepare("UPDATE sach SET SoLuongTon = SoLuongTon + ?, GiaBan = ? WHERE MaSach = ?");
 
-    // Thêm vào chi tiết phiếu nhập
-    $stmtBook = $mysqli->prepare("INSERT INTO chitiet_phieunhap (MaPN, MaSach, SoLuong, DonGiaNhap, ThanhTien) VALUES (?, ?, ?, ?, ?)");
-    foreach ($sachNhap as $book) {
-        $stmtBook->bind_param( "ssidd", $maPN, $book['ma_sach'], $book['so_luong'], $book['don_gia'], $book['thanh_tien']);
-        $stmtBook->execute();
+    foreach ($books as $book) {
+        // Insert new receipt details
+        $stmt_insert_ctpn->bind_param("ssidd", $maPN, $book['ma_sach'], $book['so_luong'], $book['don_gia'], $book['thanh_tien']);
+        $stmt_insert_ctpn->execute();
 
-        // Update số lượng tồn của sách được chọn nhập
-        $stmtUpdate = $mysqli->prepare("UPDATE sach SET SoLuongTon = SoLuongTon + ? WHERE MaSach = ?");
-        $stmtUpdate->bind_param("is", $book['so_luong'], $book['ma_sach']);
-        $stmtUpdate->execute();
-        $stmtUpdate->close();
-
-        $giaban = $book['don_gia'] * $tile_ban;
-        // Update giá bán của sách được chọn nhập
-        $stmtUpdate = $mysqli->prepare("UPDATE sach SET GiaBan = ? WHERE MaSach = ?");
-        $stmtUpdate->bind_param("is", $giaban, $book['ma_sach']);
-        $stmtUpdate->execute();
-        $stmtUpdate->close();
+        // Update book's stock quantity and selling price
+        $giaBanMoi = $book['don_gia'] * $tiLeBan;
+        $stmt_update_sach->bind_param("ids", $book['so_luong'], $giaBanMoi, $book['ma_sach']);
+        $stmt_update_sach->execute();
     }
-    $stmtBook->close();
+    
+    // Close prepared statements
+    $stmt_insert_ctpn->close();
+    $stmt_update_sach->close();
+
+    // If all queries were successful, commit the transaction
     $mysqli->commit();
     echo "OK";
 
-} catch (Exception $e) {
-  $mysqli->rollback();
-  echo "ERROR: " . $e->getMessage();
+} catch (mysqli_sql_exception $exception) {
+    // If any query fails, roll back the entire transaction
+    $mysqli->rollback();
+    http_response_code(500);
+    echo "Lỗi CSDL: " . $exception->getMessage();
+} finally {
+    $mysqli->close();
 }
-
 ?>

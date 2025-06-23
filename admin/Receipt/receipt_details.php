@@ -10,11 +10,17 @@ $receipt = $stmt->get_result()->fetch_assoc();
 
 //lấy danh sách các sách được nhập trong một phiếu nhập đó
 $receiptBooks= [];
-$res = $mysqli->query("SELECT * FROM chitiet_phieunhap WHERE MaPN = '$maPN'");
-while ($row = $res->fetch_assoc()) {
+$stmt2 = $mysqli->prepare("SELECT MaSach, SoLuong, DonGiaNhap, ThanhTien FROM chitiet_phieunhap WHERE MaPN = ?");
+$stmt2->bind_param("s", $maPN);
+$stmt2->execute();
+$result = $stmt2->get_result();
+while ($row = $result->fetch_assoc()) {
     $receiptBooks[] = $row;
 }
+$stmt2->close();
 
 header('Content-Type: application/json');
 echo json_encode(['receipt' => $receipt, 'receiptBooks' => $receiptBooks]);
+
+$stmt->close();
 ?>
