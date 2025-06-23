@@ -40,126 +40,137 @@ if ($avatarFiles && count($avatarFiles) > 0) {
     <meta charset="UTF-8">
     <title>THÔNG TIN CÁ NHÂN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../assets/rules-style.css">
+    <link rel="stylesheet" href="../assets/style.css" type="text/css">
     <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #f0f4f8;
-        color: #2c3e50;
-    }
+        body {
+            font-family: fontweb;
+            background-color: #f7faff;
+            margin: 0;
+            padding: 30px;
+            color: #495057;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
 
-    .content {
-        padding: 30px 20px;
-        background: linear-gradient(to right, #A3E4D7, #E8F8F5);
-        text-align: center;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
+        .container {
+            display: grid;
+            grid-template-columns: 280px auto;
+            align-items: center;
+            gap: 30px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            max-height: 650px;
+            overflow-y: auto;
+        }
 
-    .page-title h2 {
-        font-size: 36px;
-        margin-bottom: 5px;
-        font-weight: 600;
-    }
+        .profile-header {
+            text-align: center;
+        }
 
-    .page-title p {
-        font-size: 16px;
-        color: #555;
-    }
+        .avatar-image {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 4px solid #eef7ff;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
 
-    .block {
-        max-width: 700px;
-        margin: 30px auto;
-        background-color: #fff;
-        border-radius: 10px;
-        padding: 30px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    }
+        .user-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0d3c6b;
+            margin: 0 0 5px 0;
+        }
 
-    .profile-detail {
-        padding: 12px 0;
-        border-bottom: 1px solid #e0e0e0;
-        font-size: 18px;
-    }
+        .user-position {
+            font-size: 18px;
+            color: #1c5083;
+            margin: 0;
+            font-weight: 500;
+        }
 
-    .profile-detail:last-child {
-        border-bottom: none;
-    }
+        .profile-details-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            text-align: left;
+        }
 
-    .profile-detail strong {
-        color: #34495e;
-        display: inline-block;
-        width: 160px;
-    }
+        .detail-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            flex: 1 1 220px;
+        }
 
-    @media (max-width: 600px) {
-        .profile-detail {
+        .detail-item.full-width {
+            flex-basis: 100%;
+        }
+
+        .detail-item strong {
+            display: block;
+            color: #0d3c6b;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .detail-item span {
             font-size: 16px;
+            color: #34495e;
         }
-        .profile-detail strong {
-            width: 120px;
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+                grid-template-columns: 1fr;
+                gap: 30px;
+                align-items: stretch;
+            }
         }
-    }
-    .avatar-container {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 25px;
-    }
-
-    .avatar-image {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        object-fit: cover;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        transition: transform 0.3s ease;
-    }
-
-    .avatar-image:hover {
-        transform: scale(1.05);
-    }
-
     </style>
 
 </head>
 <body>
-    <div class="content">
-        <div class="avatar-container">
-            <img src="<?= htmlspecialchars($avatar) ?>" alt="Avatar ngẫu nhiên" class="avatar-image">
+    <div class="container">
+        <div class="profile-header">
+            <img src="<?= htmlspecialchars($avatar) ?>" alt="Avatar" class="avatar-image">
+            <h2 class="user-name"><?= htmlspecialchars($name) ?></h2>
+            <p class="user-position"><?= htmlspecialchars($position) ?></p>
         </div>
 
-        <div class="page-title">
-            <div class="wrap">
-            <p>Đây là thông tin cá nhân chi tiết của bạn.</p>
+        <div class="profile-details-grid">
+            <div class="detail-item">
+                <strong>Mã nhân viên:</strong>
+                <span><?= htmlspecialchars($id) ?></span>
             </div>
-        </div>
-    </div>
-
-    <div class="block">
-        <div class="profile-detail">
-            <strong>Mã nhân viên: </strong><?=htmlspecialchars($id)?>
-        </div>
-        <div class="profile-detail">
-            <strong>Họ tên: </strong><?=htmlspecialchars($name)?>
-        </div>            
-        <div class="profile-detail">
-            <strong>Chức vụ: </strong><?=htmlspecialchars($position)?>
-        </div>
-        <div class="profile-detail">
-            <strong>Ngày sinh: </strong><?=htmlspecialchars($dob)?>
-        </div>
-        <div class="profile-detail">
-            <strong>Số điện thoại: </strong><?=htmlspecialchars($phone)?>
-        </div>
-        <div class="profile-detail">
-            <strong>Quê quán: </strong><?=htmlspecialchars($address)?>
-        </div>
-        <div class="profile-detail">
-            <strong>Tên tài khoản: </strong><?=htmlspecialchars($username)?>
-        </div>
-        <div class="profile-detail">
-            <strong>Địa chỉ email: </strong><?=htmlspecialchars($email)?>
+            <div class="detail-item">
+                <strong>Ngày sinh:</strong>
+                <span><?= htmlspecialchars($dob) ?></span>
+            </div>
+            <div class="detail-item">
+                <strong>Số điện thoại:</strong>
+                <span><?= htmlspecialchars($phone) ?></span>
+            </div>
+            <div class="detail-item">
+                <strong>Quê quán:</strong>
+                <span><?= htmlspecialchars($address) ?></span>
+            </div>
+            <div class="detail-item full-width">
+                <strong>Tên tài khoản:</strong>
+                <span><?= htmlspecialchars($username) ?></span>
+            </div>
+            <div class="detail-item full-width">
+                <strong>Địa chỉ email:</strong>
+                <span><?= htmlspecialchars($email) ?></span>
+            </div>
         </div>
     </div>
 </body>
