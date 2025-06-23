@@ -193,7 +193,7 @@ if ($selectedMonthCongNo) {
                 <label for="report-month-ton">Chọn tháng:</label>
                 <input type="month" id="report-month-ton" name="month_ton" value="<?php echo htmlspecialchars($selectedMonthTon); ?>">
                 <button class="filter-btn" type="submit">Xem báo cáo</button>
-                <button class="export-btn" type="button">⭳ Xuất Excel</button>
+                <a href="#" id="export-ton-btn" class="export-btn" role="button">⭳ Xuất Excel</a>
             </div>
 
             <!-- Filter for Debt Report -->
@@ -201,7 +201,7 @@ if ($selectedMonthCongNo) {
                 <label for="report-month-congno">Chọn tháng:</label>
                 <input type="month" id="report-month-congno" name="month_congno" value="<?php echo htmlspecialchars($selectedMonthCongNo); ?>">
                 <button class="filter-btn" type="submit">Xem báo cáo</button>
-                <button class="export-btn" type="button">⭳ Xuất Excel</button>
+                <a href="#" id="export-congno-btn" class="export-btn" role="button">⭳ Xuất Excel</a>
             </div>
         </div>
     </form>
