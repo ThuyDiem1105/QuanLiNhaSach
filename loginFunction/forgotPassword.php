@@ -35,7 +35,7 @@ if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") 
 
         <p style="color: #000000; font-family: Arial, sans-serif; font-size: 15px;">
           Vui lòng bấm vào 
-          <a href="https://9808-2402-800-6388-107d-8ccd-2c33-ec52-3569.ngrok-free.app/loginFunction/resetPassword.php?token=$token" 
+          <a href="https://cbe3-115-78-13-71.ngrok-free.app/loginFunction/resetPassword.php?token=$token" 
             style="color: #1a0dab; text-decoration: underline;">
             đây
           </a> 
