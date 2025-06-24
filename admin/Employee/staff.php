@@ -469,10 +469,18 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
             const form = document.forms['employeeForm'];
             form.reset();
 
-            const table = document.getElementById("employeeTable").getElementsByTagName("tbody")[0];
-            const nextId = "NV" + String(table.rows.length + 1).padStart(3, '0');
-
-            form.ma_nv.value = nextId; // Gán ID trước khi cài đặt readonly
+            // Sinh mã nhân viên mới không bị trùng
+            function getNextEmployeeId() {
+                const rows = Array.from(document.querySelectorAll("#employeeTable tbody tr"));
+                let max = 0;
+                rows.forEach(row => {
+                    const ma = row.cells[1].textContent.replace("NV", "");
+                    const num = parseInt(ma, 10);
+                    if (!isNaN(num) && num > max) max = num;
+                });
+                return "NV" + String(max + 1).padStart(3, '0');
+            }
+            form.ma_nv.value = getNextEmployeeId(); // Gán ID mới không trùng
 
             for (let input of form.querySelectorAll("input")) {
                 if (input.name !== "ma_nv") input.readOnly = false;
@@ -486,7 +494,6 @@ $results = $mysqli->query("SELECT * FROM taikhoan");
             // Reset Choices.js selected values
             chucVuChoices.setChoiceByValue(''); // Đặt lại về option đầu tiên
             luongChoices.setChoiceByValue(''); // Đặt lại về option đầu tiên
-
 
             const checkboxes = document.querySelectorAll('#shiftTable input[type=checkbox]');
             checkboxes.forEach(cb => {cb.disabled = false; cb.checked = false;});
