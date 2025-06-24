@@ -63,7 +63,7 @@ $role = $_SESSION['role'];
                     Khuyến mãi
                 </a>
 
-            <!-- quyền admin -->
+            <!-- quyền admin và manager-->
             <?php if ($role !== 'Employee'): ?>
                 <a href="Employee/staff.php" id="staffBtn" class="sidebar-link">
                     <img src="../assets/staff.png" id="staff-icon" class="icon" alt="Staff Icon" />

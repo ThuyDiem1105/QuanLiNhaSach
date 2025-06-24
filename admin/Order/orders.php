@@ -493,30 +493,6 @@ $result = $mysqli->query("SELECT * FROM hoadon");
                 alert("Có lỗi xảy ra khi gửi dữ liệu.");
             });
             closeForm();
-            // if (editingIndex >= 0) {
-            //   const row = table.rows[editingIndex];
-            //   row.cells[0].textContent = maHD;
-            //   row.cells[1].textContent = maKH;
-            //   row.cells[2].textContent = ngayLap;
-            //   row.cells[3].textContent = tongTien;
-            //   row.cells[4].textContent = daThanhToan;
-            //   row.cells[5].textContent = conLai;
-            // } else {
-            //   const row = table.insertRow();
-            //   row.classList.add("new-row");
-            //   row.innerHTML = `
-            //     <td>${maHD}</td>
-            //     <td>${maKH}</td>
-            //     <td>${ngayLap}</td>
-            //     <td>${tongTien}</td>
-            //     <td>${daThanhToan}</td>
-            //     <td>${conLai}</td>
-            //     <td class="action-buttons">
-            //       <button class="view-btn" onclick="openForm('${maHD}', '${maKH}', '${ngayLap}', '${tongTien}', '${daThanhToan}', '${conLai}')">Xem</button>
-            //       <button class="delete-btn" onclick="deleteRow(this)">Xóa</button>
-            //     </td>
-            //   `;
-            // }
         }
 
         function fixTableBorders() {
@@ -761,20 +737,3 @@ $result = $mysqli->query("SELECT * FROM hoadon");
 </body>
 </html>
 
-<!-- function enableEditing() {
-  const form = document.forms['orderForm'];
-  for (let input of form.elements) {
-    if (input.name !== "ma_hd") input.readOnly = false;
-  }
-  document.querySelector(".btn-save").style.display = "inline-block";
-  document.querySelector(".btn-edit").style.display = "none";
-} -->
-
-<!-- function deleteRow(button) {
-      if (confirm("Bạn có chắc muốn xóa hóa đơn này không?")) {
-        const row = button.closest("tr");
-        row.style.transition = "opacity 0.4s ease";
-        row.style.opacity = 0;
-        setTimeout(() => row.remove(), 400);
-      }
-    } -->

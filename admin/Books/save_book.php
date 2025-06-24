@@ -27,8 +27,8 @@ if (
 // ...phần xử lý tiếp theo...
 if ($formMode === "new"){
     // kiểm tra xem sách đã tồn tại chưa
-    $stmt = $mysqli->prepare("SELECT MaSach FROM sach WHERE MaSach = ? AND TenSach = ? AND TacGia = ?");
-    $stmt->bind_param("sss", $maSach, $tenSach, $tacGia);
+    $stmt = $mysqli->prepare("SELECT MaSach FROM sach WHERE TenSach = ? AND TacGia = ?");
+    $stmt->bind_param("ss", $tenSach, $tacGia);
     $stmt->execute();
     $stmt->store_result();
 

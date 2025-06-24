@@ -93,7 +93,7 @@ $result = $mysqli->query("SELECT * FROM sach");
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <?php if($role === 'Admin'): ?>
+                <?php if($role !== 'Employee'): ?>
                 <button class="add-button" onclick="createNewBook()">
                     <img src="../../assets/plus.png" class="icon-add" alt="Add Icon" /> 
                     Thêm sách mới
@@ -251,7 +251,7 @@ $result = $mysqli->query("SELECT * FROM sach");
                 <span class="error" id="error_giaban"></span>
                 
                 <div class="form-buttons">
-                    <?php if($role === 'Admin'): ?>
+                    <?php if($role === 'Admin' || $role === 'Manager'): ?>
                     <button type="submit" class="btn-save" onclick="saveBook()" style="display: none;">Lưu</button>
                     <button type="button" class="btn-edit" onclick="enableEditing()">Sửa</button>
                     <?php endif; ?>
@@ -394,10 +394,10 @@ $result = $mysqli->query("SELECT * FROM sach");
                 document.getElementById("error_theloai").textContent = "Vui lòng chọn ít nhất một thể loại cho sách!";
                 isValid = false;
             }
-            if (!giaBan) {
-                document.getElementById("error_giaban").textContent = "Vui lòng thêm giá bán cho sách!";
-                isValid = false;
-            }
+            // if (!giaBan) {
+            //     document.getElementById("error_giaban").textContent = "Vui lòng thêm giá bán cho sách!";
+            //     isValid = false;
+            // }
             return isValid;
         }
 
@@ -464,10 +464,15 @@ $result = $mysqli->query("SELECT * FROM sach");
             const nextId = "SACH" + String(table.rows.length + 1).padStart(3, '0');
             form.ma_sach.value = nextId;
             for (let input of form.querySelectorAll("input")) {
-                if (input.name !== "ma_sach" && input.name !== "sl_ton") input.readOnly = false;
+                if (input.name !== "ma_sach" && input.name !== "sl_ton" && input.name !== "gia_ban") input.readOnly = false;
             }
-            document.querySelector(".btn-save").style.display = "inline-block";
-            document.querySelector(".btn-edit").style.display = "none";
+
+            if(document.querySelector(".btn-save")){
+                document.querySelector(".btn-save").style.display = "inline-block";
+            }
+            if(document.querySelector(".btn-edit")){
+                document.querySelector(".btn-edit").style.display = "none";
+            }
 
             editingIndex = -1;
             danhmucChoices.enable();

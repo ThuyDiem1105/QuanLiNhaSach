@@ -55,8 +55,8 @@ $result = $mysqli->query("SELECT * FROM phieunhap");
                         <input type="date" id="date-to" class="date-to" placeholder="Đến ngày">
                     </div>
                 </div>
-                <!-- chỉ có Admin mới được thêm phiếu nhập -->
-                <?php if($role === 'Admin'): ?>
+                <!-- chỉ có Admin hoặc Manager mới được thêm phiếu nhập -->
+                <?php if($role === 'Admin' || $role == 'Manager'): ?>
                 <button class="add-button" onclick="createNewReceipt()">
                     <img src="../../assets/plus.png" class="icon-add" alt="Add Icon" /> 
                     Thêm phiếu nhập

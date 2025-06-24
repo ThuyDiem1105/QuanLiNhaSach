@@ -9,7 +9,6 @@ $ngayLap = $data['ngay_lap'];
 $ngayNhap = $data['ngay_nhap'];
 $tongTien = $data['tong_tien'];
 $sachNhap = $data['books'];
-$markup = 1.05;
 
 error_log(print_r($sachNhap, true));
 $mysqli->begin_transaction();
@@ -48,7 +47,7 @@ try {
         $giaban = $book['don_gia'] * $tile_ban;
         // Update giá bán của sách được chọn nhập
         $stmtUpdate = $mysqli->prepare("UPDATE sach SET GiaBan = ? WHERE MaSach = ?");
-        $stmtUpdate->bind_param("is", $giaban, $book['ma_sach']);
+        $stmtUpdate->bind_param("ds", $giaban, $book['ma_sach']);
         $stmtUpdate->execute();
         $stmtUpdate->close();
     }

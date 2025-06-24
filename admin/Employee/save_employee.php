@@ -16,8 +16,8 @@ $stmt->bind_param("ss", $sdt, $maNV);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
-    echo "sdt_exists";
-    exit;
+  echo "sdt_exists";
+  exit;
 }
 $stmt->close();
 
